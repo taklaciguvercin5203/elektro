@@ -1,0 +1,47 @@
+---
+interface Props {
+  question: string;
+  options: string[];
+  answer: number;
+  explanation: string;
+}
+
+const { question, options, answer, explanation } = Astro.props;
+---
+
+<section class="knowledge-check" data-knowledge-check data-answer={answer}>
+  <p class="knowledge-check__label">Kendini dene</p>
+  <h3>{question}</h3>
+  <div class="knowledge-check__options">
+    {options.map((option, index) => (
+      <button type="button" data-option={index}>{option}</button>
+    ))}
+  </div>
+  <p class="knowledge-check__feedback" data-feedback hidden></p>
+  <p class="knowledge-check__explanation" data-explanation hidden>{explanation}</p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-knowledge-check]').forEach((check) => {
+    const answer = Number(check.dataset.answer);
+    const feedback = check.querySelector<HTMLElement>('[data-feedback]');
+    const explanation = check.querySelector<HTMLElement>('[data-explanation]');
+
+    check.querySelectorAll<HTMLButtonElement>('[data-option]').forEach((option) => {
+      option.addEventListener('click', () => {
+        const isCorrect = Number(option.dataset.option) === answer;
+        check.querySelectorAll('button').forEach((button) => {
+          button.disabled = true;
+          if (Number(button.dataset.option) === answer) button.dataset.correct = 'true';
+        });
+        option.dataset.selected = 'true';
+        if (feedback) {
+          feedback.hidden = false;
+          feedback.textContent = isCorrect ? 'Doğru cevap.' : 'Henüz değil. Doğru seçeneği işaretledim.';
+          feedback.dataset.state = isCorrect ? 'correct' : 'wrong';
+        }
+        if (explanation) explanation.hidden = false;
+      });
+    });
+  });
+</script>

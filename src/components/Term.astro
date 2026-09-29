@@ -1,0 +1,13 @@
+---
+/**
+ * Satır içi teknik terim. Gövde metninden farklı doku ile ayrışır.
+ * <Term>direnç</Term>  ·  <Term>ρ</Term> = özdirenç
+ */
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<span class="el-term" title={title}><slot /></span>

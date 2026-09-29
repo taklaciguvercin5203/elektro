@@ -1,0 +1,50 @@
+---
+title: 'İletkenlik ve Yarı İletkenler'
+description: İletken, yalıtkan ve yarı iletken malzemelerin temel çalışma mantığı.
+sidebar:
+  order: 2
+---
+
+# Elektron Nedir?
+
+Elektronun atomun yapısında yer alan negatif elektrik yüküne sahip parçacıklardan biridir. Pozitif yüklü protonlar ve yüksüz nötronlar çekirdekte konumlanırken, elektronlar çekirdeğin etrafındaki belirli enerji yörüngelerinde hareket ederler.
+Metaller gibi iletken malzemelerde en dış yörüngedeki değerlik elektronları atom çekirdeğine oldukça zayıf bağlıdır oda sıcaklığındaki iç enerji dahi bu elektronların serbest kalarak kafes içinde bir serbest elektron bulutu oluşturmasına yeterlidir.
+
+##### Peki iletkenler nedir?
+İletkenler elektrik akımına karşı çok küçük direnç gösteren maddelerdir. Atomlarının en dış yörüngesindeki değerlik elektronlar atoma oldukça zayıf bağlı oldukları için ufak bir gerilim veya dış etkiyle bu elektronlar kolayca serbest kalarak akımı oluşturur.
+Örnekler: Altın, gümüş, bakır, alüminyum vb.
+
+##### Peki İletkenleri nerede kullanırız?
+Elektrik enerjisini kayıp olmadan bir noktadan başka bir noktaya hızlıca aktarmamızı sağlar. Enerjiyi har vurup harman savuran Tesla bobininin tam zıttıdır :)
+Elektrik şebekeleri, ev içi elektrik tesisatları, kablolar, elektrik motorlarının sargıları ve devre kartlarındaki iletken yollar buna örnektir.
+
+##### Bu kadar iyi ve kayıpsız ise neden teknolojik cihazlarda kullanmayalımki?
+Evett muazzam güçlü, uçuyor kaçıyor amaa kontrol edemediğin güç güç değildir. İletkenler elektriği sürekli ve durdurulamaz şekilde geçirdikleri için odadaki lambaya bağlı olan anahtarı kapattığınız anda siz hissetmesniz bile aslında elektriği hemen kesemez. İletken maddeler elektriğe karşı çok düşük direnç gösterdikleri için üzerlerinden geçen elektronlara sürekli izin verirler. Bilgisayarların çalışması için elektriğin sadece taşınması yeterli değildir akımın istendiği an hassasiyetle kesilip açılabildiği bir anahtarlama mekanizmasına ihtiyaç duyulur. Ve teknoloji çağının en çok bilinen elektronik parçası Transistörler burada sahneye çıkar.
+
+Transistörleri anlayabilmemiz için yalıtkanlığıda anlayabilmemiz gerek 
+Yalıtkanlar elektrik akımına karşı çok yüksek direnç gösteren ve akımı iletmeyen maddelerdir. Yalıtkan maddelerin elektronları atomlarına son derece sıkı bağlı olduğu için serbest hareket edemezler. Elektrik kablolarının dış kaplamalarında kullanılarak canlıların elektrik akımına kapılmasını ve hatlar arasında kısa devre oluşmasını engeller. Kondansatörlerin (elektrik enerjisini kısa süreliğine depolayan bileşen) iletken plakaları arasında yalıtkan malzeme kullanılarak elektrik alanının depolanması sağlanır.
+
+İletkenliği ve yalıtkanlığı anladığımıza göre yarı iletkenliği öğrenebiliriz.
+Yarı iletkenler iletkenlik bakımından, iletkenler ile yalıtkanlar arasında yer alan maddelerdir. Saf ve normal hallerinde yalıtkan davranırlar ama ısı, ışık, gerilim uygulandığında veya içlerine özel katıklama işlemleri gerçekleştirildiğinde iletkenlik özelliği kazanırlar. 
+
+Transistörlerde kapı terminalinin altına yerleştirilen yalıtkan katman, kapıdan ana kanala doğrudan akım geçişini engeller. Bu sayede transistör neredeyse hiç akım çekmeden, sadece verilen voltajın elektrik alanıyla kontrol edilebilir.
+Örnek: Silisyum (silikon), germanyum, selenyum ve galyum arsenid.
+Transistörler yarı iletken malzeme olan silikon yani silisyumdan yapılır.
+
+Transistörler, fiziksel yapılarına, çalışma ilkelerine ve akımı kontrol etme yöntemlerine göre ana gruplara ve alt çeşitlere ayrılır:
+
+##### A) Bipolar Bağlantı Transistörleri (BJT - Bipolar Junction Transistor) 
+> Akım kontrolü elemanıdır. Beys (veya Taban) ucundan akan küçük bir akım ile Kollektör ve Emiter uçları arasındaki daha büyük bir akımı denetler. İletimde hem elektronlar hem de oyuklar (bir elektronun terk ettiği yerdeki boşluk) eşzamanlı rol oynar.
+Yarıiletken katman dizilimine göre NPN ve PNP olarak ikiye ayrılır. Ses yükselteçleri (amfiler), sinyal işleme ve genel amaçlı kontrol devrelerinde kullanılır.
+
+##### B) Alan Etkili Transistörler (FET - Field Effect Transistor)
+> Gerilim (voltaj) kontrollü elemanlardır. Kapı (Gate) ucuna uygulanan gerilimin oluşturduğu elektrik alanı ile iletken kanal kontrol edilir. Kapı ucu izole olduğu için kararlı durumda neredeyse hiç akım çekmez ve giriş empedansı (zorluğu) son derece yüksektir.
+
+> ##### JFET (Junction Field Effect Transistor):
+> Kapı terminali kanala ters kutuplanmış bir P-N eklemi ile bağlıdır. Girişe ters voltaj verir arada elektronların geçebileceği yolu tıkayarak o bölgedeki tüm serbest elektron ve oyukları süpürerek yalıtkan bir duvar oluşturup bu duvarla elektrik yolunu tıkmadan akımı kontrol eder.
+
+> ##### MOSFET (Metal-Oksit-Yarıiletken FET):
+> Kapı elektrodu kanaldan nano-ölçekli ince bir yalıtkan oksit katmanı (Silisyum Dioksit) ile tamamen ayrılmıştır[11]. Taşıyıcı tipine göre NMOS (elektron) ve PMOS (oyuk)[17]; kanal durumuna göre Arttıran (Enhancement) ve Azaltan (Depletion) modlu olarak sınıflandırılır[18].
+IGBT (Yalıtılmış Kapılı Bipolar Transistör): MOSFET'in kolay voltaj sürüşü ile BJT'nin yüksek akım/gerilim taşıma kapasitesini birleştiren hibrit bir güç yarıiletkenidir[23][24].
+
+

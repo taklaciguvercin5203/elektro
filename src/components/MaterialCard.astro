@@ -1,0 +1,31 @@
+---
+/**
+ * Sınıflandırma kartı. Üstteki renkli şerit kartın türünü tek bakışta okutur.
+ * <MaterialCard variant="conductor" ...>
+ */
+type Variant = 'conductor' | 'semiconductor' | 'insulator';
+
+interface Props {
+  variant: Variant;
+  icon?: string;
+  title: string;
+  metric?: string;
+  examples?: string;
+}
+
+const { variant, icon, title, metric, examples } = Astro.props;
+---
+
+<article class={`el-card el-card--${variant}`}>
+  <h3 class="el-card__title">
+    {icon && <span class="el-card__icon" aria-hidden="true">{icon}</span>}
+    {title}
+  </h3>
+  {metric && <span class="el-card__metric">{metric}</span>}
+  <p class="el-card__body"><slot /></p>
+  {examples && (
+    <p class="el-card__examples">
+      <strong>Örnekler:</strong> {examples}
+    </p>
+  )}
+</article>

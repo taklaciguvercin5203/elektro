@@ -1,0 +1,40 @@
+---
+---
+
+<section class="ohm-lab" data-ohm-lab>
+  <div class="ohm-lab__heading">
+    <p class="knowledge-check__label">Mini laboratuvar</p>
+    <h3>Ohm kanununu gözlemle</h3>
+    <p>Gerilim veya direnci değiştir; devreden geçen akımın nasıl etkilendiğini gör.</p>
+  </div>
+  <div class="ohm-lab__controls">
+    <label>Gerilim <output data-voltage-output>5</output> V<input data-voltage type="range" min="1" max="12" value="5" /></label>
+    <label>Direnç <output data-resistance-output>100</output> Ω<input data-resistance type="range" min="10" max="1000" step="10" value="100" /></label>
+  </div>
+  <div class="ohm-lab__result" aria-live="polite">
+    <span>Akım</span>
+    <strong data-current>50 mA</strong>
+    <small>I = V / R</small>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ohm-lab]').forEach((lab) => {
+    const voltage = lab.querySelector<HTMLInputElement>('[data-voltage]');
+    const resistance = lab.querySelector<HTMLInputElement>('[data-resistance]');
+    const voltageOutput = lab.querySelector<HTMLOutputElement>('[data-voltage-output]');
+    const resistanceOutput = lab.querySelector<HTMLOutputElement>('[data-resistance-output]');
+    const current = lab.querySelector<HTMLElement>('[data-current]');
+
+    const update = () => {
+      if (!voltage || !resistance || !voltageOutput || !resistanceOutput || !current) return;
+      const amps = Number(voltage.value) / Number(resistance.value);
+      voltageOutput.value = voltage.value;
+      resistanceOutput.value = resistance.value;
+      current.textContent = `${Math.round(amps * 1000)} mA`;
+    };
+
+    voltage?.addEventListener('input', update);
+    resistance?.addEventListener('input', update);
+  });
+</script>

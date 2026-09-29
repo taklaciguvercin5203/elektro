@@ -1,0 +1,599 @@
+/* ==========================================================================
+   ELEKTRONİK DOKÜMANTASYON — TASARIM SİSTEMİ
+   --------------------------------------------------------------------------
+   Renkler dekoratif değil, bilgi taşıyıcıdır. Her anlamsal renk tek bir
+   bilgi türüne karşılık gelir ve tüm dokümanda aynı anlamı taşır.
+   ========================================================================== */
+
+:root {
+	/* --- Marka / gezinme vurgusu --- */
+	--sl-color-accent-low: #d7ece9;
+	--sl-color-accent: #0b7f74;
+	--sl-color-accent-high: #07544d;
+
+	/* --- Anlamsal bilgi renkleri: yüzey / çerçeve / mürekkep --- */
+	--el-info-surface: #e8f1fe;
+	--el-info-border: #b6d3fb;
+	--el-info-ink: #10467f;
+
+	--el-tip-surface: #e3f6ec;
+	--el-tip-border: #a7dfc2;
+	--el-tip-ink: #0b5a37;
+
+	--el-warn-surface: #fdf3d8;
+	--el-warn-border: #f0d489;
+	--el-warn-ink: #7a4d05;
+
+	--el-danger-surface: #fdeceb;
+	--el-danger-border: #f5bdb8;
+	--el-danger-ink: #8a231a;
+
+	--el-term-surface: #efeafc;
+	--el-term-border: #cdc0f2;
+	--el-term-ink: #4a2c92;
+
+	--el-neutral-surface: #f1f3f6;
+	--el-neutral-border: #d8dee7;
+	--el-neutral-ink: #3b4657;
+
+	/* --- Malzeme sınıfı kimlik renkleri (sınıflandırma omurgası) --- */
+	--el-conductor: #c2620a; /* iletken     */
+	--el-semiconductor: #0b7f74; /* yarı iletken */
+	--el-insulator: #4a5c78; /* yalıtkan     */
+
+	/* --- Ölçek / ritim --- */
+	--el-radius: 0.5rem;
+	--el-gap: 1rem;
+
+	/* ======================================================================
+	   SAYFA GENİŞLİĞİ
+	   ----------------------------------------------------------------------
+	   Doküman metninin okunabilir satır uzunluğu (birim: rem).
+	   ~60-75 karakter için 40-48rem, geniş tablolar için 55-70rem önerilir.
+	   Buradaki değer tüm alt bileşenlerin (tablo, kart, callout) genişliğini
+	   de belirler; hepsi bu tek değere bağlıdır.
+	   ====================================================================== */
+	--sl-content-width: 53drem;
+}
+
+[data-theme='dark'] {
+	--sl-color-accent-low: #0b3a36;
+	--sl-color-accent: #3fc0ae;
+	--sl-color-accent-high: #8fe0d3;
+
+	/* Koyu temada yüzeyler koyulaşır, mürekkepler açıklaşır. */
+	--el-info-surface: #10233b;
+	--el-info-border: #1f4a7d;
+	--el-info-ink: #9cc6f5;
+
+	--el-tip-surface: #0d2b1e;
+	--el-tip-border: #1c6444;
+	--el-tip-ink: #85dfb4;
+
+	--el-warn-surface: #33260a;
+	--el-warn-border: #7a5c14;
+	--el-warn-ink: #f0cf82;
+
+	--el-danger-surface: #361313;
+	--el-danger-border: #7d2a22;
+	--el-danger-ink: #f5a9a0;
+
+	--el-term-surface: #241a40;
+	--el-term-border: #453172;
+	--el-term-ink: #c1aef5;
+
+	--el-neutral-surface: #1a1f28;
+	--el-neutral-border: #2c333f;
+	--el-neutral-ink: #b3bdcc;
+
+	--el-conductor: #f0a155;
+	--el-semiconductor: #45c4b3;
+	--el-insulator: #9db2d0;
+}
+
+/* --------------------------------------------------------------------------
+   1. TEMEL DOKÜMAN AKIŞI
+   Uzun teknik paragraflar gözü yorar: satır uzunluğu --sl-content-width
+   ile sınırlanır (yukarıda tanımlandı).
+   -------------------------------------------------------------------------- */
+
+.sl-markdown-content p,
+.sl-markdown-content li {
+	line-height: 1.75;
+}
+
+.sl-markdown-content p {
+	text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------------------
+   2. BAŞLIK HİYERARŞİSİ
+   Başlıklar yalnızca büyüklükle değil; kalınlık, renk ve üst boşlukla da
+   ayrışır. H2 = bölüm, H3 = alt bölüm, H4 = teknik alt başlık.
+   -------------------------------------------------------------------------- */
+
+.sl-markdown-content h2 {
+	margin-top: 3rem;
+	margin-bottom: 1.1rem;
+	padding-bottom: 0.6rem;
+	border-bottom: 1px solid var(--el-neutral-border);
+	color: var(--sl-color-white);
+	font-size: clamp(1.45rem, 1.2rem + 0.9vw, 1.9rem);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+}
+
+.sl-markdown-content h3 {
+	margin-top: 2.2rem;
+	color: var(--sl-color-white);
+	font-size: 1.25rem;
+	font-weight: 650;
+	line-height: 1.35;
+}
+
+.sl-markdown-content h4 {
+	margin-top: 1.6rem;
+	color: var(--sl-color-gray-2);
+	font-size: 1.02rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+/* Başlıktan hemen sonra gelen paragraf bağlamı özetler. */
+.sl-markdown-content h2 + p,
+.sl-markdown-content h3 + p {
+	color: var(--sl-color-gray-2);
+}
+
+
+/* --------------------------------------------------------------------------
+   3. SATIR İÇİ TEKNİK TERİM
+   Gövde metninden farklı doku + renk ile ayrışır; okurken göz bu kutuya
+   takılır, terim akılda kalır.
+   -------------------------------------------------------------------------- */
+
+.el-term {
+	padding: 0.1em 0.4em;
+	border: 1px solid var(--el-term-border);
+	border-radius: 0.3rem;
+	background: var(--el-term-surface);
+	color: var(--el-term-ink);
+	font-size: 0.92em;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+/* Ölçü birimi / sembol rozetleri */
+.el-unit {
+	padding: 0.05em 0.35em;
+	border-radius: 0.25rem;
+	background: var(--el-neutral-surface);
+	color: var(--el-neutral-ink);
+	font-family: var(--sl-font-mono, monospace);
+	font-size: 0.85em;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+/* Vurgu: kavramı gövdeden ayırır, altı kalın çizgi ile işaretler. */
+.el-highlight {
+	padding: 0.05em 0.3em;
+	border-radius: 0.25rem;
+	background: var(--el-warn-surface);
+	box-shadow: inset 0 -0.35em 0 var(--el-warn-border);
+}
+
+/* --------------------------------------------------------------------------
+   4. ETİKET / BADGE SİSTEMİ
+   Küçük, büyük harfli, ikonlu. Sınıflandırma omurgasının görünür yüzü.
+   -------------------------------------------------------------------------- */
+
+.el-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3em;
+	padding: 0.15em 0.6em;
+	border: 1px solid var(--el-neutral-border);
+	border-radius: 999px;
+	background: var(--el-neutral-surface);
+	color: var(--el-neutral-ink);
+	font-family: var(--sl-font, sans-serif);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	line-height: 1.7;
+	text-transform: uppercase;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.el-badge::before {
+	font-size: 0.95em;
+	line-height: 1;
+}
+
+.el-badge--conductor {
+	border-color: color-mix(in srgb, var(--el-conductor) 45%, transparent);
+	background: color-mix(in srgb, var(--el-conductor) 14%, transparent);
+	color: var(--el-conductor);
+}
+.el-badge--conductor::before { content: '\25B6'; }
+
+.el-badge--semiconductor {
+	border-color: color-mix(in srgb, var(--el-semiconductor) 45%, transparent);
+	background: color-mix(in srgb, var(--el-semiconductor) 14%, transparent);
+	color: var(--el-semiconductor);
+}
+.el-badge--semiconductor::before { content: '\25C6'; }
+
+.el-badge--insulator {
+	border-color: color-mix(in srgb, var(--el-insulator) 45%, transparent);
+	background: color-mix(in srgb, var(--el-insulator) 14%, transparent);
+	color: var(--el-insulator);
+}
+.el-badge--insulator::before { content: '\25A0'; }
+
+.el-badge--bjt {
+	border-color: var(--el-info-border);
+	background: var(--el-info-surface);
+	color: var(--el-info-ink);
+}
+.el-badge--bjt::before { content: '\26A1'; }
+
+.el-badge--fet {
+	border-color: var(--el-tip-border);
+	background: var(--el-tip-surface);
+	color: var(--el-tip-ink);
+}
+.el-badge--fet::before { content: '\2315'; }
+
+.el-badge--warning {
+	border-color: var(--el-warn-border);
+	background: var(--el-warn-surface);
+	color: var(--el-warn-ink);
+}
+.el-badge--warning::before { content: '\26A0'; }
+
+/* --------------------------------------------------------------------------
+   5. KALICI VURGU (lead paragrafı)
+   Sol çizgi + büyük punto: sayfanın "ne öğreneceğim" cevabı.
+   -------------------------------------------------------------------------- */
+
+.el-lead {
+	margin-bottom: 1.6rem;
+	padding-left: 1rem;
+	border-left: 3px solid var(--sl-color-accent);
+	color: var(--sl-color-gray-2);
+	font-size: 1.03em;
+	line-height: 1.7;
+}
+
+.el-lead strong {
+	color: var(--sl-color-white);
+}
+
+
+/* --------------------------------------------------------------------------
+   6. İÇİNDEKİLER KARTI (okuma yönlendirici)
+   Giriş sayfasında ve bölüm başlarında "nereye bakmalıyım" sorusunu cevaplar.
+   -------------------------------------------------------------------------- */
+
+.el-toc {
+	display: grid;
+	gap: 0.55rem;
+	margin: 1.5rem 0 2.5rem;
+	padding: 1.25rem 1.4rem;
+	border: 1px solid var(--el-neutral-border);
+	border-radius: var(--el-radius);
+	background: var(--el-neutral-surface);
+	list-style: none;
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+
+.el-toc li {
+	margin: 0;
+}
+
+.el-toc a {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	color: var(--sl-color-white);
+	font-size: 0.92rem;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.el-toc a::before {
+	content: '\2192';
+	color: var(--sl-color-accent);
+	font-weight: 700;
+}
+
+.el-toc a:hover {
+	color: var(--sl-color-accent);
+	text-decoration: underline;
+}
+
+.el-toc-label {
+	margin: 0 0 0.75rem;
+	color: var(--sl-color-gray-2);
+	font-size: 0.74rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   7. KATEGORİ / MALZEME KARTI
+   Üstteki 3px şerit, kartın sınıfını tek bakışta okutur.
+   -------------------------------------------------------------------------- */
+
+.el-cards {
+	display: grid;
+	gap: var(--el-gap);
+	margin: 1.6rem 0 2.2rem;
+	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.el-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1.1rem 1.2rem 1.2rem;
+	border: 1px solid var(--el-neutral-border);
+	border-radius: var(--el-radius);
+	background: var(--sl-color-gray-6);
+	overflow: hidden;
+}
+
+.el-card::before {
+	content: '';
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 3px;
+	background: var(--el-card-accent, var(--sl-color-accent));
+}
+
+.el-card--conductor { --el-card-accent: var(--el-conductor); }
+.el-card--semiconductor { --el-card-accent: var(--el-semiconductor); }
+.el-card--insulator { --el-card-accent: var(--el-insulator); }
+
+.el-card__title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0;
+	color: var(--sl-color-white);
+	font-size: 1.05rem;
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+.el-card__icon {
+	font-size: 1.25rem;
+	line-height: 1;
+}
+
+.el-card__metric {
+	display: block;
+	color: var(--el-card-accent, var(--sl-color-accent));
+	font-family: var(--sl-font-mono, monospace);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+}
+
+.el-card__body {
+	margin: 0;
+	color: var(--sl-color-gray-2);
+	font-size: 0.93rem;
+	line-height: 1.65;
+}
+
+.el-card__examples {
+	margin: 0.25rem 0 0;
+	padding-top: 0.55rem;
+	border-top: 1px dashed var(--el-neutral-border);
+	color: var(--sl-color-gray-3);
+	font-size: 0.85rem;
+}
+
+.el-card__examples strong {
+	color: var(--sl-color-gray-2);
+	font-weight: 650;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. ANAHTAR GERÇEK / SPEC (sayısal vurgu)
+   -------------------------------------------------------------------------- */
+
+.el-facts {
+	display: grid;
+	gap: 0.7rem;
+	margin: 1.4rem 0 2rem;
+	grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
+.el-fact {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	padding: 0.85rem 1rem;
+	border: 1px solid var(--el-neutral-border);
+	border-left: 3px solid var(--sl-color-accent);
+	border-radius: 0.4rem;
+	background: var(--el-neutral-surface);
+}
+
+.el-fact__label {
+	color: var(--sl-color-gray-2);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+}
+
+.el-fact__value {
+	color: var(--sl-color-white);
+	font-family: var(--sl-font-mono, monospace);
+	font-size: 1.15rem;
+	font-weight: 700;
+}
+
+.el-fact__note {
+	color: var(--sl-color-gray-2);
+	font-size: 0.82rem;
+	line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   9. KARŞILAŞTIRMA TABLOSU
+   -------------------------------------------------------------------------- */
+
+.sl-markdown-content table {
+	display: table;
+	width: 100%;
+	margin: 1.6rem 0 2rem;
+	border: 1px solid var(--el-neutral-border);
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: var(--el-radius);
+	overflow: hidden;
+	font-size: 0.93rem;
+}
+
+.sl-markdown-content table th,
+.sl-markdown-content table td {
+	padding: 0.7rem 0.9rem;
+	border-bottom: 1px solid var(--el-neutral-border);
+	text-align: left;
+	vertical-align: top;
+}
+
+.sl-markdown-content table thead th {
+	background: var(--el-neutral-surface);
+	color: var(--sl-color-white);
+	font-size: 0.76rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.sl-markdown-content table tbody tr:last-child th,
+.sl-markdown-content table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.sl-markdown-content table tbody tr:nth-child(even) {
+	background: color-mix(in srgb, var(--el-neutral-surface) 45%, transparent);
+}
+
+.sl-markdown-content table tbody th {
+	color: var(--sl-color-white);
+	font-weight: 650;
+}
+
+/* Tablo içi karşılaştırma işaretleri */
+.el-yes { color: var(--el-tip-ink); font-weight: 700; }
+.el-no { color: var(--el-danger-ink); font-weight: 700; }
+.el-part { color: var(--el-warn-ink); font-weight: 700; }
+
+/* --------------------------------------------------------------------------
+   10. LİSTE HİYERARŞİSİ
+   -------------------------------------------------------------------------- */
+
+.sl-markdown-content ul,
+.sl-markdown-content ol {
+	padding-left: 1.4rem;
+}
+
+.sl-markdown-content li {
+	margin-bottom: 0.45rem;
+}
+
+.sl-markdown-content li::marker {
+	color: var(--sl-color-accent);
+	font-weight: 700;
+}
+
+.sl-markdown-content li > ul,
+.sl-markdown-content li > ol {
+	margin-top: 0.45rem;
+}
+
+.sl-markdown-content li strong {
+	color: var(--sl-color-white);
+	font-weight: 650;
+}
+
+
+/* --------------------------------------------------------------------------
+   11. KOD, ALINTILAR, SAYFA BAŞLIĞI, ERİŞİLEBİLİRLİK
+   -------------------------------------------------------------------------- */
+
+/* Alıntı: "kaynak/çözümleme" sesi taşır, gövdeden ayrılır. */
+.sl-markdown-content blockquote {
+	margin: 1.4rem 0;
+	padding: 0.9rem 1.2rem;
+	border-left: 3px solid var(--el-info-border);
+	border-radius: 0 0.4rem 0.4rem 0;
+	background: var(--el-info-surface);
+	color: var(--sl-color-gray-2);
+	font-style: normal;
+}
+
+.sl-markdown-content blockquote > p {
+	margin: 0;
+}
+
+.sl-markdown-content blockquote strong {
+	color: var(--el-info-ink);
+}
+
+/* Satır içi kod: teknik terimden ayırt edilebilir olsun. */
+.sl-markdown-content :not(pre) > code {
+	padding: 0.12em 0.38em;
+	border: 1px solid var(--el-neutral-border);
+	border-radius: 0.28rem;
+	background: var(--el-neutral-surface);
+	color: var(--el-term-ink);
+	font-size: 0.88em;
+	font-weight: 500;
+}
+
+.page-title {
+	margin-bottom: 0.35rem;
+	letter-spacing: -0.02em;
+}
+
+.page-title + p {
+	margin-bottom: 1.75rem;
+	color: var(--sl-color-accent-low);
+	font-size: 1.03rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+@media (max-width: 600px) {
+	.sl-markdown-content h2 { margin-top: 2.25rem; }
+	.el-cards { grid-template-columns: 1fr; }
+	.el-facts { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+	.sl-markdown-content table { font-size: 0.86rem; }
+	.sl-markdown-content table th,
+	.sl-markdown-content table td { padding: 0.55rem 0.6rem; }
+}
+
