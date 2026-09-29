@@ -1,0 +1,19 @@
+---
+/**
+ * Anahtar gerçek / spec kartı. Sayısal ya da kısa bir değeri öne çıkarır.
+ * <KeyFact label="Özdirenç" value="1,72 × 10⁻⁸ Ω·m">Bakır</KeyFact>
+ */
+interface Props {
+  label: string;
+  value: string;
+  note?: string;
+}
+
+const { label, value, note } = Astro.props;
+---
+
+<div class="el-fact">
+  <span class="el-fact__label">{label}</span>
+  <strong class="el-fact__value">{value}</strong>
+  {note && <span class="el-fact__note">{note}</span>}
+</div>

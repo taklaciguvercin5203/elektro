@@ -1,0 +1,177 @@
+---
+/**
+ * Starlight varsayılan Header'ının zenginleştirilmiş sürümü.
+ *
+ * Varsayılan Header yalnızca SiteTitle + Search + SocialIcons + ThemeSelect
+ * render eder; sadece SiteTitle ve arama çubuğu görünür, gerisi mobil
+ * breakpoint'inin altına gizlenir. Bu bileşen:
+ *   - Başlığın yanına site alt başlığı (tagline) ekler
+ *   - Etkin bir "GitHub" butonu (yıldız ikonu + etiket) koyar
+ *   - Sürüm rozeti gösterir
+ *   - Arama çubuğu ve tema seçicinin orijinal yerleşimini korur
+ *
+ * Not: `virtual:starlight/components/*` import'ları, kullanıcı bileşen
+ * override'larını da çözer. Böylece Search/ThemeSelect davranışı Starlight'ın
+ * kendi sürümüyle birebir aynı kalır.
+ */
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import Search from 'virtual:starlight/components/Search';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import config from 'virtual:starlight/user-config';
+
+/** Arama kutusunun yalnızca Pagefind ya da Search override'ı varken basılması gerekir. */
+const shouldRenderSearch =
+  config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const repoUrl = 'https://github.com/taklaciguvercin5203/elektro';
+const version = 'v0.1';
+---
+
+<div class="hdr">
+  <!-- Sol küme: logo + başlık + alt başlık + sürüm -->
+  <div class="hdr__brand sl-flex">  
+    <SiteTitle />
+  </div>
+
+  <!-- Orta küme: arama -->
+  <div class="hdr__search sl-flex">
+    {shouldRenderSearch && <Search />}
+  </div>
+
+  <!-- Sağ küme: GitHub butonu + tema seçici -->
+  <div class="hdr__actions sl-hidden md:sl-flex">
+    <a class="hdr__github" href={repoUrl} target="_blank" rel="noopener noreferrer me">
+      <svg class="hdr__github-icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+      </svg>
+      <span class="hdr__github-label">GitHub</span>
+    </a>
+    <ThemeSelect />
+    <LanguageSelect />
+  </div>
+</div>
+
+<style>
+  /* Dışarıdan gelen sınıflara erişim gerekli olduğu için :global kullanılır. */
+  .hdr {
+    display: flex;
+    gap: var(--sl-nav-gap);
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .hdr__brand {
+    gap: 0.6rem;
+    min-width: 0;
+    overflow: clip;
+    padding: 0.25rem;
+    margin: -0.25rem;
+  }
+
+  /* Alt başlık yalnızca yeterli genişlik varsa görünür. */
+  .hdr__tagline {
+    padding-left: 0.6rem;
+    border-left: 1px solid var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2);
+    font-size: 0.8rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .hdr__version {
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-2);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+  }
+
+  .hdr__search {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .hdr__actions {
+    gap: 0.85rem;
+    align-items: center;
+  }
+
+  /* --- GitHub butonu: iki katmanlı (ikon + etiket / eylem) --- */
+  .hdr__github {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+
+  .hdr__github:hover {
+    border-color: var(--sl-color-text-accent);
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-text-accent-high);
+  }
+
+  .hdr__github-icon {
+    flex-shrink: 0;
+  }
+
+  .hdr__github-action {
+    padding-left: 0.45rem;
+    border-left: 1px solid var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2);
+    font-weight: 500;
+  }
+
+  .hdr__github:hover .hdr__github-action {
+    color: var(--sl-color-text-accent);
+  }
+
+  /* Odak halkası klavye kullanıcıları için görünür kalmalı. */
+  .hdr__github:focus-visible {
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 72rem) {
+    .hdr__tagline {
+      display: block;
+    }
+  }
+
+  /* Orta genişlikte alt başlık gizlenir, GitHub etiketi kısalır. */
+  @media (max-width: 72rem) {
+    .hdr__tagline {
+      display: none;
+    }
+  }
+
+  @media (max-width: 60rem) {
+    .hdr__github-action {
+      display: none;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .hdr__github-label {
+      display: none;
+    }
+    .hdr__github {
+      padding: 0.3rem 0.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,196 @@
+---
+/**
+ * Anlamsal bilgi kutusu (callout).
+ *
+ * type:
+ *   info    — tanım / arka plan        (mavi)
+ *   tip     — nasıl çalışır / öneri     (yeşil)
+ *   example — somut örnek               (turkuaz)
+ *   warning — dikkat / sık yapılan hata (amber)
+ *   danger  — tehlike / gerçek risk      (kırmızı)
+ *   note    — ek açıklama / referans    (nötr)
+ *
+ * Kullanım:
+ *   <Callout type="tip" title="Akım kontrolü nasıl olur?">İçerik</Callout>
+ */
+type CalloutType = 'info' | 'tip' | 'example' | 'warning' | 'danger' | 'note';
+
+interface Props {
+  type?: CalloutType;
+  title?: string;
+  collapsible?: boolean;
+}
+
+const { type = 'info', title, collapsible = false } = Astro.props;
+
+const ICONS: Record<CalloutType, string> = {
+  info: 'ℹ',
+  tip: '💡',
+  example: '🔬',
+  warning: '⚠',
+  danger: '⛔',
+  note: '📎',
+};
+
+const LABELS: Record<CalloutType, string> = {
+  info: 'Bilgi',
+  tip: 'İpucu',
+  example: 'Örnek',
+  warning: 'Uyarı',
+  danger: 'Tehlike',
+  note: 'Not',
+};
+
+const icon = ICONS[type];
+const label = LABELS[type];
+const heading = title ?? label;
+---
+
+<aside class={`el-callout el-callout--${type}`} role="note">
+  <div class="el-callout__head">
+    <span class="el-callout__icon" aria-hidden="true">{icon}</span>
+    {collapsible
+      ? <button type="button" class="el-callout__toggle" aria-expanded="false">{heading}</button>
+      : <strong class="el-callout__title">{heading}</strong>}
+    {!collapsible && <span class="el-callout__label">{label}</span>}
+  </div>
+  <div class="el-callout__body" hidden={collapsible ? true : undefined}>
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .el-callout {
+    margin: 1.5rem 0;
+    border: 1px solid var(--el-callout-border);
+    border-left: 3px solid var(--el-callout-border);
+    border-radius: var(--el-radius);
+    background: var(--el-callout-surface);
+    overflow: hidden;
+  }
+
+  .el-callout__head {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.7rem 1.05rem;
+    background: color-mix(in srgb, var(--el-callout-border) 22%, transparent);
+  }
+
+  .el-callout__icon {
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+
+  .el-callout__title,
+  .el-callout__toggle {
+    margin: 0;
+    color: var(--el-callout-ink);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Sağ uçtaki etiket: başlığın türünü tekrar eder ama görsel ağırlığı düşüktür */
+  .el-callout__label {
+    margin-left: auto;
+    color: var(--el-callout-ink);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    opacity: 0.65;
+    text-transform: uppercase;
+  }
+
+  .el-callout__toggle {
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .el-callout__toggle::after {
+    content: '▾';
+    margin-left: 0.4rem;
+    font-size: 0.8em;
+    opacity: 0.7;
+    transition: rotate 160ms ease;
+  }
+
+  .el-callout__toggle[aria-expanded='true']::after {
+    rotate: 180deg;
+  }
+
+  .el-callout__body {
+    padding: 0.9rem 1.05rem 1rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  /* İç içe callout'lar düzleşmesin */
+  .el-callout__body :global(.el-callout) {
+    margin: 0.9rem 0;
+  }
+
+  .el-callout__body :global(p) {
+    margin: 0.5rem 0;
+  }
+
+  .el-callout__body :global(p:first-child) {
+    margin-top: 0;
+  }
+
+  .el-callout__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .el-callout__body :global(strong) {
+    color: var(--sl-color-white);
+  }
+
+  /* --- Varyantlar --- */
+  .el-callout--info {
+    --el-callout-surface: var(--el-info-surface);
+    --el-callout-border: var(--el-info-border);
+    --el-callout-ink: var(--el-info-ink);
+  }
+  .el-callout--tip {
+    --el-callout-surface: var(--el-tip-surface);
+    --el-callout-border: var(--el-tip-border);
+    --el-callout-ink: var(--el-tip-ink);
+  }
+  .el-callout--example {
+    --el-callout-surface: color-mix(in srgb, var(--el-semiconductor) 12%, var(--sl-color-gray-6));
+    --el-callout-border: color-mix(in srgb, var(--el-semiconductor) 45%, transparent);
+    --el-callout-ink: var(--el-semiconductor);
+  }
+  .el-callout--warning {
+    --el-callout-surface: var(--el-warn-surface);
+    --el-callout-border: var(--el-warn-border);
+    --el-callout-ink: var(--el-warn-ink);
+  }
+  .el-callout--danger {
+    --el-callout-surface: var(--el-danger-surface);
+    --el-callout-border: var(--el-danger-border);
+    --el-callout-ink: var(--el-danger-ink);
+  }
+  .el-callout--note {
+    --el-callout-surface: var(--el-neutral-surface);
+    --el-callout-border: var(--el-neutral-border);
+    --el-callout-ink: var(--el-neutral-ink);
+  }
+</style>
+
+{collapsible && (
+  <script>
+    document.querySelectorAll<HTMLElement>('.el-callout__toggle').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const body = toggle.closest('.el-callout')?.querySelector<HTMLElement>('.el-callout__body');
+        if (!body) return;
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        body.hidden = expanded;
+      });
+    });
+  </script>
+)}
