@@ -59,7 +59,7 @@
 /* Tüm h1, h2 ve h5 başlıkları için ortak veya özel stiller */
 h1 {
   font-size: 2.8rem;
-  color: #bbff00;
+  color: #F97316;
   padding-left: 30%;
 }
 
@@ -95,16 +95,15 @@ blockquote {
   padding: 0.5em 1em;
   color: white;
   background-color: black; /* Hafif gri arka plan */
-  border-left: 0.25em solid #fdfdfdb9; /* Sol taraftaki mavi çizgi */
+  border-left: 0.25em solid #B0B0B0; /* Sol taraftaki mavi çizgi */
 }
 
 /* "` `" için  */
 code {
   padding: 0.1em 0.3em;
   margin: 0;
-  font-size: 85%;
-  color: black;
-  background-color: rgba(245, 245, 245, 0.932); /* Kod arkası hafif gri */
+  color: white;
+  background-color: #f4f4f42c; /* Kod arkası hafif gri */
   border-radius: 3px;
   font-family: monospace;
 }
@@ -118,7 +117,7 @@ blockquote h5 {
 /* 1. Üstteki Genel Başlık Bölümü ("Elektronik" yazan alan) */
 .sidebar-content h2, 
 .sidebar-content .top-level-title {
-  color: #00ffaa !important; /* İstediğin başlık rengi */
+  color: #584343 !important; /* İstediğin başlık rengi */
 }
 
 /* 2. Menü Grubu Başlığı ("Temel ve Dijital Elektronik" yazan alan) */
@@ -127,13 +126,15 @@ blockquote h5 {
 }
 
 .sidebar-content details summary:hover {
-  color: #00b7ff !important; /* Üzerine gelindiğinde grup başlığı rengi */
+  color: #F4F4F4 !important; /* Üzerine gelindiğinde grup başlığı rengi */
 }
 
 /* 3. Aktif/Seçili Menü Elemanı (Görseldeki yeşil arka planlı "İletkenlik..." alanı) */
 .sidebar-content a[aria-current="page"] {
-  background-color: #0d6efd !important; /* Mevcut yeşil arka planı değiştirmek için */
-  color: #ffffff !important;            /* İçindeki yazının rengi */
+  background-color: #7e7d7d !important; /* Mevcut yeşil arka planı değiştirmek için */
+  color: #000000 !important;        
+  padding: 5px;
+  padding-left: 30px;
   font-weight: 600;                      /* Yazıyı kalınlaştırmak istersen */
   border-radius: 6px;                    /* Köşe yumuşatma derecesi */
 }
