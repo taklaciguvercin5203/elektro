@@ -2,8 +2,10 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+  site: 'https://taklaciguvercin5203.github.io-elektro',
+  base: '/taklaciguvercin5203.github.io-elektro/',
   integrations: [starlight({
-    title: 'Elektronik',
+    title: 'Herkes için elektronik',
     defaultLocale: 'root',
     locales: {
       root: {
