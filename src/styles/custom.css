@@ -114,3 +114,33 @@ blockquote h5 {
   display: inline;
   margin: 0;
 }
+
+/* 1. Üstteki Genel Başlık Bölümü ("Elektronik" yazan alan) */
+.sidebar-content h2, 
+.sidebar-content .top-level-title {
+  color: #00ffaa !important; /* İstediğin başlık rengi */
+}
+
+/* 2. Menü Grubu Başlığı ("Temel ve Dijital Elektronik" yazan alan) */
+.sidebar-content details summary {
+  color: #ffffff !important; /* Grup başlığı yazı rengi */
+}
+
+.sidebar-content details summary:hover {
+  color: #00b7ff !important; /* Üzerine gelindiğinde grup başlığı rengi */
+}
+
+/* 3. Aktif/Seçili Menü Elemanı (Görseldeki yeşil arka planlı "İletkenlik..." alanı) */
+.sidebar-content a[aria-current="page"] {
+  background-color: #0d6efd !important; /* Mevcut yeşil arka planı değiştirmek için */
+  color: #ffffff !important;            /* İçindeki yazının rengi */
+  font-weight: 600;                      /* Yazıyı kalınlaştırmak istersen */
+  border-radius: 6px;                    /* Köşe yumuşatma derecesi */
+}
+
+/* 4. Aktif olmayan ama üzerine gelinen (Hover) menü linkleri */
+.sidebar-content a:not([aria-current="page"]):hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #00b7ff !important;
+}
+
