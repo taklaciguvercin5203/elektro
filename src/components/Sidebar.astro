@@ -1,0 +1,113 @@
+---
+/**
+ * Starlight varsayılan Sidebar'ının zenginleştirilmiş sürümü.
+ *
+ * Varsayılan bileşen `virtual:starlight/components/Sidebar` üzerinden gelir;
+ * bu proje `astro.config.mjs > components.Sidebar` ile buraya yönlendirilir.
+ *
+ * Eklenen tek şey, linklerin üstünde duran "menüyü daralt" düğmesidir.
+ * Düğmeye basıldığında menü gizlenir; menüyü tekrar açmak için header'daki
+ * site title'ın solundaki (Starlight'ın `MobileMenuToggle` düğmesinin yanındaki)
+ * alana tıklanır — bu yüzden bu bileşen yalnızca daraltma yönünü üstlenir.
+ *
+ * NOT: Menüye bir link tıklandığında menü KAPANMAZ. Açık/kapalı durumu yalnızca
+ * düğmeye basıldığında değişir ve `localStorage` ile saklanır.
+ */
+import DefaultSidebar from '@astrojs/starlight/components/Sidebar.astro';
+---
+
+<div class="sidebar">
+  <button
+    type="button"
+    class="sidebar__collapse"
+    id="sidebar-collapse"
+    title="Menüyü Daralt"
+    aria-label="Menüyü Daralt"
+  >
+    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M10 3.5L5.5 8l4.5 4.5" />
+    </svg>
+    <span></span>
+  </button>
+
+  <DefaultSidebar />
+</div>
+
+<script>
+  const STORAGE_KEY = 'elektro:sidebar-collapsed';
+  const root = document.documentElement;
+
+  /** Menü durumunu uygular. */
+  function applyState(collapsed) {
+    root.toggleAttribute('data-sidebar-collapsed', collapsed);
+  }
+
+  // Başlangıç durumunu geri yükle.
+  applyState(localStorage.getItem(STORAGE_KEY) === '1');
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    // Yalnızca düğmeye basıldığında durum değişir; linkler menüyü kapatmaz.
+    if (!target.closest('#sidebar-collapse')) return;
+
+    const collapsed = root.hasAttribute('data-sidebar-collapsed');
+    applyState(!collapsed);
+    localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
+  });
+
+  // Starlight'ın sayfa geçişlerinden sonra durumu koru.
+  document.addEventListener('astro:after-swap', () => {
+    applyState(localStorage.getItem(STORAGE_KEY) === '1');
+  });
+</script>
+
+<style>
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* --- Daraltma düğmesi --- */
+  .sidebar__collapse {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: flex-start;
+    margin: 0 0 0.15rem var(--sl-sidebar-pad-x, 0.75rem);
+    padding: 0.3rem 0.6rem 0.3rem 0.4rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 0.45rem;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+  }
+
+  .sidebar__collapse:hover {
+    border-color: var(--sl-menu-accent, var(--sl-color-text-accent));
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--sl-color-white);
+  }
+
+  .sidebar__collapse:focus-visible {
+    outline: 2px solid var(--sl-menu-accent, var(--sl-color-text-accent));
+    outline-offset: 2px;
+  }
+
+  /* Menü daraltıldığında düğmeyi gizle (panel de gizli olacağı için). */
+  :global(html[data-sidebar-collapsed]) .sidebar__collapse {
+    display: none;
+  }
+
+  /* Mobilde menü zaten tam ekrandır; daraltma düğmesi gereksiz. */
+  @media (max-width: 49.99em) {
+    .sidebar__collapse {
+      display: none;
+    }
+  }
+</style>

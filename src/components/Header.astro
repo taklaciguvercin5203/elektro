@@ -52,7 +52,67 @@ const version = 'v0.1';
   </div>
 </div>
 
+<!--
+  Sol menü daraltıldığında görünen kenar sekmesi.
+  Menü kapalıyken tekrar açmanın yoludur; genişliği çok dar olduğu için
+  yalnızca ikon taşır ve metni ekran okuyuculara gizli bırakılır.
+-->
+<button
+  type="button"
+  class="hdr__sidebar-reopen"
+  id="sidebar-reopen"
+  title="Menüyü aç"
+  aria-label="Menüyü aç"
+>
+  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 3.5L10.5 8 6 12.5" />
+  </svg>
+</button>
+
 <style>
+  /* --- Menü kapalıyken sol kenardaki "menüyü aç" sekmesi --- */
+  .hdr__sidebar-reopen {
+    position: fixed;
+    inset-block-start: calc(var(--sl-nav-height) + 0.75rem);
+    inset-inline-start: 0;
+    z-index: var(--sl-z-index-menu);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-inline-start: none;
+    border-start-end-radius: 0.45rem;
+    border-end-end-radius: 0.45rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    transition: color 150ms ease, background 150ms ease;
+  }
+
+  .hdr__sidebar-reopen:hover {
+    background: var(--sl-color-gray-6);
+    color: var(--sl-menu-accent, var(--sl-color-text-accent));
+  }
+
+  .hdr__sidebar-reopen:focus-visible {
+    outline: 2px solid var(--sl-menu-accent, var(--sl-color-text-accent));
+    outline-offset: 2px;
+  }
+
+  /* Yalnızca menü kapalıyken ve masaüstünde görünür. */
+  :global(html[data-sidebar-collapsed]) .hdr__sidebar-reopen {
+    display: flex;
+  }
+
+  @media (max-width: 49.99em) {
+    .hdr__sidebar-reopen {
+      display: none !important;
+    }
+  }
+
   /* Dışarıdan gelen sınıflara erişim gerekli olduğu için :global kullanılır. */
   .hdr {
     display: flex;
@@ -68,6 +128,58 @@ const version = 'v0.1';
     overflow: clip;
     padding: 0.25rem;
     margin: -0.25rem;
+  }
+
+  /* --- Sol menü aç/kapat düğmesi --- */
+  .hdr__sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+
+  .hdr__sidebar-toggle:hover {
+    border-color: var(--sl-color-text-accent);
+    color: var(--sl-color-text-accent);
+  }
+
+  .hdr__sidebar-toggle:focus-visible {
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: 2px;
+  }
+
+  /* Menü açıkken "X", kapalıyken "hamburger" ikonu gösterilir. */
+  .hdr__sidebar-toggle .icon-close {
+    display: none;
+  }
+
+  :global(html[data-sidebar-collapsed]) .hdr__sidebar-toggle .icon-open {
+    display: none;
+  }
+
+  :global(html[data-sidebar-collapsed]) .hdr__sidebar-toggle .icon-close {
+    display: block;
+  }
+
+  /* Görsel olarak gizlenen metin (ekran okuyucular için). */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   /* Alt başlık yalnızca yeterli genişlik varsa görünür. */
@@ -175,3 +287,23 @@ const version = 'v0.1';
     }
   }
 </style>
+
+<script>
+  // Sol menü kapalıyken görünen kenar sekmesi: menüyü tekrar açar.
+  const STORAGE_KEY = 'elektro:sidebar-collapsed';
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element) || !target.closest('#sidebar-reopen')) return;
+
+    document.documentElement.removeAttribute('data-sidebar-collapsed');
+    localStorage.setItem(STORAGE_KEY, '0');
+  });
+
+  // Sayfa geçişlerinden sonra durum korunur (Sidebar.astro da uygular).
+  document.addEventListener('astro:after-swap', () => {
+    if (localStorage.getItem(STORAGE_KEY) === '1') {
+      document.documentElement.setAttribute('data-sidebar-collapsed', '');
+    }
+  });
+</script>
