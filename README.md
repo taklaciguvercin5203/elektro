@@ -1,49 +1,15 @@
-# Starlight Starter Kit: Basics
+> *"Bir şeyi 6 yaşındaki bir çocuğa anlatamıyorsanız, siz de anlamamışsınızdır."*  
+> — **Richard Feynman**
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Bu depo elektronik ve bilgisayar mühendisliği konularını **Feynman Tekniği**'ni kullanarak, jargondan arındırılmış, en yalın ve somut halleriyle derlediğim kişisel öğrenme alanımdır. 
 
-```
-npm create astro@latest -- --template starlight
-```
+Buradaki temel amaç; karmaşık fiziksel/mühendislik kavramlarını benzetmeler, gerçek hayat örnekleri ve sadeleştirmelerle anlatarak **öğrenme sürecimi geliştirmek** ve aynı zamanda merak duyan herkes için anlaşılır bir kaynak sunmaktır. Modern web framework'ü Astro'nun Starlight isimli döküman template'ini kullanıyorum bu bana modern bir arayüzlü MDX dosyaları oluşturmamı sağlıyor öğrenmeyi ve öğrenmeyi öğrenmeyi dahada iyileştireceğine inanıyorum. 
+---
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 📅 Haftalık Not Akışı
 
-## 🚀 Project Structure
+| Hafta | Konu Başlığı | Özeti / Temel Soru | Bağlantı |
+| :---: | :--- | :--- | :---: |
+| **01** | **Elektron'dan Yapay Zekaya** | Elektrik sinyallerinden transistörlere ve bilgisayarlara nasıl varabildik? | [Notu Oku](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/) |
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
-
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
-
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
-
-Static assets, like favicons, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+*(Her hafta yeni bir konu eklenecektir.)*
