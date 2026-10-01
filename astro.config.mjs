@@ -5,7 +5,7 @@ export default defineConfig({
   site: 'https://taklaciguvercin5203.github.io/elektro',
   base: '/elektro/',
   integrations: [starlight({
-    title: 'Herkes için elektronik',
+    title: 'Elektronik',
     defaultLocale: 'root',
     locales: {
       root: {
@@ -20,6 +20,7 @@ export default defineConfig({
     components: {
       Header: './src/components/Header.astro',
       PageTitle: './src/components/PageTitle.astro',
+      Sidebar: './src/components/Sidebar.astro',
     },
     expressiveCode: {
       themes: ['github-dark', 'github-light'],

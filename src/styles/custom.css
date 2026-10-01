@@ -7,9 +7,10 @@
 
 :root {
 	/* --- Marka / gezinme vurgusu --- */
-	--sl-color-accent-low: #d7ece9;
-	--sl-color-accent: #0b7f74;
-	--sl-color-accent-high: #07544d;
+	/* Koyu yeşil (#0b7f74) okunmuyordu; yerine sıcak amber paleti. */
+	--sl-color-accent-low: #5a3603;
+	--sl-color-accent: #f59e0b;
+	--sl-color-accent-high: #fbbf24;
 
 	/* --- Anlamsal bilgi renkleri: yüzey / çerçeve / mürekkep --- */
 	--el-info-surface: #e8f1fe;
@@ -114,34 +115,158 @@ blockquote h5 {
   margin: 0;
 }
 
-/* 1. Üstteki Genel Başlık Bölümü ("Elektronik" yazan alan) */
-.sidebar-content h2, 
-.sidebar-content .top-level-title {
-  color: #584343 !important; /* İstediğin başlık rengi */
+/* =========================================================
+   MARKA YAZISI (Header'daki "Elektronik")
+   Starlight site title'ı accent rengini kullanır; koyu temada
+   okunabilir olması için açık tonlara sabitleniyor.
+   ========================================================= */
+
+:root[data-theme='dark'] .site-title,
+:root[data-theme='dark'] .site-title span,
+:root[data-theme='dark'] .site-title:hover {
+	color: #f8fafc !important;
 }
 
-/* 2. Menü Grubu Başlığı ("Temel ve Dijital Elektronik" yazan alan) */
+:root[data-theme='dark'] .site-title:hover span {
+	color: var(--sl-menu-accent) !important;
+}
+
+:root:not([data-theme='dark']) .site-title,
+:root:not([data-theme='dark']) .site-title span {
+	color: #7c2d12 !important;
+}
+
+/* =========================================================
+   SOL MENÜ (SIDEBAR) — Renk Paleti & Stil
+   Palet: gece lacivert (#0b1220 → #131c33) zemin,
+   amber/turkuaz vurgu, yumuşak gri-mavi metin.
+   ========================================================= */
+
+:root {
+  --sl-menu-bg: linear-gradient(180deg, #0d1424 0%, #131c33 55%, #0f1729 100%);
+  --sl-menu-border: rgba(148, 163, 184, 0.18);
+  --sl-menu-title: #f8fafc;      /* "Elektronik" üst başlık */
+  --sl-menu-group: #7dd3fc;     /* Grup başlığı (Temel ve Dijital…) */
+  --sl-menu-text: #c3cddd;      /* Normal linkler */
+  --sl-menu-accent: #f59e0b;    /* Aktif kaydın çubuğu */
+  --sl-menu-accent-soft: rgba(245, 158, 11, 0.14);
+  --sl-menu-hover: #e2e8f0;
+  --sl-menu-hover-bg: rgba(125, 211, 252, 0.10);
+}
+
+/* Menü paneli zemini ve sağ ayraç */
+.sidebar-pane,
+.sidebar-pane > div {
+  background: var(--sl-menu-bg) !important;
+  border-right: 1px solid var(--sl-menu-border) !important;
+}
+
+/* İç boşluklar */
+.sidebar-content {
+  padding: 1rem 0.75rem 2.5rem !important;
+}
+
+/* 1) Üstteki genel başlık ("Elektronik") */
+.sidebar-content h2,
+.sidebar-content .top-level-title {
+  color: var(--sl-menu-title) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.5rem 0.75rem !important;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--sl-menu-border);
+}
+
+/* 2) Menü grubu başlığı */
 .sidebar-content details summary {
-  color: #ffffff !important; /* Grup başlığı yazı rengi */
+  color: var(--sl-menu-group) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.5rem !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sidebar-content details summary:hover {
-  color: #F4F4F4 !important; /* Üzerine gelindiğinde grup başlığı rengi */
+  color: #bae6fd !important;
+  background-color: var(--sl-menu-hover-bg) !important;
 }
 
-/* 3. Aktif/Seçili Menü Elemanı (Görseldeki yeşil arka planlı "İletkenlik..." alanı) */
-.sidebar-content a[aria-current="page"] {
-  background-color: #7e7d7d !important; /* Mevcut yeşil arka planı değiştirmek için */
-  color: #000000 !important;        
-  padding: 5px;
-  padding-left: 30px;
-  font-weight: 600;                      /* Yazıyı kalınlaştırmak istersen */
-  border-radius: 6px;                    /* Köşe yumuşatma derecesi */
+/* Gruptaki ok işareti */
+.sidebar-content details summary .caret {
+  stroke: var(--sl-menu-group);
 }
 
-/* 4. Aktif olmayan ama üzerine gelinen (Hover) menü linkleri */
+/* 3) Normal menü linkleri */
+.sidebar-content a:not([aria-current="page"]) {
+  color: var(--sl-menu-text) !important;
+  border-radius: 0.5rem;
+  padding-top: 0.35rem !important;
+  padding-bottom: 0.35rem !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* 4) Hover */
 .sidebar-content a:not([aria-current="page"]):hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #00b7ff !important;
+  background-color: var(--sl-menu-hover-bg) !important;
+  color: var(--sl-menu-hover) !important;
 }
 
+/* 5) Aktif sayfa */
+.sidebar-content a[aria-current="page"] {
+  background: linear-gradient(90deg, var(--sl-menu-accent-soft), rgba(245, 158, 11, 0.04)) !important;
+  color: #fff7ed !important;
+  font-weight: 600;
+  border-radius: 0.6rem;
+  border-left: 3px solid var(--sl-menu-accent);
+  margin-left: 0 !important;
+  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.25);
+}
+
+/* 6) Klavye odağı */
+.sidebar-content a:focus-visible,
+.sidebar-content summary:focus-visible {
+  outline: 2px solid var(--sl-menu-accent);
+  outline-offset: 2px;
+}
+
+/* 7) Grup içi liste hizası */
+.sidebar-content details ul {
+  padding-left: 0.4rem !important;
+  border-left: 1px solid var(--sl-menu-border);
+  margin-left: 0.75rem;
+}
+
+
+/* Starlight'ın açık tema accent'i (mavi) custom.css'i eziyordu; sona alınır. */
+:root[data-theme='light'],
+:root:not([data-theme='dark']) {
+--sl-color-accent-low: #fdf0d5;
+--sl-color-accent: #b45309;
+--sl-color-accent-high: #8a3f06;
+}
+
+/* =========================================================
+   SOL MENÜ — AÇILIR / KAPANIR (COLLAPSE)
+   Header'daki düğme <html data-sidebar-collapsed> özniteliğini
+   değiştirir; aşağıdaki kurallar yerleşimi buna göre düzenler.
+   Sadece masaüstünde (≥50em) uygulanır; mobilde Starlight'ın
+   kendi popover menüsü devrede kalır.
+   ========================================================= */
+
+@media (min-width: 50rem) {
+/* Menü gizliyken içerik sola kaymasın, genişliği tüm ekrana açılsın. */
+:root[data-sidebar-collapsed] {
+--sl-sidebar-width: 0px;
+--sl-content-inline-start: 0px;
+}
+
+:root[data-sidebar-collapsed] .sidebar-pane {
+display: none !important;
+}
+
+/* Menü kapanınca içerik alanı ortalanmış görünsün. */
+:root[data-sidebar-collapsed] .main-frame {
+padding-inline-start: 0 !important;
+}
+}
