@@ -3,7 +3,12 @@ title: 'İletkenlik ve Yarı İletkenler'
 description: İletken, yalıtkan ve yarı iletken malzemelerin temel çalışma mantığı.
 sidebar:
   order: 2
+  
 ---
+import { Image } from 'astro:assets';
+import i1 from '/src/assets/mosfet_ile_led_yakma.png';
+import i2 from '/src/assets/mosfet_ile_mantiksal_devre_1.32v_alti.png';
+import i3 from '/src/assets/mosfet_ile_mantiksal_devre_1.32v_ustu.png';
 
 # Elektron Nedir?
 
@@ -18,33 +23,36 @@ Metaller gibi iletken malzemelerde en dış yörüngedeki değerlik elektronlar�
 Elektrik enerjisini kayıp olmadan bir noktadan başka bir noktaya hızlıca aktarmamızı sağlar. Enerjiyi har vurup harman savuran Tesla bobininin tam zıttıdır :)
 Elektrik şebekeleri, ev içi elektrik tesisatları, kablolar, elektrik motorlarının sargıları ve devre kartlarındaki iletken yollar buna örnektir.
 
-##### Bu kadar iyi ve kayıpsız ise neden teknolojik cihazlarda kullanmayalımki?
-Evet muazzam güçlü, uçuyor kaçıyor amaa **kontrol edemediğin güç güç değildir.** İletkenler elektriği sürekli ve durdurulamaz şekilde geçirdikleri için odadaki lambaya bağlı olan anahtarı kapattığınız anda siz hissetmesniz bile aslında elektriği hemen kesemez. İletken maddeler elektriğe karşı çok düşük direnç gösterdikleri için üzerlerinden geçen elektronlara sürekli izin verirler. Bilgisayarların çalışması için elektriğin sadece taşınması yeterli değildir akımın istendiği an hassasiyetle kesilip açılabildiği bir anahtarlama mekanizmasına ihtiyaç duyulur. Ve teknoloji çağının en çok bilinen elektronik parçası Transistörlerin atası olan Vakumlu Triyot burada sahneye çıkar.
+##### Bu kadar iyi ve kayıpsız ise neden teknolojik cihazlarda kullanmayalım ki?
+Evet muazzam güçlü, uçuyor kaçıyor amaa **kontrol edemediğin güç güç değildir.** İletkenler elektriği sürekli ve durdurulamaz şekilde geçirdikleri için odadaki lambaya bağlı olan anahtarı kapattığınız anda siz hissetmeseniz bile aslında elektriği hemen kesemez. İletken maddeler elektriğe karşı çok düşük direnç gösterdikleri için üzerlerinden geçen elektronlara sürekli izin verirler. Bilgisayarların çalışması için elektriğin sadece taşınması yeterli değildir akımın istendiği an hassasiyetle kesilip açılabildiği bir anahtarlama mekanizmasına ihtiyaç duyulur. Ve teknoloji çağının en çok bilinen elektronik parçası Transistörlerin atası olan Vakumlu Triyot burada sahneye çıkar.
 
-**Transistörleri anlayabilmemiz için yalıtkanlığıda anlayabilmemiz gerek.**
+**Transistörleri anlayabilmemiz için yalıtkanlığı da anlayabilmemiz gerek.**
 Yalıtkanlar elektrik akımına karşı çok yüksek direnç gösteren ve akımı iletmeyen maddelerdir. Yalıtkan maddelerin elektronları atomlarına son derece sıkı bağlı olduğu için serbest hareket edemezler. Elektrik kablolarının dış kaplamalarında kullanılarak canlıların elektrik akımına kapılmasını ve hatlar arasında kısa devre oluşmasını engeller. Kondansatörlerin (elektrik enerjisini kısa süreliğine depolayan bileşen) iletken plakaları arasında yalıtkan malzeme kullanılarak elektrik alanının depolanması sağlanır.
 
 **İletkenliği ve yalıtkanlığı anladığımıza göre yarı iletkenliği öğrenebiliriz.**
-Yarı iletkenler iletkenlik bakımından, iletkenler ile yalıtkanlar arasında yer alan maddelerdir. Saf ve normal hallerinde yalıtkan davranırlar ama ısı, ışık, gerilim uygulandığında veya içlerine özel katıklama işlemleri gerçekleştirildiğinde iletkenlik özelliği kazananan malzemelerdir. 
+Yarı iletkenler iletkenlik bakımından, iletkenler ile yalıtkanlar arasında yer alan maddelerdir. Saf ve normal hallerinde yalıtkan davranırlar ama ısı, ışık, gerilim uygulandığında veya içlerine özel katkılama işlemleri gerçekleştirildiğinde iletkenlik özelliği kazanan malzemelerdir. 
 
 **Transistörlerin atası olan Vakumlu Triyot nedir?**
-Önce elektrik sinyallerini **yükseltmek (güçlendirmek)** ve **anahtarlamak (açıp kapatmak)** amacıyla kullanılan üç elektrotlu ilk elektronik devre elemanlarından biriydi. Ve Elektrik akışını istenildiğinde hızlıca açıp kapatarak erken dönem dijital bilgisayarlarda (örneğin ENIAC) mantıksal devrelerin ve hafıza hücrelerinin kurulmasını sağladı. İleriki yıllarda transistörlerin çıkmasıyla yerini tamamen transistörlere bırakıcak.
+Önce elektrik sinyallerini **yükseltmek (güçlendirmek)** ve **anahtarlamak (açıp kapatmak)** amacıyla kullanılan üç elektrotlu ilk elektronik devre elemanlarından biriydi. Ve Elektrik akışını istenildiğinde hızlıca açıp kapatarak erken dönem dijital bilgisayarlarda (örneğin ENIAC) mantıksal devrelerin ve hafıza hücrelerinin kurulmasını sağladı. İleriki yıllarda transistörlerin çıkmasıyla yerini tamamen transistörlere bırakacak.
 
 **Ama neden yerini Transistörlere bırakıcak ki?**
-Bunu anlayabilmek için nasıl çalıştığına bakalım. Triyot, havası boşaltılmış cam bir kap kapalı tutulan 3 temel bileşenden oluşur: Katot (Isıtıldığında elektron yayan uç), Anot (Katottan yayılan elektronların toplandığı pozitif yüklü uç) ve Kontrol Izgarası (Grid: Katot ile anot arasına yerleştirilen bir tel ızgara.) Bu ızgaraya uygulanan çok küçük bir gerilim değişimi, katottan anota akan elektron miktarını bir musluk gibi hassas bir şekilde kontrol ederdi. Bu devre elemanının çok büyük bir dezavantajı vardı. Entropinin en sevdiği şey olan ısı bu elemanın peşini bırakmıyordu. Entropi, bir sistemdeki düzensizliğin ve rastgeleliğin bir ölçüsüdür. Enerji türleri arasında molekülleri en çok kaosa sürükleyen, onları en düzensiz şekilde hareket ettiren enerji türü ise ısıdır. Bu devre elemanının ısınması br yan etki değildir direkt çalışmak için ısınmak zorundadır. Isı probleminden dolayı verimi yerlerde gezdiği için de zamanla entropiye kurban oldu ve yerini çok daha küçük, çok zor ısınan, çok daha düşük gerilim (voltajla) çalışan, cam yapıda oldukları için kırılmayan, çok uzun ömürlü olan ve kapitalizmin en sevdiği üretimi ucuz olan yarıiletken silisyumdan (bilinen ismi silikon) yapılan **Transistör'e** yerini bıraktı. Teknoloji dünyasında **Moore Yasası** olarak bilinen ve onlarca yıl boyunca "her iki yılda bir çip üzerindeki transistör sayısının ikiye katlanacağını" söyleyen kural, aslında teknik bir doğa kanunu değil, kapitalist radikal bir iş modeliydi. Transistör'ün ham maddesi doğada su kadar çok olduğu için Moore Yasası bunun üzerine inşaa edildi ve şuan Moore Yasasının sonuna geldik. **Hikayenin devamı için transistörleri öğrenmemiz lazım.**
+Bunu anlayabilmek için nasıl çalıştığına bakalım. Triyot, havası boşaltılmış cam bir kap içinde kapalı tutulan 3 temel bileşenden oluşur: Katot (Isıtıldığında elektron yayan uç), Anot (Katottan yayılan elektronların toplandığı pozitif yüklü uç) ve Kontrol Izgarası (Grid: Katot ile anot arasına yerleştirilen bir tel ızgara.) Bu ızgaraya uygulanan çok küçük bir gerilim değişimi, katottan anota akan elektron miktarını bir musluk gibi hassas bir şekilde kontrol ederdi. Bu devre elemanının çok büyük bir dezavantajı vardı. Entropinin en sevdiği şey olan ısı bu elemanın peşini bırakmıyordu. Entropi, bir sistemdeki düzensizliğin ve rastgeleliğin bir ölçüsüdür. Enerji türleri arasında molekülleri en çok kaosa sürükleyen, onları en düzensiz şekilde hareket ettiren enerji türü ise ısıdır. Bu devre elemanının ısınması bir yan etki değildir direkt çalışmak için ısınmak zorundadır. Isı probleminden dolayı verimi yerlerde gezdiği için de zamanla entropiye kurban oldu ve yerini çok daha küçük, çok zor ısınan, çok daha düşük gerilim (voltajla) çalışan, cam yapıda oldukları için kırılmayan, çok uzun ömürlü olan ve kapitalizmin en sevdiği üretimi ucuz olan yarı iletken silisyumdan (bilinen ismi silikon) yapılan **Transistör'e** yerini bıraktı. Teknoloji dünyasında **Moore Yasası** olarak bilinen ve onlarca yıl boyunca "her iki yılda bir çip üzerindeki transistör sayısının ikiye katlanacağını" söyleyen kural, aslında teknik bir doğa kanunu değil, kapitalist radikal bir iş modeliydi. Transistör'ün ham maddesi doğada su kadar çok olduğu için Moore Yasası bunun üzerine inşaa edildi ve şuan Moore Yasasının sonuna geldik. **Hikayenin devamı için transistörleri öğrenmemiz lazım.**
 
 Evinizdeki ışık anahtarına parmağınızla basarsınız ve elektrik geçer. Transistörde ise parmağınızın yerini küçük bir elektrik sinyali alır. Bir transistöre küçük bir elektrik akımı verdiğinizde, iç direncini değiştirip devasa bir elektrik akımının geçişini kontrol edebilir (açabilir veya kapatabilirsiniz).
-İşte bu "Açık" (Elektrik var = 1) ve "Kapalı" (Elektrik yok = 0) kısaca ya hep ya hiç mantığı bilgisayarların kullandığı dijital dünyanın (binary sistemin) temelini oluşturur. Telefonunuzdaki işlemcinin içinde bu anahtarlardan milyarlarca vardır ve saniyede milyarlarca kez açılıp kapanarak kodları çalıştırırlar. Modern teknolojilerimizde kullandığımız MOSFET teknolojisine bakarsak. Elektrik akımı Source (Kaynak) ucundan sisteme girer. Drain (Gider) ucu elektrik akımının transistörden çıkıp gittiği yerdir. Gate (Kapı) Akışı kontrol eden anahtar mekanizmasıdır. Anahtar mekanizması tetiklendiğinde milyonlarca ohm iç direnç ve 0.01 ohm gibi çok küçük ohm değerleri arasında elektrik çıkışını cerrah hassasiyetiyle kontrol eder. 
+İşte bu **"Açık" (Elektrik var = 1)** ve **"Kapalı" (Elektrik yok = 0)** kısaca ya hep ya hiç mantığı bilgisayarların kullandığı dijital dünyanın (binary sistemin) temelini oluşturur. Telefonunuzdaki işlemcinin içinde bu anahtarlardan milyarlarca vardır ve saniyede milyarlarca kez açılıp kapanarak kodları çalıştırırlar. Modern teknolojilerimizde kullandığımız **MOSFET** teknolojisine bakarsak. Elektrik akımı Source (Kaynak) ucundan sisteme girer. Drain (Gider) ucu elektrik akımının transistörden çıkıp gittiği yerdir. Gate (Kapı) Akışı kontrol eden anahtar mekanizmasıdır. Anahtar mekanizması tetiklendiğinde **milyonlarca ohm** iç direnç ve **0.01 ohm** gibi çok küçük ohm değerleri arasında elektrik çıkışını cerrah hassasiyetiyle kontrol eder. 
 
 **İstediği kadar kapanıp açılsın kontrol etsin voltajı ne işe yarar?**
 
-Tek bir transistör sadece bir ışığı açıp kapatabilir evet. Ancak milyarlarca transistörü birbirine bağladığınızda, bu açılıp kapanmalar 1'ler 0'lar matematiksel işlemlere, mantıksal kararlara ve en nihayetinde şu an ekranda gördüğünüz GitHub Pages sayfasında çalışan statik HTML CSS kodlarına, oyunlara ve yapay zekaya dönüşür.
+Tek bir transistör sadece bir ışığı açıp kapatabilir evet. Ancak milyarlarca transistörü birbirine bağladığınızda, bu açılıp kapanmalar **1'ler 0'lar** matematiksel işlemlere, mantıksal kararlara ve en nihayetinde şu an ekranda gördüğünüz **GitHub Pages sayfasında çalışan statik HTML CSS kodlarına, oyunlara ve yapay zekaya dönüşür.**
 Süreç adım adım şu şekilde işler:
 
-1. Sayıları ve Harfleri Temsil Eder (İkili Sistem)
-Biz dünyayı harfler ve 10'luk sayılarla (0-9) algılarız. Bilgisayar ise sadece elektriğin varlığını (1) ve yokluğunu (0) bilir. Transistörlerin voltajı kesip vermesi, harfleri ve sayıları kodlamayı sağlar. Örneğin, transistörleri yan yana dizip voltajlarını ayarladığınızda "01000001" dizilimi bilgisayar için "A" harf "01000010" dizilimi "B" harfini temsil eder.
+`1. Sayıları ve Harfleri Temsil Eder (İkili Sistem)`
+
+Biz dünyayı harfler ve 10'luk sayılarla (0-9) algılarız. **Bilgisayar ise sadece elektriğin varlığını (1) ve yokluğunu (0) bilir.** Transistörlerin voltajı kesip vermesi, harfleri ve sayıları kodlamayı sağlar. Örneğin, transistörleri yan yana dizip voltajlarını ayarladığınızda **"01000001" dizilimi bilgisayar için "A" harf "01000010" dizilimi "B" harfini temsil eder.**
 Telefonunuza bir mesaj geldiğinde, aslında arka arkaya dizilmiş milyonlarca transistörün voltajı açıp kapatarak oluşturduğu 1 ve 0 kodları ekranınıza akar.
-2. Mantık Kapıları Oluşturur (Karar Verme Mekanizması)
+
+`2. Mantık Kapıları Oluşturur (Karar Verme Mekanizması)`
+
 Transistörleri birbirine özel şekillerde bağlayarak "Mantık Kapıları" (Logic Gates) elde ederiz. Bilgisayarın karar vermesini sağlayan şey budur.
 Küçük bir örnek verelim; arabanızdaki "Emniyet kemeri takılı değilse ve araba hareket ediyorsa uyarı ver" sistemini düşünün. Mühendisler buraya iki transistörü arka arkaya bağlar
 > Transistör A (Kemer): Kemer takılı değilse akım geçirir (1).
@@ -53,29 +61,61 @@ Küçük bir örnek verelim; arabanızdaki "Emniyet kemeri takılı değilse ve 
 >
 > Sonuç: İki transistör de aynı anda açıldığında (1 ve 1 olduğunda) elektrik en uçtaki alarm hoparlörüne ulaşır ve araba ötmeye başlar.
 
-3. Piksel Kontrolü (Görüntü Üretme)
+`3. Piksel Kontrolü (Görüntü Üretme)`
+
 Şu an okuduğunuz bu ekran milyonlarca küçük renkli noktadan (piksel) oluşur. Her bir pikselin arkasında, oraya gidecek voltajı ayarlayan transistörler vardır. Transistör voltajı açtığında o piksel parlar, kapattığında söner. Milyarlarca transistör saniyede milyonlarca kez voltajı değiştirerek ekrandaki renkleri ve dolayısıyla bu yazıyı veya izlediğiniz bir videoyu oluşturur.
 Bugün dünyayı kasıp kavuran gelişmiş yapay zeka modelleride temelde bu voltaj kontrolünden ibarettir. Yapay zeka, milyarlarca veriyi işlerken aslında devasa bir matematiksel hesaplamalar çarpma ve toplama işlemi yapar.
 İşlemcinin içindeki transistörler, mikroskobik düzeyde voltajları birbirleriyle çarpar ve toplar. Saniyede trilyonlarca kez yapılan bu voltaj açıp-kapama işlemi, en sonunda karşınıza insan gibi konuşan bir yapay zeka veya gerçeğe yakın grafiklere sahip bir bilgisayar oyunu olarak çıkar.
 
-Yani her zaman nitelik nicelikten önde gelmiyormuş :D
+Yani her zaman nitelik nicelikten önde gelmiyormuş.
 Konu para kazanmak ise kapitalizm en "aptal" maddeden bile bir deha çıkarabilir.
 
 Transistörler, fiziksel yapılarına, çalışma ilkelerine ve akımı kontrol etme yöntemlerine göre ana gruplara ve alt çeşitlere ayrılır:
 
 ##### `A) Bipolar Bağlantı Transistörleri (BJT - Bipolar Junction Transistor)` 
 > Akım kontrolü elemanıdır. Beys (veya Taban) ucundan akan küçük bir akım ile Kollektör ve Emiter uçları arasındaki daha büyük bir akımı denetler. İletimde hem elektronlar hem de oyuklar (bir elektronun terk ettiği yerdeki boşluk) eşzamanlı rol oynar.
-Yarıiletken katman dizilimine göre NPN ve PNP olarak ikiye ayrılır. Ses yükselteçleri (amfiler), sinyal işleme ve genel amaçlı kontrol devrelerinde kullanılır.
+yarı iletken katman dizilimine göre NPN ve PNP olarak ikiye ayrılır. Ses yükselteçleri (amfiler), sinyal işleme ve genel amaçlı kontrol devrelerinde kullanılır.
 
 ##### `B) Alan Etkili Transistörler (FET - Field Effect Transistor)`
 > Gerilim (voltaj) kontrollü elemanlardır. Kapı (Gate) ucuna uygulanan gerilimin oluşturduğu elektrik alanı ile iletken kanal kontrol edilir. Kapı ucu izole olduğu için kararlı durumda neredeyse hiç akım çekmez ve giriş empedansı (zorluğu) son derece yüksektir.
 >
 > ##### `JFET (Junction Field Effect Transistor):`
-> Girişe ters voltaj verir arada elektronların geçebileceği yolu tıkayarak o bölgedeki tüm serbest elektron ve oyukları süpürerek yalıtkan bir duvar oluşturup bu duvarla elektrik yolunu tıkmadan akımı kontrol eder.
+> Girişe ters voltaj verir arada elektronların geçebileceği yolu tıkayarak o bölgedeki tüm serbest elektron ve oyukları süpürerek yalıtkan bir duvar oluşturup bu duvarla elektrik yolunu tıkayarak akımı kontrol eder.
 >
-> ##### `MOSFET (Metal-Oksit-Yarıiletken FET):`
+> ##### `MOSFET (Metal-Oksit-Yarı İletken FET):`
 > Kapı elektrodu kanaldan ince bir yalıtkan oksit katmanı (Silisyum Dioksit) ile tamamen ayrılmıştır. Taşıyıcı tipine göre `NMOS (elektron)` ve `PMOS (oyuk)` kanal durumuna göre `Arttıran (Enhancement)` ve `Azaltan (Depletion)` modlu olarak sınıflandırılır.
 >
 >
 > ##### `IGBT (Yalıtılmış Kapılı Bipolar Transistör):`
-> MOSFET'in kolay voltaj iletimi ile BJT'nin yüksek akım/gerilim taşıma kapasitesini birleştiren hibrit bir güç yarıiletkenidir.
+> MOSFET'in kolay voltaj iletimi ile BJT'nin yüksek akım/gerilim taşıma kapasitesini birleştiren hibrit bir güç yarı iletkenidir.
+
+
+
+En çok kullanılan MOSFET'in Örnek kullanımları:
+
+-----
+
+<Image 
+  src={i1} 
+  alt="MOSFET ile led yakma" 
+  quality="mid"
+/>
+
+Bu devre, pilin artı ucundan MOSFET transistörün Gate (G) bacağına gelen gerilimle tetiklenen NMOS transistörün akım iletmesi sayesinde LED'in sürekli yanmasını sağlayan elektronik bir anahtarlama devresidir.
+
+-----
+ 
+Burada ise bir mantıksal devre örneği bulunuyor 1.32V altı gerilimde led yanmıyor. 1.32V veya üstü gerilimde led yanıyor. Ya hep ya hiç mantığı aradaki 0,01 volt anahtarlama mekanizması sayesinde çalışır.
+
+<Image 
+  src={i2} 
+  alt="MOSFET ile mantıksal devre 1.32v altı gerilim" 
+  quality="mid"
+/>
+
+<Image 
+  src={i3} 
+  alt="MOSFET ile mantıksal devre 1.32v üstü gerilim" 
+  quality="mid"
+/>
+
