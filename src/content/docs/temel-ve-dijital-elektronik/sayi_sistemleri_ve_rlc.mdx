@@ -1,0 +1,51 @@
+---
+title: 'İkili ve Çoklu Sistemler - RLC Devreleri'
+description: RLC devre elemanları nedir, nerede kullanılır.
+sidebar:
+  order: 3
+  
+
+---
+import NumberSystemConverter from '../../../components/NumberSystemConverter.astro';
+
+
+
+## Neden İkili Sistem?
+
+Bilgisayarların elektrik var ve yok mantığı ile çalıştığını öğrenmiştik. Ama neden 1 ve 0 kullanıyoruz ve bu endüstri standartı oldu? 10'luk sayı sistemini neden kullanmıyoruz. Onluk sayı sistemi aslında teorik bir formülden değil direkt 10 parmağımızın olmasından geliyor. İnsanlar en eski çağlardan beri saymak için parmaklarını kullanmıştır. MÖ 3000'lerde Onluk sistemin ilk izleri ve temel kullanımı Antik Mısır hiyerogliflerinde ve sümerlerde görülmeye başlandı.
+
+Biz insanlar 10'luk sayı sistemiyle algılarız. Ama makinelerin işlem yapma mantığı çok farklıdır. Onlar karmaşık harfleri veya sayıları bizim gibi değil, farklı taban matematiksel hesapları ile işlerler.
+Örneğin, 8'lik (Oktal) tabandaki bir veriyi 16'lık (Heksadesimal) tabana dönüştürmeleri gerekebilir; 
+
+
+### Sayı Dönüşüm Aracı
+
+Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değeri diğer sistemlere çevirebilir, ASCII ve HEX byte rotasyonunu da görebilirsiniz.
+
+<NumberSystemConverter value="255" fromBase={10} />
+
+
+#### Peki Bu Makinelere Hayat Veren Şey Nedir?
+
+Bu devasa mantık kapılarının ve sistemlerin çalışabilmesi için enerjiye ihtiyacı vardır. İşte burada devreye kaynaklarımız girer.
+Elektronları bir borudaki su gibi düşünürseniz, onları ileri doğru iten güce gerilim (voltaj) deriz. Devrelerimizde hem sabit bir itme gücü sağlayan Doğru Akım (DC) gerilim kaynaklarını hem de dalgalı bir itme gücü sağlayan Alternatif Akım (AC) kaynaklarını kullanırız. Bir de doğrudan akımın (suyun) miktarını belirleyen Akım Kaynakları vardır. Mesela çatınızdaki bir Güneş Paneli enerjiyi depolamaktan ziyade tam olarak böyle bir akım kaynağı gibi davranır.  
+
+#### Ya Bu Güç Çok Büyükse?
+
+Akım Transformatörleri eğer güneş panelinizden, jeneratörden veya ana şebekeden gelen akım çok büyükse, bunu standart bir cihazla ölçmeye kalkmak o cihazı saniyeler içinde kül eder. Büyük akımları güvenle ölçmek ve kontrol etmek için Akım Transformatörü adı verilen bileşenleri kullanırız.
+
+Ancak burada şakası olmayan altın bir kural vardır: Akım transformatörlerinin primer (birinci) ve sekonder (ikinci) sargı uçları asla açılmaz (boşta bırakılmaz). Eğer açarsanız, o devasa enerji gidecek yer bulamaz ve sistemi havaya uçuracak kadar tehlikeli yüksek gerilimler üretir.  
+
+#### Elektroniğin Kutsal Üçlüsü: R, L ve C 
+
+**Enerjiyi ürettik, transistörlere veya makinelere göndereceğiz. Peki yolda bu enerjiyi nasıl şekillendireceğiz?** Karşımıza üç temel pasif devre elemanı çıkar: **`Direnç R (Resistor)`**,**` Bobin/İndüktör L (Lens' Law)`** ve **`Kapasite/Kapasitör C (Capacitor)`**.
+
+**Tüm bu elemanların çalışma kurallarını belirleyen evrensel yasa ise **Ohm Kanunu'dur**: Bir devredeki gerilimin akıma bölümü her zaman sabittir .**
+
+##### Peki bu üçlü ne işe yarar?  
+
+**`Direnç (R):`** Senin de bahsettiğin gibi, elektronların önüne set çeker ve akımı sınırlar.
+
+**`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur.   Bobin Etkisi ve Gerilim İndüklenmesi Nedir?Bobin, üzerinden geçen akım değiştiğinde buna tepki gösteren inatçı bir elemandır. Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir "gerilim indükleyerek" (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır.   Devrelerin Evrensel Dengesi: Kirchhoff'un Gerilimler KanunuNasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
+Yani kaynağın ürettiği gerilim ($V_i$), direncin harcadığı gerilim ($-V_R$) ile toplandığında sonuç koca bir sıfır olmalıdır ($V_i + (-V_R) = 0$). Ne kadar enerji sağlarsan, o kadarını harcarsın. Evren borçlu kalmayı sevmez.   Güvenlik ve Sınırlar: Optik İzolasyon ve Manyetik KuplajTüm bu işlemleri yaparken, devasa akımların geçtiği tehlikeli güç katı ile transistörlerin saniyede milyarlarca işlem yaptığı hassas beyin katını (işlemcileri) birbirinden ayırmak zorundasınızdır. İşte burada "Optik İzolasyon" ve "Manyetik Kuplaj" sahneye çıkar.
+İki devre arasına fiziksel bir kablo çekmek yerine, sinyalleri ışıkla (optik) veya manyetik alanla aktararak onları elektriksel olarak tamamen yalıtırsınız. Böylece bir tarafta yıldırım bile düşse, diğer taraftaki hassas transistörler bu kaostan habersiz bir şekilde senin ekranda gördüğün bu metni işlemeye devam edebilir.

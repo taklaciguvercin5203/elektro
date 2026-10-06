@@ -1,0 +1,421 @@
+---
+/**
+ * Sayı sistemi dönüşümünü interaktif olarak gösteren bileşen.
+ * Kullanım:
+ *   <NumberSystemConverter value="255" fromBase={10} />
+ *   <NumberSystemConverter value="A5" fromBase={16} />
+ *   <NumberSystemConverter value="1010" fromBase={2} />
+ */
+
+import * as ns from '../js/number-systems.js';
+
+interface Props {
+  /** Dönüştürülecek değer (sayı veya taban dizesi). */
+  value: string | number;
+  /** Girdi değerinin tabanı (2=ikili, 8=sekizli, 10=onluk, 16=HEX). */
+  fromBase?: number;
+  /** Girdi alanının etiketi. */
+  inputLabel?: string;
+  /** Girdi alanının placeholder'i. */
+  inputPlaceholder?: string;
+  /** Girdi değerinin varsayılan durumu (hata/boş durumunda önizleme). */
+  preview?: boolean;
+}
+
+const {
+  value,
+  fromBase = ns.BASES.DECIMAL,
+  inputLabel = 'Değer girin',
+  inputPlaceholder = 'Sayı girin...',
+  preview = false,
+} = Astro.props;
+
+// Girdi değeri ve tabanı güvenli hale getiriyoruz.
+let inputValue: string = String(value ?? '').trim();
+let inputBase: number = Number(fromBase);
+let error: string | null = null;
+
+let decimalValue: number | null = null;
+let results = { binary: '—', octal: '—', decimal: '—', hex: '—' };
+let asciiInfo = '—';
+let hexByteInfo = '—';
+
+try {
+  if (inputValue === '') {
+    throw new Error('Değer boş olamaz.');
+  }
+  if (!Number.isInteger(inputBase) || inputBase < 2 || inputBase > 36) {
+    throw new Error('Taban 2 ile 36 arasında olmalıdır.');
+  }
+  ns.normalizeBaseN(inputValue, inputBase, 'girdi');
+  decimalValue = ns.baseToDecimal(inputValue, inputBase);
+  results = {
+    binary: ns.decimalToBinary(decimalValue),
+    octal: ns.decimalToOctal(decimalValue),
+    decimal: String(decimalValue),
+    hex: ns.decimalToHex(decimalValue),
+  };
+  // ASCII: sayısal karşılığın karakteri (0-65535 aralığında anlamlı).
+  try {
+    asciiInfo = ns.asciiCodeToChar(decimalValue);
+  } catch {
+    asciiInfo = '—';
+  }
+  // HEX byte: sayısal karşılığın en az 2 haneli HEX gösterimi.
+  try {
+    hexByteInfo = ns.formatHex(decimalValue, Math.max(2, ns.decimalToHex(decimalValue).length));
+  } catch {
+    hexByteInfo = '—';
+  }
+} catch (e) {
+  error = e instanceof Error ? e.message : String(e);
+  decimalValue = null;
+}
+
+function labelForBase(base: number): string {
+  switch (base) {
+    case ns.BASES.BINARY: return 'İkili';
+    case ns.BASES.OCTAL: return 'Sekizli';
+    case ns.BASES.DECIMAL: return 'Onluk';
+    case ns.BASES.HEX: return 'HEX';
+    default: return `${base} tabanı`;
+  }
+}
+
+const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES.HEX];
+---
+
+<div
+  class={`number-system-converter${error ? ' is-error' : ''}${preview ? ' is-preview' : ''}`}
+  data-number-system-converter
+>
+  <div class="number-system-converter__header">
+    <span class="number-system-converter__title">Sayı Dönüştürme Aracı</span>
+    <span class="number-system-converter__sub" data-nsc-sub>
+      {error ? 'Giriş kontrol edin' : 'Değeri seçilen tabandan diğer tabanlara çevir'}
+    </span>
+  </div>
+
+  <div class="number-system-converter__body">
+    <label class="number-system-converter__label">
+      {inputLabel}
+      {error ? (
+        <span class="number-system-converter__error-marker" aria-hidden="true">⚠</span>
+      ) : null}
+    </label>
+
+    <div class="number-system-converter__input-row">
+      <input
+        class={`number-system-converter__input${error ? ' is-error' : ''}`}
+        type="text"
+        value={inputValue}
+        placeholder={inputPlaceholder}
+        data-nsc-input
+        data-testid="nsc-input"
+      />
+
+      <div class="number-system-converter__base-row">
+        {baseOptions.map((base) => (
+          <label class={`number-system-converter__base-option${inputBase === base ? ' is-active' : ''}`}>
+            <input
+              type="radio"
+              name="nsc-base"
+              value={base}
+              checked={inputBase === base}
+              data-nsc-base={base}
+            />
+            <span>{labelForBase(base)}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <p class="number-system-converter__error" role="alert" data-nsc-error hidden={!error}>
+      {error ?? ''}
+    </p>
+
+    <div class="number-system-converter__results" data-nsc-results hidden={!!error}>
+      <div class="number-system-converter__row">
+        <span class="number-system-converter__label">İkili</span>
+        <span class="number-system-converter__value" data-nsc-out-binary>{results.binary}</span>
+      </div>
+      <div class="number-system-converter__row">
+        <span class="number-system-converter__label">Sekizli</span>
+        <span class="number-system-converter__value" data-nsc-out-octal>{results.octal}</span>
+      </div>
+      <div class="number-system-converter__row number-system-converter__row--highlight">
+        <span class="number-system-converter__label">Onluk</span>
+        <span class="number-system-converter__value" data-nsc-out-decimal>{results.decimal}</span>
+      </div>
+      <div class="number-system-converter__row">
+        <span class="number-system-converter__label">Onaltılık</span>
+        <span class="number-system-converter__value" data-nsc-out-hex>{results.hex}</span>
+      </div>
+      <div class="number-system-converter__row number-system-converter__row--ascii">
+        <span class="number-system-converter__label">ASCII</span>
+        <span class="number-system-converter__value" data-nsc-out-ascii>{asciiInfo}</span>
+      </div>
+      <div class="number-system-converter__row number-system-converter__row--hexbytes">
+        <span class="number-system-converter__label">HEX byte</span>
+        <span class="number-system-converter__value" data-nsc-out-hexbyte>{hexByteInfo}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .number-system-converter {
+    --nsc-bg: var(--sl-color-white);
+<script>
+  import { BASES, normalizeBaseN, baseToDecimal, decimalToBinary, decimalToOctal, decimalToHex, asciiCodeToChar, formatHex } from '../js/number-systems.js';
+  function initConverter(root) {
+    const input = root.querySelector('[data-nsc-input]');
+    const radios = Array.from(root.querySelectorAll('[data-nsc-base]'));
+    const errEl = root.querySelector('[data-nsc-error]');
+    const resEl = root.querySelector('[data-nsc-results]');
+    const subEl = root.querySelector('[data-nsc-sub]');
+    const out = {
+      bin: root.querySelector('[data-nsc-out-binary]'),
+      oct: root.querySelector('[data-nsc-out-octal]'),
+      dec: root.querySelector('[data-nsc-out-decimal]'),
+      hex: root.querySelector('[data-nsc-out-hex]'),
+      asc: root.querySelector('[data-nsc-out-ascii]'),
+      hb: root.querySelector('[data-nsc-out-hexbyte]'),
+    };
+    if (!input) return;
+    function curBase() {
+      const c = radios.find((r) => r.checked);
+      const v = c ? Number(c.value) : BASES.DECIMAL;
+      return Number.isInteger(v) ? v : BASES.DECIMAL;
+    }
+    function render() {
+      const raw = String(input.value ?? '').trim();
+      const base = curBase();
+      root.querySelectorAll('.number-system-converter__base-option').forEach((lb) => {
+        const rd = lb.querySelector('input[type="radio"]');
+        lb.classList.toggle('is-active', !!(rd && rd.checked));
+      });
+      try {
+        if (raw === '') throw new Error('Değer boş olamaz.');
+        normalizeBaseN(raw, base, 'girdi');
+        const dec = baseToDecimal(raw, base);
+        out.bin.textContent = decimalToBinary(dec);
+        out.oct.textContent = decimalToOctal(dec);
+        out.dec.textContent = String(dec);
+        out.hex.textContent = decimalToHex(dec);
+        try { out.asc.textContent = asciiCodeToChar(dec); } catch { out.asc.textContent = '—'; }
+        try { out.hb.textContent = formatHex(dec, Math.max(2, decimalToHex(dec).length)); } catch { out.hb.textContent = '—'; }
+        if (errEl) { errEl.textContent = ''; errEl.hidden = true; }
+        if (resEl) resEl.hidden = false;
+        if (subEl) subEl.textContent = 'Değeri seçilen tabandan diğer tabanlara çevir';
+        root.classList.remove('is-error');
+        input.classList.remove('is-error');
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
+        if (resEl) resEl.hidden = true;
+        if (subEl) subEl.textContent = 'Giriş kontrol edin';
+        root.classList.add('is-error');
+        input.classList.add('is-error');
+      }
+    }
+    input.addEventListener('input', render);
+    radios.forEach((r) => r.addEventListener('change', render));
+  }
+  document.querySelectorAll('[data-number-system-converter]').forEach(initConverter);
+</script>
+
+    --nsc-border: var(--sl-color-gray-200);
+    --nsc-border-strong: var(--sl-color-gray-300);
+    --nsc-ink: var(--sl-color-gray-900);
+    --nsc-ink-muted: var(--sl-color-gray-600);
+    --nsc-accent: var(--sl-color-accent);
+    --nsc-accent-soft: var(--sl-color-accent-low);
+    --nsc-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --nsc-radius: 0.75rem;
+    --nsc-focus: 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+
+    display: block;
+    background: var(--nsc-bg);
+    color: var(--nsc-ink);
+    border: 1px solid var(--nsc-border);
+    border-radius: var(--nsc-radius);
+    box-shadow: var(--nsc-shadow);
+    overflow: hidden;
+  }
+
+  .number-system-converter.is-error {
+    border-color: var(--sl-color-red-300);
+    box-shadow: 0 0 0 1px var(--sl-color-red-300), 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .number-system-converter__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.85rem 1rem;
+    background: var(--nsc-accent-soft);
+    border-bottom: 1px solid var(--nsc-border);
+  }
+
+  .number-system-converter__title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--nsc-ink);
+    letter-spacing: 0.01em;
+  }
+
+  .number-system-converter__sub {
+    font-size: 0.8rem;
+    color: var(--nsc-ink-muted);
+  }
+
+  .number-system-converter__body {
+    padding: 1rem;
+  }
+
+  .number-system-converter__label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--nsc-ink-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .number-system-converter__input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .number-system-converter__input {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    font-size: 1rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    border: 1px solid var(--nsc-border-strong);
+    border-radius: 0.5rem;
+    background: var(--sl-color-gray-50);
+    color: var(--nsc-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .number-system-converter__input:focus {
+    outline: none;
+    border-color: var(--nsc-accent);
+    box-shadow: var(--nsc-focus);
+  }
+
+  .number-system-converter__input.is-error {
+    border-color: var(--sl-color-red-300);
+  }
+
+  .number-system-converter__base-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .number-system-converter__base-option {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--nsc-border);
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--nsc-ink-muted);
+    transition: all 0.12s ease;
+  }
+
+  .number-system-converter__base-option input {
+    accent-color: var(--nsc-accent);
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .number-system-converter__base-option:hover {
+    border-color: var(--nsc-accent);
+    color: var(--nsc-ink);
+  }
+
+  .number-system-converter__base-option.is-active {
+    border-color: var(--nsc-accent);
+    background: var(--nsc-accent-soft);
+    color: var(--nsc-accent);
+  }
+
+  .number-system-converter__error {
+    margin: 0.4rem 0 0 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.82rem;
+    color: var(--sl-color-red-700);
+    background: color-mix(in srgb, var(--sl-color-red-100) 60%, transparent);
+    border-radius: 0.4rem;
+    border: 1px solid color-mix(in srgb, var(--sl-color-red-300) 30%, transparent);
+  }
+
+  .number-system-converter__results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .number-system-converter__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0.65rem;
+    border-radius: 0.4rem;
+    font-size: 0.92rem;
+  }
+
+  .number-system-converter__row + .number-system-converter__row {
+    border-top: 1px solid color-mix(in srgb, var(--sl-color-gray-200) 60%, transparent);
+  }
+
+  .number-system-converter__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--nsc-ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .number-system-converter__value {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--nsc-accent);
+    word-break: break-all;
+    white-space: nowrap;
+  }
+
+  .number-system-converter__row--highlight .number-system-converter__value {
+    color: var(--nsc-ink);
+    font-size: 1.05rem;
+  }
+
+  .number-system-converter__row--ascii .number-system-converter__value {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.95rem;
+    color: var(--sl-color-emerald-700);
+  }
+
+  .number-system-converter__row--hexbytes .number-system-converter__value {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.95rem;
+    color: var(--sl-color-blue-700);
+  }
+
+  .number-system-converter__error-marker {
+    margin-left: 0.35rem;
+    font-size: 0.9rem;
+  }
+</style>
