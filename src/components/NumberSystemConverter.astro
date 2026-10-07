@@ -166,64 +166,7 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
 <style>
   .number-system-converter {
     --nsc-bg: var(--sl-color-white);
-<script>
-  import { BASES, normalizeBaseN, baseToDecimal, decimalToBinary, decimalToOctal, decimalToHex, asciiCodeToChar, formatHex } from '../js/number-systems.js';
-  function initConverter(root) {
-    const input = root.querySelector('[data-nsc-input]');
-    const radios = Array.from(root.querySelectorAll('[data-nsc-base]'));
-    const errEl = root.querySelector('[data-nsc-error]');
-    const resEl = root.querySelector('[data-nsc-results]');
-    const subEl = root.querySelector('[data-nsc-sub]');
-    const out = {
-      bin: root.querySelector('[data-nsc-out-binary]'),
-      oct: root.querySelector('[data-nsc-out-octal]'),
-      dec: root.querySelector('[data-nsc-out-decimal]'),
-      hex: root.querySelector('[data-nsc-out-hex]'),
-      asc: root.querySelector('[data-nsc-out-ascii]'),
-      hb: root.querySelector('[data-nsc-out-hexbyte]'),
-    };
-    if (!input) return;
-    function curBase() {
-      const c = radios.find((r) => r.checked);
-      const v = c ? Number(c.value) : BASES.DECIMAL;
-      return Number.isInteger(v) ? v : BASES.DECIMAL;
-    }
-    function render() {
-      const raw = String(input.value ?? '').trim();
-      const base = curBase();
-      root.querySelectorAll('.number-system-converter__base-option').forEach((lb) => {
-        const rd = lb.querySelector('input[type="radio"]');
-        lb.classList.toggle('is-active', !!(rd && rd.checked));
-      });
-      try {
-        if (raw === '') throw new Error('Değer boş olamaz.');
-        normalizeBaseN(raw, base, 'girdi');
-        const dec = baseToDecimal(raw, base);
-        out.bin.textContent = decimalToBinary(dec);
-        out.oct.textContent = decimalToOctal(dec);
-        out.dec.textContent = String(dec);
-        out.hex.textContent = decimalToHex(dec);
-        try { out.asc.textContent = asciiCodeToChar(dec); } catch { out.asc.textContent = '—'; }
-        try { out.hb.textContent = formatHex(dec, Math.max(2, decimalToHex(dec).length)); } catch { out.hb.textContent = '—'; }
-        if (errEl) { errEl.textContent = ''; errEl.hidden = true; }
-        if (resEl) resEl.hidden = false;
-        if (subEl) subEl.textContent = 'Değeri seçilen tabandan diğer tabanlara çevir';
-        root.classList.remove('is-error');
-        input.classList.remove('is-error');
-      } catch (e) {
-        const msg = e instanceof Error ? e.message : String(e);
-        if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
-        if (resEl) resEl.hidden = true;
-        if (subEl) subEl.textContent = 'Giriş kontrol edin';
-        root.classList.add('is-error');
-        input.classList.add('is-error');
-      }
-    }
-    input.addEventListener('input', render);
-    radios.forEach((r) => r.addEventListener('change', render));
-  }
-  document.querySelectorAll('[data-number-system-converter]').forEach(initConverter);
-</script>
+
 
     --nsc-border: var(--sl-color-gray-200);
     --nsc-border-strong: var(--sl-color-gray-300);
@@ -419,3 +362,76 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
     font-size: 0.9rem;
   }
 </style>
+
+<script>
+  import { BASES, normalizeBaseN, baseToDecimal, decimalToBinary, decimalToOctal, decimalToHex, asciiCodeToChar, formatHex } from '../js/number-systems.js';
+  function initConverter(root) {
+    const input = root.querySelector('[data-nsc-input]');
+    if (!input || input.dataset.nscBound === '1') return;
+    input.dataset.nscBound = '1';
+    const radios = Array.from(root.querySelectorAll('[data-nsc-base]'));
+    const errEl = root.querySelector('[data-nsc-error]');
+    const resEl = root.querySelector('[data-nsc-results]');
+    const subEl = root.querySelector('[data-nsc-sub]');
+    const out = {
+      bin: root.querySelector('[data-nsc-out-binary]'),
+      oct: root.querySelector('[data-nsc-out-octal]'),
+      dec: root.querySelector('[data-nsc-out-decimal]'),
+      hex: root.querySelector('[data-nsc-out-hex]'),
+      asc: root.querySelector('[data-nsc-out-ascii]'),
+      hb: root.querySelector('[data-nsc-out-hexbyte]'),
+    };
+    function curBase() {
+      const c = radios.find((r) => r.checked);
+      const v = c ? Number(c.value) : BASES.DECIMAL;
+      return Number.isInteger(v) ? v : BASES.DECIMAL;
+    }
+    function render() {
+      const raw = String(input.value ?? '').trim();
+      const base = curBase();
+      root.querySelectorAll('.number-system-converter__base-option').forEach((lb) => {
+        const rd = lb.querySelector('input[type="radio"]');
+        lb.classList.toggle('is-active', !!(rd && rd.checked));
+      });
+      try {
+        if (raw === '') throw new Error('Değer boş olamaz.');
+        normalizeBaseN(raw, base, 'girdi');
+        const dec = baseToDecimal(raw, base);
+        out.bin.textContent = decimalToBinary(dec);
+        out.oct.textContent = decimalToOctal(dec);
+        out.dec.textContent = String(dec);
+        out.hex.textContent = decimalToHex(dec);
+        try { out.asc.textContent = asciiCodeToChar(dec); } catch { out.asc.textContent = '—'; }
+        try { out.hb.textContent = formatHex(dec, Math.max(2, decimalToHex(dec).length)); } catch { out.hb.textContent = '—'; }
+        if (errEl) { errEl.textContent = ''; errEl.hidden = true; }
+        if (resEl) resEl.hidden = false;
+        if (subEl) subEl.textContent = 'Değeri seçilen tabandan diğer tabanlara çevir';
+        root.classList.remove('is-error');
+        input.classList.remove('is-error');
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
+        if (resEl) resEl.hidden = true;
+        if (subEl) subEl.textContent = 'Giriş kontrol edin';
+        root.classList.add('is-error');
+        input.classList.add('is-error');
+      }
+    }
+    input.addEventListener('input', render);
+    radios.forEach((r) => r.addEventListener('change', render));
+  }
+  function initAll(rootDoc) {
+    const doc = rootDoc || document;
+    doc.querySelectorAll('[data-number-system-converter]').forEach((root) => {
+      try { initConverter(root); } catch (err) { console.error('[nsc] init failed', err); }
+    });
+  }
+  initAll();
+  // Starlight View Transitions ile sayfa değişimlerinde betik yeniden
+  // çalışmayabilir; bu olaylarda da bağlamayı tekrar dene.
+  document.addEventListener('astro:page-load', () => initAll());
+  document.addEventListener('astro:after-swap', (e) => {
+    try { initAll(e && e.target && e.target.ownerDocument ? e.target.ownerDocument : document); } catch { initAll(); }
+  });
+</script>
+
