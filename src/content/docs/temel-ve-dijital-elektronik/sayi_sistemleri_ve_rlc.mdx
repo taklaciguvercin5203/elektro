@@ -38,14 +38,18 @@ Ancak burada şakası olmayan altın bir kural vardır: Akım transformatörleri
 
 #### Elektroniğin Kutsal Üçlüsü: R, L ve C 
 
-**Enerjiyi ürettik, transistörlere veya makinelere göndereceğiz. Peki yolda bu enerjiyi nasıl şekillendireceğiz?** Karşımıza üç temel pasif devre elemanı çıkar: **`Direnç R (Resistor)`**,**` Bobin/İndüktör L (Lens' Law)`** ve **`Kapasite/Kapasitör C (Capacitor)`**.
+**Enerjiyi ürettik, transistörlere veya makinelere göndereceğiz. Peki yolda bu enerjiyi nasıl şekillendireceğiz?** Karşımıza üç temel pasif devre elemanı çıkar: **`Direnç R (Resistor)`**,**` Bobin/İndüktör L (Lenz's Law)`** ve **`Kapasite/Kapasitör C (Capacitor)`**.
 
 **Tüm bu elemanların çalışma kurallarını belirleyen evrensel yasa ise **Ohm Kanunu'dur**: Bir devredeki gerilimin akıma bölümü her zaman sabittir .**
 
-##### Peki bu üçlü ne işe yarar?  
+### Peki bu üçlü ne işe yarar?  
 
 **`Direnç (R):`** Senin de bahsettiğin gibi, elektronların önüne set çeker ve akımı sınırlar.
 
-**`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur.   Bobin Etkisi ve Gerilim İndüklenmesi Nedir?Bobin, üzerinden geçen akım değiştiğinde buna tepki gösteren inatçı bir elemandır. Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir "gerilim indükleyerek" (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır.   Devrelerin Evrensel Dengesi: Kirchhoff'un Gerilimler KanunuNasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
+**`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur. 
+
+##### Bobin Etkisi ve Gerilim İndüklenmesi Nedir?
+
+Bobin, üzerinden geçen akım değiştiğinde buna tepki gösteren inatçı bir elemandır. Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir "gerilim indükleyerek" (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır.   Devrelerin Evrensel Dengesi: Kirchhoff'un Gerilimler KanunuNasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
 Yani kaynağın ürettiği gerilim ($V_i$), direncin harcadığı gerilim ($-V_R$) ile toplandığında sonuç koca bir sıfır olmalıdır ($V_i + (-V_R) = 0$). Ne kadar enerji sağlarsan, o kadarını harcarsın. Evren borçlu kalmayı sevmez.   Güvenlik ve Sınırlar: Optik İzolasyon ve Manyetik KuplajTüm bu işlemleri yaparken, devasa akımların geçtiği tehlikeli güç katı ile transistörlerin saniyede milyarlarca işlem yaptığı hassas beyin katını (işlemcileri) birbirinden ayırmak zorundasınızdır. İşte burada "Optik İzolasyon" ve "Manyetik Kuplaj" sahneye çıkar.
 İki devre arasına fiziksel bir kablo çekmek yerine, sinyalleri ışıkla (optik) veya manyetik alanla aktararak onları elektriksel olarak tamamen yalıtırsınız. Böylece bir tarafta yıldırım bile düşse, diğer taraftaki hassas transistörler bu kaostan habersiz bir şekilde senin ekranda gördüğün bu metni işlemeye devam edebilir.
