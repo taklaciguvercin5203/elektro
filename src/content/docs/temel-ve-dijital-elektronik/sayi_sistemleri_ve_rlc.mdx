@@ -20,7 +20,7 @@ Biz insanlar 10'luk sayı sistemiyle algılarız. Ama makinelerin işlem yapma m
 
 ### Sayı Dönüşüm Aracı
 
-Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değeri diğer sistemlere çevirebilir, ASCII ve HEX byte rotasyonunu da görebilirsiniz.
+Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değeri diğer sistemlere çevirebilirsiniz
 
 <NumberSystemConverter value="255" fromBase={10} />
 
@@ -28,13 +28,46 @@ Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değer
 #### Peki Bu Makinelere Hayat Veren Şey Nedir?
 
 Bu devasa mantık kapılarının ve sistemlerin çalışabilmesi için enerjiye ihtiyacı vardır. İşte burada devreye kaynaklarımız girer.
-Elektronları bir borudaki su gibi düşünürseniz, onları ileri doğru iten güce gerilim (voltaj) deriz. Devrelerimizde hem sabit bir itme gücü sağlayan Doğru Akım (DC) gerilim kaynaklarını hem de dalgalı bir itme gücü sağlayan Alternatif Akım (AC) kaynaklarını kullanırız. Bir de doğrudan akımın (suyun) miktarını belirleyen Akım Kaynakları vardır. Mesela çatınızdaki bir Güneş Paneli enerjiyi depolamaktan ziyade tam olarak böyle bir akım kaynağı gibi davranır.  
+Elektronları bir borudaki su gibi düşünürseniz, onları ileri doğru zorlayan güce gerilim (voltaj) deriz. Devrelerimizde hem sabit bir itme gücü sağlayan Doğru Akım (DC) gerilim kaynaklarını hem de dalgalı bir itme gücü sağlayan Alternatif Akım (AC) kaynaklarını kullanırız. 
 
-#### Ya Bu Güç Çok Büyükse?
+Bir de doğrudan akımın (suyun) miktarını belirleyen Akım Kaynakları vardır. Gerçek hayattan örnek vermek gerekirse isterseniz milyonlarca volt ile çarpılın eğer amper yani akım şiddeti düşükse hayatta kalabilirsiniz ama iç direncinizi aşan çok küçük bir volt ve biraz akım şiddeti sizi çok rahat öldürebilir. Bunu Ohm Kanunu ile ölçebiliriz:
 
-Akım Transformatörleri eğer güneş panelinizden, jeneratörden veya ana şebekeden gelen akım çok büyükse, bunu standart bir cihazla ölçmeye kalkmak o cihazı saniyeler içinde kül eder. Büyük akımları güvenle ölçmek ve kontrol etmek için Akım Transformatörü adı verilen bileşenleri kullanırız.
+• **Gerilim (V) 12 Volt olsun**
 
-Ancak burada şakası olmayan altın bir kural vardır: Akım transformatörlerinin primer (birinci) ve sekonder (ikinci) sargı uçları asla açılmaz (boşta bırakılmaz). Eğer açarsanız, o devasa enerji gidecek yer bulamaz ve sistemi havaya uçuracak kadar tehlikeli yüksek gerilimler üretir.  
+• **Kuru İnsan İç Direnci (R) Yaklaşık 100.000 ohm (Ω)**
+
+• **Formülü Uygulayalım:** `12V / 100.000R = 0.00012A`
+
+• **Sonuç:** Vücudunuzdan geçen akım sadece 0.12 miliamper olur. Bu değer ölümcül sınır olan 50 miliamper'in çok altındadır. Kaynak arkasında ne kadar büyük amper saklarsa saklasın, 12 Volt'un gücü bu yüksek direnci aşmaya yetmez. Hiçbir şey hissetmezsiniz, güvendesinizdir.
+
+##### Hangi Durumlarda tehlikedeyiz!!
+
+Küvet, jakuzi veya havuz gibi vücudun neredeyse tamamının su altında olduğu ve suyun iletkenliğinin ter, tuz veya klor gibi maddeler nedeniyle yüksek olduğu durumlarda cilt direnci neredeyse tamamen sıfırlanır adeta bir kabloya dönersiniz. Başka senaryoda eğer elektrik iletimi deriden değil de açık bir yara, kesik veya tıbbi bir iğne aracılığıyla doğrudan vücut sıvılarının ve kasların bulunduğu iç dokulara temas ederse, cildin koruyucu yalıtkanlığı tamamen devre dışı kalır. İnsan vücudunun içindeki tuzlu su, kas ve sinir dokularının kendi saf iç direnci zaten 300 ila 500 ohm arasındadır.
+
+Aynı formülü kıyamet senaryosu için kullanalım:
+
+• **Gerilim (V) 12 Volt**
+
+• **Tuz ve Kimyasallara Maruz Kalmış Islak İnsan İç Direnci (R) Yaklaşık 100 ohm (Ω)**
+
+• **Formülü Uygulayalım:** `12V / 100R = 0.012A`
+
+Bu 120 amper demektir yani kalbinizin durmasına yetecek miktarın 2 katından fazlasıdır.
+
+#### Akımı Ne İle Ölçeriz?
+
+Evet akım gözümüzü korkuttuğuna göre multimetre ve çıplak el ile ölçemeyeceğimizi anlamamız gerek. Çünkü Multimetre veya Ampermetre kullandığımız zaman bu cihaz ölçümü doğru yapmak için iç direnci 0'a alır. Eğer güneş panelinizden, jeneratörden veya ana şebekeden gelen akım çok büyükse, bunu standart bir cihazla ölçmeye kalkmak o cihazı saniyeler içinde kül eder. Probları eritebilir ve kör eden ışık patlamalarına (elektrik arkı çok yüksek sıcaklıkta ışık ve yoğun ultraviyole (UV) ile kızılötesi (IR) radyasyon yayar. Yoğun UV ışınları gözdeki korneayı yakabilir) yol açabilir.
+
+Bu yüzden büyük akımları güvenle ölçmek ve kontrol etmek için Akım Transformatörü adı verilen bileşenleri kullanırız.
+
+**Ancak burada şakası olmayan altın bir kural daha vardır:** Akım transformatörlerinin primer (birinci) ve sekonder (ikinci) sargı uçları asla açılmaz (boşta bırakılmaz). 
+Eğer açarsanız, o devasa enerji demanyetize edici zıt manyetik alanın ortadan kalkar ve sistemi havaya uçuracak kadar tehlikeli yüksek gerilimler üretir. Ya kıvılcım olarak atmaya çalışır yada etrafındaki herşeyi indükleyerek (Elektrik üretme) çarpar.
+
+**• Normal Çalışma:** Akım trafoları normalde sekonderi kısa devreye yakın çok düşük dirençle çalışacak şekilde tasarlanmıştır. Sekonderden akan akım, primer akımının oluşturduğu manyetik akıyı dengeler ve nüvedeki (manyetik alanın dağılmasını önleyerek onu üzerinde toplayan ve yönlendiren metal blok) toplam manyetik alanı güvenli bir seviyede tutar.
+
+**• Açık Devre Durumu:** Sekonder devre açıldığında, sekonder akımı sıfıra düşer. Bu durumda primeri dengeleyecek bir karşı manyetik alan kalmaz.
+
+**• Sonuç:** Primer akımının tamamı nüveyi mıknatıslamaya başlar. Nüve aşırı doyuma ulaşır (satürasyon) ve sekonder terminallerinde binlerce voltluk (kV yani Vol'tun binlerce katı) tehlikeli bir yüksek gerilim indükler (üretir).
 
 #### Elektroniğin Kutsal Üçlüsü: R, L ve C 
 
@@ -44,7 +77,7 @@ Ancak burada şakası olmayan altın bir kural vardır: Akım transformatörleri
 
 ### Peki bu üçlü ne işe yarar?  
 
-**`Direnç (R):`** Senin de bahsettiğin gibi, elektronların önüne set çeker ve akımı sınırlar.
+**`Direnç (R):`** Direnç tam bir eşkiyadır koskoca otobanı kapatan tek şeride düşüren ve araçların verimini düşürüp ısınmasına hararet yapmasına neden olan bir eşkiyadır. Devredeki gerilimi düşürmek için alanı daraltır elektronlar dar alanda birbirine ve atomlara çarpması ile fazlaca ısınır bu çarpışmalar elektronların hareketini zorlaştırır. İşte bu zorluğa direnç denir birimi ohm (Ω)'dur.  
 
 **`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur. 
 
