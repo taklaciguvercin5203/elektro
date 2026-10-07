@@ -165,63 +165,83 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
 
 <style>
   .number-system-converter {
-    --nsc-bg: var(--sl-color-white);
-
-
-    --nsc-border: var(--sl-color-gray-200);
-    --nsc-border-strong: var(--sl-color-gray-300);
-    --nsc-ink: var(--sl-color-gray-900);
-    --nsc-ink-muted: var(--sl-color-gray-600);
-    --nsc-accent: var(--sl-color-accent);
-    --nsc-accent-soft: var(--sl-color-accent-low);
-    --nsc-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-    --nsc-radius: 0.75rem;
-    --nsc-focus: 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+    /* Sabit koyu "cihaz kartı" paleti: sitenin teması ne olursa olsun aynı görünür. */
+    --nsc-bg: #0f172a;
+    --nsc-bg-soft: #1e293b;
+    --nsc-bg-deep: #020617;
+    --nsc-border: #334155;
+    --nsc-border-strong: #475569;
+    --nsc-ink: #f1f5f9;
+    --nsc-ink-muted: #94a3b8;
+    --nsc-accent: #f59e0b;
+    --nsc-accent-ink: #0f172a;
+    --nsc-green: #34d399;
+    --nsc-blue: #38bdf8;
+    --nsc-red: #f87171;
+    --nsc-radius: 0.9rem;
+    --nsc-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', ui-monospace, monospace;
 
     display: block;
-    background: var(--nsc-bg);
+    background: linear-gradient(160deg, var(--nsc-bg) 0%, var(--nsc-bg-deep) 100%);
     color: var(--nsc-ink);
     border: 1px solid var(--nsc-border);
     border-radius: var(--nsc-radius);
-    box-shadow: var(--nsc-shadow);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.45), inset 0 1px 0 rgba(148, 163, 184, 0.12);
     overflow: hidden;
   }
 
   .number-system-converter.is-error {
-    border-color: var(--sl-color-red-300);
-    box-shadow: 0 0 0 1px var(--sl-color-red-300), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-color: var(--nsc-red);
+    box-shadow: 0 0 0 1px var(--nsc-red), 0 10px 30px rgba(2, 6, 23, 0.45);
   }
 
   .number-system-converter__header {
     display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    padding: 0.85rem 1rem;
-    background: var(--nsc-accent-soft);
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.1rem;
+    background: rgba(245, 158, 11, 0.08);
     border-bottom: 1px solid var(--nsc-border);
   }
 
+  .number-system-converter__header::before {
+    content: '';
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 999px;
+    background: var(--nsc-accent);
+    box-shadow: 0 0 10px var(--nsc-accent);
+    flex-shrink: 0;
+  }
+
   .number-system-converter__title {
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.95rem;
     color: var(--nsc-ink);
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
   }
 
   .number-system-converter__sub {
-    font-size: 0.8rem;
+    margin-left: auto;
+    font-size: 0.75rem;
     color: var(--nsc-ink-muted);
+    text-align: right;
   }
 
   .number-system-converter__body {
-    padding: 1rem;
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
   }
 
   .number-system-converter__label {
     display: block;
-    font-size: 0.82rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--nsc-ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     margin-bottom: 0.5rem;
   }
 
@@ -233,24 +253,34 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
 
   .number-system-converter__input {
     width: 100%;
-    padding: 0.65rem 0.85rem;
-    font-size: 1rem;
-    font-family: 'SF Mono', 'Fira Code', monospace;
+    box-sizing: border-box;
+    padding: 0.7rem 0.9rem;
+    font-size: 1.15rem;
+    font-family: var(--nsc-mono);
+    font-weight: 700;
+    letter-spacing: 0.03em;
     border: 1px solid var(--nsc-border-strong);
-    border-radius: 0.5rem;
-    background: var(--sl-color-gray-50);
-    color: var(--nsc-ink);
+    border-radius: 0.6rem;
+    background: var(--nsc-bg-deep);
+    color: var(--nsc-accent);
+    caret-color: var(--nsc-accent);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .number-system-converter__input::placeholder {
+    color: #475569;
+    font-weight: 400;
   }
 
   .number-system-converter__input:focus {
     outline: none;
     border-color: var(--nsc-accent);
-    box-shadow: var(--nsc-focus);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
   }
 
   .number-system-converter__input.is-error {
-    border-color: var(--sl-color-red-300);
+    border-color: var(--nsc-red);
+    color: var(--nsc-red);
   }
 
   .number-system-converter__base-row {
@@ -262,99 +292,113 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
   .number-system-converter__base-option {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.45rem 0.6rem;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.6rem;
     border: 1px solid var(--nsc-border);
-    border-radius: 0.4rem;
+    border-radius: 0.55rem;
+    background: var(--nsc-bg-soft);
     cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
     color: var(--nsc-ink-muted);
-    transition: all 0.12s ease;
+    transition: border-color 0.12s ease, background 0.12s ease, color 0.12s ease, transform 0.12s ease;
+    user-select: none;
   }
 
   .number-system-converter__base-option input {
     accent-color: var(--nsc-accent);
-    width: 1rem;
-    height: 1rem;
+    width: 0.95rem;
+    height: 0.95rem;
     flex-shrink: 0;
+    margin: 0;
   }
 
   .number-system-converter__base-option:hover {
     border-color: var(--nsc-accent);
     color: var(--nsc-ink);
+    transform: translateY(-1px);
   }
 
   .number-system-converter__base-option.is-active {
     border-color: var(--nsc-accent);
-    background: var(--nsc-accent-soft);
-    color: var(--nsc-accent);
+    background: var(--nsc-accent);
+    color: var(--nsc-accent-ink);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  }
+
+  .number-system-converter__base-option.is-active input {
+    accent-color: var(--nsc-accent-ink);
   }
 
   .number-system-converter__error {
-    margin: 0.4rem 0 0 0;
-    padding: 0.5rem 0.75rem;
+    margin: 0;
+    padding: 0.6rem 0.8rem;
     font-size: 0.82rem;
-    color: var(--sl-color-red-700);
-    background: color-mix(in srgb, var(--sl-color-red-100) 60%, transparent);
-    border-radius: 0.4rem;
-    border: 1px solid color-mix(in srgb, var(--sl-color-red-300) 30%, transparent);
+    font-weight: 600;
+    color: #fecaca;
+    background: rgba(248, 113, 113, 0.12);
+    border-radius: 0.55rem;
+    border: 1px solid rgba(248, 113, 113, 0.4);
   }
 
   .number-system-converter__results {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    margin-top: 0.75rem;
+    gap: 0.45rem;
+    margin-top: 0.25rem;
   }
 
   .number-system-converter__row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 0.5rem 0.65rem;
-    border-radius: 0.4rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.55rem;
     font-size: 0.92rem;
+    background: rgba(148, 163, 184, 0.07);
+    border: 1px solid transparent;
   }
 
-  .number-system-converter__row + .number-system-converter__row {
-    border-top: 1px solid color-mix(in srgb, var(--sl-color-gray-200) 60%, transparent);
+  .number-system-converter__row--highlight {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.45);
   }
 
   .number-system-converter__label {
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 800;
     color: var(--nsc-ink-muted);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.09em;
     flex-shrink: 0;
   }
 
   .number-system-converter__value {
-    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-family: var(--nsc-mono);
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--nsc-accent);
+    font-weight: 700;
+    color: var(--nsc-ink);
     word-break: break-all;
-    white-space: nowrap;
+    text-align: right;
+    overflow-wrap: anywhere;
   }
 
   .number-system-converter__row--highlight .number-system-converter__value {
-    color: var(--nsc-ink);
-    font-size: 1.05rem;
+    color: var(--nsc-accent);
+    font-size: 1.1rem;
   }
 
   .number-system-converter__row--ascii .number-system-converter__value {
-    font-family: 'SF Mono', 'Fira Code', monospace;
     font-size: 0.95rem;
-    color: var(--sl-color-emerald-700);
+    color: var(--nsc-green);
   }
 
   .number-system-converter__row--hexbytes .number-system-converter__value {
-    font-family: 'SF Mono', 'Fira Code', monospace;
     font-size: 0.95rem;
-    color: var(--sl-color-blue-700);
+    color: var(--nsc-blue);
   }
 
   .number-system-converter__error-marker {
