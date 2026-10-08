@@ -30,33 +30,35 @@ Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değer
 Bu devasa mantık kapılarının ve sistemlerin çalışabilmesi için enerjiye ihtiyacı vardır. İşte burada devreye kaynaklarımız girer.
 Elektronları bir borudaki su gibi düşünürseniz, onları ileri doğru zorlayan güce gerilim (voltaj) deriz. Devrelerimizde hem sabit bir itme gücü sağlayan Doğru Akım (DC) gerilim kaynaklarını hem de dalgalı bir itme gücü sağlayan Alternatif Akım (AC) kaynaklarını kullanırız. 
 
-Bir de doğrudan akımın (suyun) miktarını belirleyen Akım Kaynakları vardır. Gerçek hayattan örnek vermek gerekirse isterseniz milyonlarca volt ile çarpılın eğer amper yani akım şiddeti düşükse hayatta kalabilirsiniz ama iç direncinizi aşan çok küçük bir volt ve biraz akım şiddeti sizi çok rahat öldürebilir. Bunu Ohm Kanunu ile ölçebiliriz:
+Bir de doğrudan akımın (suyun) miktarını belirleyen Akım Kaynakları vardır. Gerçek hayattan örnek vermek gerekirse isterseniz milyonlarca volt ile çarpılın eğer amper yani akım şiddeti düşükse hayatta kalabilirsiniz ama iç ve dış direncinizi aşan çok küçük bir volt ve biraz akım şiddeti sizi çok rahat öldürebilir. Bunu Ohm Kanunu ile ölçebiliriz:
 
-• **Gerilim (V) 12 Volt olsun**
+• **Gerilim (V) 50 Volt olsun**
 
 • **Kuru İnsan İç Direnci (R) Yaklaşık 100.000 ohm (Ω)**
 
-• **Formülü Uygulayalım:** `12V / 100.000R = 0.00012A`
+• **Formülü Uygulayalım:** `50V / 100.000R = 0,0005A`
 
-• **Sonuç:** Vücudunuzdan geçen akım sadece 0.12 miliamper olur. Bu değer ölümcül sınır olan 50 miliamper'in çok altındadır. Kaynak arkasında ne kadar büyük amper saklarsa saklasın, 12 Volt'un gücü bu yüksek direnci aşmaya yetmez. Hiçbir şey hissetmezsiniz, güvendesinizdir.
+• **Sonuç:** Vücudunuzdan geçen akım sadece 0.5 miliamper olur. Bu değer ölümcül sınır olan 50 miliamper'in altındadır. Gücü bu yüksek direnci aşmaya yetmez. Vücudunuzda elektriği gıdıklanma olarak hissedebilirsiniz, yani güvendesinizdir.
 
-##### Hangi Durumlarda tehlikedeyiz!!
+> Gerilim demek yüksek direnci aşmaya çalışan elektriksel baskı demek olduğu için gerilim yükseldikçe (örneğin 220V veya 1000V) aynı 100.000 ohm dirençten geçen akım da katlanarak artar. Burada kastettiğimiz durum, 50V gibi düşük bir gerilimin yüksek direnci aşarak tehlikeli düzeyde akım geçirmeye yetmemesidir. Voltaj yükseldikçe insan vücudunun dış direncini düşürmeye başlar belirli bir eşiği aştığında, derinin bu koruyucu direnci elektriksel olarak delinir yani bu kural her zaman işe yaramaz insan hayatı açısından asıl tehlikeli olan gerilimin kendisi değil, vücuttan geçen akım şiddetidir. Gerilim, bu akımı geçirmek için gereken basıncı sağlar. 
+
+##### Hangi Durumlarda tehlikedeyiz!
 
 Küvet, jakuzi veya havuz gibi vücudun neredeyse tamamının su altında olduğu ve suyun iletkenliğinin ter, tuz veya klor gibi maddeler nedeniyle yüksek olduğu durumlarda cilt direnci neredeyse tamamen sıfırlanır adeta bir kabloya dönersiniz. Başka senaryoda eğer elektrik iletimi deriden değil de açık bir yara, kesik veya tıbbi bir iğne aracılığıyla doğrudan vücut sıvılarının ve kasların bulunduğu iç dokulara temas ederse, cildin koruyucu yalıtkanlığı tamamen devre dışı kalır. İnsan vücudunun içindeki tuzlu su, kas ve sinir dokularının kendi saf iç direnci zaten 300 ila 500 ohm arasındadır.
 
 Aynı formülü kıyamet senaryosu için kullanalım:
 
-• **Gerilim (V) 12 Volt**
+• **Gerilim (V) 30 Volt**
 
-• **Tuz ve Kimyasallara Maruz Kalmış Islak İnsan İç Direnci (R) Yaklaşık 100 ohm (Ω)**
+• **Tuz ve Kimyasallara Maruz Kalmış Islak İnsan İç Direnci (R) Yaklaşık 300 ohm (Ω)**
 
-• **Formülü Uygulayalım:** `12V / 100R = 0.012A`
+• **Formülü Uygulayalım:** `30V / 300R = 0.1A`
 
-Bu 120 amper demektir yani kalbinizin durmasına yetecek miktarın 2 katından fazlasıdır.
+Bu 100 miliamper demektir yani sizi çok rahat öldürmeye yeter.
 
 #### Akımı Ne İle Ölçeriz?
 
-Evet akım gözümüzü korkuttuğuna göre multimetre ve çıplak el ile ölçemeyeceğimizi anlamamız gerek. Çünkü Multimetre veya Ampermetre kullandığımız zaman bu cihaz ölçümü doğru yapmak için iç direnci 0'a alır. Eğer güneş panelinizden, jeneratörden veya ana şebekeden gelen akım çok büyükse, bunu standart bir cihazla ölçmeye kalkmak o cihazı saniyeler içinde kül eder. Probları eritebilir ve kör eden ışık patlamalarına (elektrik arkı çok yüksek sıcaklıkta ışık ve yoğun ultraviyole (UV) ile kızılötesi (IR) radyasyon yayar. Yoğun UV ışınları gözdeki korneayı yakabilir) yol açabilir.
+Evet akım gözümüzü korkuttuğuna göre ampermetre ve çıplak el ile ölçemeyeceğimizi anlamamız gerek. Çünkü Multimetre veya Ampermetre kullandığımız zaman bu cihaz akımı ölçmek için devreye seri bağlanmak zorundadır Devredeki akımın cihaz yüzünden yavaşlamaması veya voltajın düşmemesi için iç direnci 0'a yakın alır. Eğer güneş panelinizden, jeneratörden veya ana şebekeden gelen akım çok büyükse, bunu standart bir cihazla ölçmeye kalkmak o cihazı saniyeler içinde kül eder. Probları eritebilir ve kör eden ışık patlamalarına (elektrik arkı çok yüksek sıcaklıkta ışık ve yoğun ultraviyole (UV) ile kızılötesi (IR) radyasyon yayar. Ark sıcaklığı güneşin yüzey sıcaklığından neredeyse 5 daha fazladır ve yoğun UV ışınları gözdeki korneayı yakabilir) yol açabilir.
 
 Bu yüzden büyük akımları güvenle ölçmek ve kontrol etmek için Akım Transformatörü adı verilen bileşenleri kullanırız.
 
@@ -77,12 +79,34 @@ Eğer açarsanız, o devasa enerji demanyetize edici zıt manyetik alanın ortad
 
 ### Peki bu üçlü ne işe yarar?  
 
-**`Direnç (R):`** Direnç tam bir eşkiyadır koskoca otobanı kapatan tek şeride düşüren ve araçların verimini düşürüp ısınmasına hararet yapmasına neden olan bir eşkiyadır. Devredeki gerilimi düşürmek için alanı daraltır elektronlar dar alanda birbirine ve atomlara çarpması ile fazlaca ısınır bu çarpışmalar elektronların hareketini zorlaştırır. İşte bu zorluğa direnç denir birimi ohm (Ω)'dur.  
+**`Direnç (R):`** Direnç tam bir eşkiyadır koskoca otobanı kapatan tek şeride düşüren ve araçların verimini düşürüp ısınmasına hararet yapmasına neden olan bir eşkiyadır. Devredeki gerilimi düşürmek için alanı daraltır elektronlar dar alanda birbirine ve atomlara çarpması ile fazlaca ısınır bu çarpışmalar elektronların hareketini zorlaştırır. İşte bu zorluğa direnç denir birimi ohm (Ω)'dur.
 
-**`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur. 
+**`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak yukarıda bahsettiğimiz Primer ve Sekonder birer bobindir, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur. 
+
+**1. Kondansatör (C) : Gerilimin (Voltajın) Bekçisi ve Elektrik Barajı**
+
+Kondansatörü ortasından esnek bir zar geçen bir su borusu veya şehir hatlarına bağlı bir su deposu gibi düşünebilirsiniz. İçinde birbirine değmeyen iki metal plaka ve aralarında yalıtkan bir madde vardır.
+
+    **Nasıl Çalışır?** Elektronlar bir plakaya doluşur ve karşı tarafa geçemezler. Ancak eksi yükler birbirini ittiği için, karşı plakadaki elektronları kovalar. Böylece plakalar arasında bir gerilim oluşur. Enerjiyi Elektrik Alanı olarak, statik (duran) halde depolar.
+
+    **Karakteri:** Kondansatör, devredeki voltajın aniden değişmesinden nefret eder. Eğer şebekede voltaj aniden düşerse, deposundaki enerjiyi devreye salarak voltajı ayakta tutar. Eğer voltaj aniden yükselirse, fazla enerjiyi emerek şoku yutar.
+
+    **Görevi:** Devredeki dalgalanmaları filtreler, voltajı pürüzsüz hale getirir (örneğin telefon şarj aletlerinin içindeki akımın dümdüz çıkmasını sağlarlar).
+
+**2. Bobin (L) : Akımın (Amperin) Bekçisi ve Manyetik Kasa**
+
+Önceki mietinde bahsettiğimiz Primer ve Sekonder sargılarının ta kendisidir. Bobin sadece sarmal hale getirilmiş bir teldir ama o tel sarıldığında uzay-zamanın fiziksel kuralları değişir. Onu devasa, ağır bir değirmen taşına (volan çarkı) benzetebiliriz.
+
+    **Nasıl Çalışır?** İçinden akım (elektronlar) geçtiği anda etrafında görünmez bir Manyetik Alan oluşur. Enerjiyi bu manyetik alanda kinetik (hareketli) olarak depolar.
+
+    **Karakteri:** Kondansatör voltaj değişimine direnirken, Bobin akımın aniden değişmesinden nefret eder (Buna Len's Kanunu denir). Dönen ağır bir değirmen taşını aniden durduramazsınız, aniden de hızlandıramazsınız. Fişi çektiğinizde bobinin etrafındaki manyetik alan çöker ve içindeki enerjiyi devasa bir voltaj olarak devreye geri kusar (Önceki konudaki akım trafosunda sekonder açıldığında patlamasının sebebi tam olarak budur).
+
+    **Görevi:** Akımdaki ani sıçramaları engeller, devreye giren akımın yavaşça yükselmesini ve yavaşça düşmesini sağlar.
 
 ##### Bobin Etkisi ve Gerilim İndüklenmesi Nedir?
 
-Bobin, üzerinden geçen akım değiştiğinde buna tepki gösteren inatçı bir elemandır. Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir "gerilim indükleyerek" (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır.   Devrelerin Evrensel Dengesi: Kirchhoff'un Gerilimler KanunuNasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
-Yani kaynağın ürettiği gerilim ($V_i$), direncin harcadığı gerilim ($-V_R$) ile toplandığında sonuç koca bir sıfır olmalıdır ($V_i + (-V_R) = 0$). Ne kadar enerji sağlarsan, o kadarını harcarsın. Evren borçlu kalmayı sevmez.   Güvenlik ve Sınırlar: Optik İzolasyon ve Manyetik KuplajTüm bu işlemleri yaparken, devasa akımların geçtiği tehlikeli güç katı ile transistörlerin saniyede milyarlarca işlem yaptığı hassas beyin katını (işlemcileri) birbirinden ayırmak zorundasınızdır. İşte burada "Optik İzolasyon" ve "Manyetik Kuplaj" sahneye çıkar.
-İki devre arasına fiziksel bir kablo çekmek yerine, sinyalleri ışıkla (optik) veya manyetik alanla aktararak onları elektriksel olarak tamamen yalıtırsınız. Böylece bir tarafta yıldırım bile düşse, diğer taraftaki hassas transistörler bu kaostan habersiz bir şekilde senin ekranda gördüğün bu metni işlemeye devam edebilir.
+Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir "gerilim indükleyerek" (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır. 
+
+**Kirchhoff'un Gerilimler Kanunu:** Nasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
+
+Yani kaynağın ürettiği gerilim, direncin harcadığı gerilim ile toplandığında sonuç koca bir sıfır olmalıdır **`V_i + -V_R = 0`** Ne kadar enerji sağlarsan, o kadarını harcarsın. Evren borçlu kalmayı sevmez.
