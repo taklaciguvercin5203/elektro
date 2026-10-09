@@ -59,34 +59,33 @@
 
 /* Tüm h1, h2 ve h5 başlıkları için ortak veya özel stiller */
 h1 {
-  font-size: 2.8rem;
-  color: #F97316;
-  padding-left: 30%;
+  font-size: 3rem;
+  color: #FF9D72;
 }
 
 h2 {
   font-size: 2.5rem;
-  color: #00b7ff;
+  color: #F472B6;
 }
 
 h3 {
-  font-size: 2.1rem;
-  color: #00ffaa; /* Canlı Turkuaz / Nane Yeşili */
+  font-size: 2rem;
+  color: #B785F5; /* Canlı Turkuaz / Nane Yeşili */
 }
 
 h4 {
-  font-size: 1.8rem;
-  color: #e100ff; /* Siber Pembe / Neon Mor */
+  font-size: 1.5rem;
+  color: #818CF8; /* Siber Pembe / Neon Mor */
 }
 
 h5 {
-  font-size: 1.5rem;
-  color: #ffffff; /* Net Beyaz (Küçüldüğü için okunabilirlik amaçlı) */
+  font-size: 1rem;
+  color: #2DD4BF; /* Net Beyaz (Küçüldüğü için okunabilirlik amaçlı) */
 }
 
 h6 {
-  font-size: 1.2rem;
-  color: #94a3b8; /* Mat Slate Grisi (Göz yormayan alt detay rengi) */
+  font-size: 0.5rem;
+  color: #34D399; /* Mat Slate Grisi (Göz yormayan alt detay rengi) */
   text-transform: uppercase; /* Küçük olduğu için vurgu katması amacıyla */
 }
 
@@ -270,3 +269,28 @@ display: none !important;
 padding-inline-start: 0 !important;
 }
 }
+
+.formula-container {
+    display: flex;
+    align-items: center;
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-size: 20px;
+    margin: 15px 0;
+  }
+  .fraction {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 4px;
+    vertical-align: middle;
+  }
+  .numerator {
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    text-align: center;
+  }
+  .denominator {
+    padding-top: 2px;
+    text-align: center;
+  }
