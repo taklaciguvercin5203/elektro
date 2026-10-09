@@ -6,13 +6,15 @@ sidebar:
   
 
 ---
+import { Image } from 'astro:assets';
 import NumberSystemConverter from '../../../components/NumberSystemConverter.astro';
-
+import i1 from '/src/assets/2/paralel_ve_seri_bagli_devre.png';
+import i2 from '/src/assets/2/paralel_ve_seri_ayni_devrede.png';
 
 
 ## Neden İkili Sistem?
 
-Bilgisayarların elektrik var ve yok mantığı ile çalıştığını öğrenmiştik. Ama neden 1 ve 0 kullanıyoruz ve bu endüstri standartı oldu? 10'luk sayı sistemini neden kullanmıyoruz. Onluk sayı sistemi aslında teorik bir formülden değil direkt 10 parmağımızın olmasından geliyor. İnsanlar en eski çağlardan beri saymak için parmaklarını kullanmıştır. MÖ 3000'lerde Onluk sistemin ilk izleri ve temel kullanımı Antik Mısır hiyerogliflerinde ve sümerlerde görülmeye başlandı.
+Bilgisayarların elektrik var ve yok mantığı ile çalıştığını öğrenmiştik. Ama neden 1 ve 0 kullanıyoruz ve bu endüstri standardı oldu? 10'luk sayı sistemini neden kullanmıyoruz. Onluk sayı sistemi aslında teorik bir formülden değil direkt 10 parmağımızın olmasından geliyor. İnsanlar en eski çağlardan beri saymak için parmaklarını kullanmıştır. MÖ 3000'lerde Onluk sistemin ilk izleri ve temel kullanımı Antik Mısır hiyerogliflerinde ve sümerlerde görülmeye başlandı.
 
 Biz insanlar 10'luk sayı sistemiyle algılarız. Ama makinelerin işlem yapma mantığı çok farklıdır. Onlar karmaşık harfleri veya sayıları bizim gibi değil, farklı taban matematiksel hesapları ile işlerler.
 Örneğin, 8'lik (Oktal) tabandaki bir veriyi 16'lık (Heksadesimal) tabana dönüştürmeleri gerekebilir; 
@@ -25,7 +27,7 @@ Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değer
 <NumberSystemConverter value="255" fromBase={10} />
 
 
-#### Peki Bu Makinelere Hayat Veren Şey Nedir?
+### Peki Bu Makinelere Hayat Veren Şey Nedir?
 
 Bu devasa mantık kapılarının ve sistemlerin çalışabilmesi için enerjiye ihtiyacı vardır. İşte burada devreye kaynaklarımız girer.
 Elektronları bir borudaki su gibi düşünürseniz, onları ileri doğru zorlayan güce gerilim (voltaj) deriz. Devrelerimizde hem sabit bir itme gücü sağlayan Doğru Akım (DC) gerilim kaynaklarını hem de dalgalı bir itme gücü sağlayan Alternatif Akım (AC) kaynaklarını kullanırız. 
@@ -95,18 +97,106 @@ Kondansatörü ortasından esnek bir zar geçen bir su borusu veya şehir hatlar
 
 **2. Bobin (L) : Akımın (Amperin) Bekçisi ve Manyetik Kasa**
 
-Önceki mietinde bahsettiğimiz Primer ve Sekonder sargılarının ta kendisidir. Bobin sadece sarmal hale getirilmiş bir teldir ama o tel sarıldığında uzay-zamanın fiziksel kuralları değişir. Onu devasa, ağır bir değirmen taşına (volan çarkı) benzetebiliriz.
+Önceki metinde bahsettiğimiz Primer ve Sekonder sargılarının ta kendisidir. Bobin sadece sarmal hale getirilmiş bir teldir ama o tel sarıldığında uzay-zamanın fiziksel kuralları değişir. Onu devasa, ağır bir değirmen taşına (volan çarkı) benzetebiliriz.
 
     **Nasıl Çalışır?** İçinden akım (elektronlar) geçtiği anda etrafında görünmez bir Manyetik Alan oluşur. Enerjiyi bu manyetik alanda kinetik (hareketli) olarak depolar.
 
-    **Karakteri:** Kondansatör voltaj değişimine direnirken, Bobin akımın aniden değişmesinden nefret eder (Buna Len's Kanunu denir). Dönen ağır bir değirmen taşını aniden durduramazsınız, aniden de hızlandıramazsınız. Fişi çektiğinizde bobinin etrafındaki manyetik alan çöker ve içindeki enerjiyi devasa bir voltaj olarak devreye geri kusar (Önceki konudaki akım trafosunda sekonder açıldığında patlamasının sebebi tam olarak budur).
+    **Karakteri:** Kondansatör voltaj değişimine direnirken, Bobin akımın aniden değişmesinden nefret eder (Buna Lenz's Kanunu denir). Dönen ağır bir değirmen taşını aniden durduramazsınız, aniden de hızlandıramazsınız. Fişi çektiğinizde bobinin etrafındaki manyetik alan çöker ve içindeki enerjiyi devasa bir voltaj olarak devreye geri kusar (Önceki konudaki akım trafosunda sekonder açıldığında patlamasının sebebi tam olarak budur).
 
     **Görevi:** Akımdaki ani sıçramaları engeller, devreye giren akımın yavaşça yükselmesini ve yavaşça düşmesini sağlar.
 
-##### Bobin Etkisi ve Gerilim İndüklenmesi Nedir?
+### Bobin Etkisi ve Gerilim İndüklenmesi Nedir?
 
-Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir "gerilim indükleyerek" (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır. 
+Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir gerilim indükleyerek (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır. 
 
 **Kirchhoff'un Gerilimler Kanunu:** Nasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
 
 Yani kaynağın ürettiği gerilim, direncin harcadığı gerilim ile toplandığında sonuç koca bir sıfır olmalıdır **`V_i + -V_R = 0`** Ne kadar enerji sağlarsan, o kadarını harcarsın. Evren borçlu kalmayı sevmez.
+
+**Kirchhoff'un Akımlar Kanunu** ise elektrik devrelerindeki düğüm noktasına giren ve çıkan akımlar arasındaki ilişkiyi açıklar. Bir düğüm noktasına giren akımların toplamı, o düğümden çıkan akımların toplamına eşittir. Elektrik yükü yok olamaz veya durduk yere var edilemez bir noktaya ne kadar yük girerse aynı sürede o kadar yük çıkmak zorundadır. **`I_1 + I_2 + I_3 + I_4 + ... = 0`** her zaman sıfıra eşit olmak zorundadır.
+
+> Örnek:
+> 4 ayrı kablonun kesiştiği bir düğüme gelen ilk üç kablodaki akımlar sırasıyla düğüme doğru **3A, 2A ve 1A** olduğuna göre, 4. kablodan geçen akımın yönü ve büyüklüğü nedir?
+
+<details>
+<summary>Çözüm İçin Tıklayın</summary>
+
+> Kirchhoff'un Akımlar Kanununa göre bir düğüme **giren akımların toplamı, çıkan akımların toplamına eşit** olmalıdır 
+> 
+> Formülü kurarsak:
+> 
+> I<sub>1</sub> + I<sub>2</sub> + I<sub>3</sub> + I<sub>4</sub> = 0
+> 
+> 3A + 2A + 1A + I<sub>4</sub> = 0
+> 
+> 6A + I<sub>4</sub> = 0
+>  
+> I<sub>4</sub>7 = -6 
+>
+> **Sonuç:** 4. kablodan **6A** büyüklüğünde akım geçer ve yönü **düğümden dışarı doğru**dur.
+
+</details>
+
+
+### Bir devrenin serimi paralelmi olduğunu nasıl anlarız?
+
+
+Bir elektrik veya elektronik devresinin **seri mi yoksa paralel mi** olduğunu anlamak için akımın izlediği yola ve elemanların bağlanma şekline bakmanız gerekir:
+
+##### 1. Akım Yolu
+
+    **`Paralel Devre:`** Akım, devre üzerinde birden fazla kola (düğüme) ayrılır. Akımın izleyebileceği alternatif yollar vardır.
+
+    **`Seri Devre:`** Akımın takip edebileceği tek bir yol vardır. Akım kaynağın artı ucundan çıkar, sırayla tüm elemanların (direnç, ampul vb.) içinden geçer ve eksi uca döner.
+
+
+
+<Image 
+  src={i1} 
+  alt="Seri ve Paralel Bağlantı" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto' }}
+/>
+
+##### **2. Bağlantı Noktaları**
+
+    **`Paralel Devre:`** Elemanların bütün giriş uçları tek bir noktada, bütün çıkış uçları başka tek bir noktada birleşir (yan yana bağlantı).
+
+    **`Seri Devre:`** Elemanlar uç uca (arka arkaya) bağlanır. Bir elemanın çıkışı, diğer elemanın girişine bağlıdır.
+
+Aşağıdaki devrede - ve + kutupları sırasıyla siyah ve kırmızı ile gösterilmiştir. Bir direncin serimi paralelmi olduğunun anlamanın en kolay yolu o direncin girişine bağlanan kablo herhangi bir direncin çıkışına bağlı mı sorusunu cevaplamaktır. Aşağıdaki örnekteki siyah hatta soldan sağa sırayla dirençler R1 ve R2 bulunuyor pilin eksi ucundan çıkan elektronlar ilk başta R1 e uğrar ve çıkış yapar sonra R2 nin girişine bağlanır buna seri bağlantı denir. Toplam dirençlerini bulmak için önce seri bağlı olan her direncin ohm değerlerini direkt toplarız artık tek bir direncimiz varmış gibi (R1+R2=RX) düşünür ve topladığımız ohm değerini o dirence atarız. Artık paralel iki direncimiz var:
+R1 ve R2 toplamı RX=6 ohm varsayarsak R3 direnci 3 ohm olursa şu formülü kullanarak devrenin eşdeğer direnicini bulabiliriz:
+
+<div class="formula-container">
+    R<sub>eq (Eşdeğer Direnç)</sub> &nbsp;=&nbsp;
+    <div class="fraction">
+        <span class="numerator">R<sub>X</sub> &times; R<sub>3</sub></span>
+        <span class="denominator">R<sub>X</sub> + R<sub>3</sub></span>
+    </div>
+</div>
+
+<p>6 ohm ve 3 ohm'luk iki paralel direnç:</p>
+
+<div class="formula-container">
+    R<sub>eq</sub> &nbsp;=&nbsp;
+    <div class="fraction">
+        <span class="numerator">6 &times; 3</span>
+        <span class="denominator">6 + 3</span>
+    </div>
+    &nbsp;=&nbsp;
+    <div class="fraction">
+        <span class="numerator">18</span>
+        <span class="denominator">9</span>
+    </div>
+    &nbsp;=&nbsp; 2 ohm &nbsp;=&nbsp; R<sub>eq</sub> 
+</div>
+
+<Image 
+  src={i2} 
+  alt="Seri ve Paralel Bağlantı" 
+  quality="mid"
+  style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
+/>
+
+
+
