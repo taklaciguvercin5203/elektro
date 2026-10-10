@@ -79,7 +79,7 @@ h4 {
 }
 
 h5 {
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: #2DD4BF; /* Net Beyaz (Küçüldüğü için okunabilirlik amaçlı) */
 }
 
@@ -270,7 +270,7 @@ padding-inline-start: 0 !important;
 }
 }
 
-.formula-container {
+.formül-container {
     display: flex;
     align-items: center;
     font-family: "Times New Roman", Times, serif;
@@ -278,19 +278,19 @@ padding-inline-start: 0 !important;
     font-size: 20px;
     margin: 15px 0;
   }
-  .fraction {
+  .kesir {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     padding: 0 4px;
     vertical-align: middle;
   }
-  .numerator {
+  .pay {
     border-bottom: 1px solid currentColor;
     padding-bottom: 2px;
     text-align: center;
   }
-  .denominator {
+  .payda {
     padding-top: 2px;
     text-align: center;
   }

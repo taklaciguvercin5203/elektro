@@ -8,8 +8,9 @@ Buradaki temel amaç; karmaşık fiziksel/mühendislik kavramlarını benzetmele
 
 ## 📅 Haftalık Not Akışı
 
-| Hafta | Konu Başlığı | Özeti / Temel Soru | Bağlantı |
-| :---: | :--- | :--- | :---: |
-| **01** | **Elektron'dan Yapay Zekaya** | Elektrik sinyallerinden transistörlere ve bilgisayarlara nasıl varabildik? | [Notu Oku](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/) |
+| Hafta | Konu Başlığı | Bağlantı |
+| :---: | :--- | :---: |
+| **01** | **Elektron'dan Yapay Zekaya** | [Kesin Oku](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/) |
+| **02** | **Elektriği Şekillendiren Evrensel Yasalar**  | [Oku](http://localhost:4321/elektro/temel-ve-dijital-elektronik/sayi_sistemleri_ve_devreler/) |
 
 *(Her hafta yeni bir konu eklenecektir.)*
