@@ -7,35 +7,35 @@ sidebar:
 ---
 import { Image } from 'astro:assets';
 import i1 from '/src/assets/1/mosfet_ile_led_yakma.png';
-import i2 from '/src/assets/1/mosfet_ile_mantiksal_devre_1.32v_alti.png';
-import i3 from '/src/assets/1/mosfet_ile_mantiksal_devre_1.32v_ustu.png';
+import i2 from '/src/assets/1/mosfet_ile_mantiksal_devre_1.67v_alti.png';
+import i3 from '/src/assets/1/mosfet_ile_mantiksal_devre_1.67v_ustu.png';
 
-# Elektron Nedir?
+## Elektron Nedir?
 
 Elektronik kelime olarak elektron'dan gelmektedir. Elektroniği anlamak için elektronu anlamamız gerek. Elektronun atomun yapısında yer alan negatif elektrik yüküne sahip parçacıklardan biridir. Pozitif yüklü protonlar ve yüksüz nötronlar çekirdekte konumlanırken, elektronlar çekirdeğin etrafındaki belirli enerji yörüngelerinde hareket ederler.
 Metaller gibi iletken malzemelerde en dış yörüngedeki değerlik elektronları atom çekirdeğine oldukça zayıf bağlıdır oda sıcaklığındaki iç enerji dahi bu elektronların serbest kalarak kafes içinde bir serbest elektron bulutu oluşturmasına yeterlidir.
 
-##### Peki iletkenler nedir?
+### Peki iletkenler nedir?
 İletkenler elektrik akımına karşı çok küçük direnç gösteren maddelerdir. Atomlarının en dış yörüngesindeki değerlik elektronlar atoma oldukça zayıf bağlı oldukları için ufak bir gerilim veya dış etkiyle bu elektronlar kolayca serbest kalarak akımı oluşturur.
 Örnekler: Altın, gümüş, bakır, alüminyum vb.
 
-##### Peki İletkenleri nerede kullanırız?
+#### Peki İletkenleri nerede kullanırız?
 Elektrik enerjisini kayıp olmadan bir noktadan başka bir noktaya hızlıca aktarmamızı sağlar. Enerjiyi har vurup harman savuran Tesla bobininin tam zıttıdır :)
 Elektrik şebekeleri, ev içi elektrik tesisatları, kablolar, elektrik motorlarının sargıları ve devre kartlarındaki iletken yollar buna örnektir.
 
 ##### Bu kadar iyi ve kayıpsız ise neden teknolojik cihazlarda kullanmayalım ki?
 Evet muazzam güçlü, uçuyor kaçıyor amaa **kontrol edemediğin güç güç değildir.** İletkenler elektriği sürekli ve durdurulamaz şekilde geçirdikleri için odadaki lambaya bağlı olan anahtarı kapattığınız anda siz hissetmeseniz bile aslında elektriği hemen kesemez. İletken maddeler elektriğe karşı çok düşük direnç gösterdikleri için üzerlerinden geçen elektronlara sürekli izin verirler. Bilgisayarların çalışması için elektriğin sadece taşınması yeterli değildir akımın istendiği an hassasiyetle kesilip açılabildiği bir anahtarlama mekanizmasına ihtiyaç duyulur. Ve teknoloji çağının en çok bilinen elektronik parçası Transistörlerin atası olan Vakumlu Triyot burada sahneye çıkar.
 
-**Transistörleri anlayabilmemiz için yalıtkanlığı da anlayabilmemiz gerek.**
+##### Transistörleri anlayabilmemiz için yalıtkanlığı da anlayabilmemiz gerek
 Yalıtkanlar elektrik akımına karşı çok yüksek direnç gösteren ve akımı iletmeyen maddelerdir. Yalıtkan maddelerin elektronları atomlarına son derece sıkı bağlı olduğu için serbest hareket edemezler. Elektrik kablolarının dış kaplamalarında kullanılarak canlıların elektrik akımına kapılmasını ve hatlar arasında kısa devre oluşmasını engeller. Kondansatörlerin (elektrik enerjisini kısa süreliğine depolayan bileşen) iletken plakaları arasında yalıtkan malzeme kullanılarak elektrik alanının depolanması sağlanır.
 
-**İletkenliği ve yalıtkanlığı anladığımıza göre yarı iletkenliği öğrenebiliriz.**
+#### İletkenliği ve yalıtkanlığı anladığımıza göre yarı iletkenliği öğrenebiliriz.
 Yarı iletkenler iletkenlik bakımından, iletkenler ile yalıtkanlar arasında yer alan maddelerdir. Saf ve normal hallerinde yalıtkan davranırlar ama ısı, ışık, gerilim uygulandığında veya içlerine özel katkılama işlemleri gerçekleştirildiğinde iletkenlik özelliği kazanan malzemelerdir. 
 
-**Transistörlerin atası olan Vakumlu Triyot nedir?**
+##### Transistörlerin atası olan Vakumlu Triyot nedir?
 Önce elektrik sinyallerini **yükseltmek (güçlendirmek)** ve **anahtarlamak (açıp kapatmak)** amacıyla kullanılan üç elektrotlu ilk elektronik devre elemanlarından biriydi. Ve Elektrik akışını istenildiğinde hızlıca açıp kapatarak erken dönem dijital bilgisayarlarda (örneğin ENIAC) mantıksal devrelerin ve hafıza hücrelerinin kurulmasını sağladı. İleriki yıllarda transistörlerin çıkmasıyla yerini tamamen transistörlere bırakacak.
 
-**Ama neden yerini Transistörlere bırakıcak ki?**
+### Ama neden yerini Transistörlere bırakıcak ki?
 Bunu anlayabilmek için nasıl çalıştığına bakalım. Triyot, havası boşaltılmış cam bir kap içinde kapalı tutulan 3 temel bileşenden oluşur: Katot (Isıtıldığında elektron yayan uç), Anot (Katottan yayılan elektronların toplandığı pozitif yüklü uç) ve Kontrol Izgarası (Grid: Katot ile anot arasına yerleştirilen bir tel ızgara.) Bu ızgaraya uygulanan çok küçük bir gerilim değişimi, katottan anota akan elektron miktarını bir musluk gibi hassas bir şekilde kontrol ederdi. Bu devre elemanının çok büyük bir dezavantajı vardı. Entropinin en sevdiği şey olan ısı bu elemanın peşini bırakmıyordu. Entropi, bir sistemdeki düzensizliğin ve rastgeleliğin bir ölçüsüdür. Enerji türleri arasında molekülleri en çok kaosa sürükleyen, onları en düzensiz şekilde hareket ettiren enerji türü ise ısıdır. Bu devre elemanının ısınması bir yan etki değildir direkt çalışmak için ısınmak zorundadır. Isı probleminden dolayı verimi yerlerde gezdiği için de zamanla entropiye kurban oldu ve yerini çok daha küçük, çok zor ısınan, çok daha düşük gerilim (voltajla) çalışan, cam yapıda oldukları için kırılmayan, çok uzun ömürlü olan ve kapitalizmin en sevdiği üretimi ucuz olan yarı iletken silisyumdan (bilinen ismi silikon) yapılan **Transistör'e** yerini bıraktı. Teknoloji dünyasında **Moore Yasası** olarak bilinen ve onlarca yıl boyunca "her iki yılda bir çip üzerindeki transistör sayısının ikiye katlanacağını" söyleyen kural, aslında teknik bir doğa kanunu değil, kapitalist radikal bir iş modeliydi. Transistör'ün ham maddesi doğada su kadar çok olduğu için Moore Yasası bunun üzerine inşaa edildi ve şuan Moore Yasasının sonuna geldik. **Hikayenin devamı için transistörleri öğrenmemiz lazım.**
 
 Evinizdeki ışık anahtarına parmağınızla basarsınız ve elektrik geçer. Transistörde ise parmağınızın yerini küçük bir elektrik sinyali alır. Bir transistöre küçük bir elektrik akımı verdiğinizde, iç direncini değiştirip devasa bir elektrik akımının geçişini kontrol edebilir (açabilir veya kapatabilirsiniz).
@@ -99,23 +99,26 @@ En çok kullanılan MOSFET'in Örnek kullanımları:
   src={i1} 
   alt="MOSFET ile led yakma" 
   quality="mid"
+  style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
 />
 
 Bu devre, pilin artı ucundan MOSFET transistörün Gate (G) bacağına gelen gerilimle tetiklenen NMOS transistörün akım iletmesi sayesinde LED'in sürekli yanmasını sağlayan elektronik bir anahtarlama devresidir.
 
 -----
  
-Burada ise bir mantıksal devre örneği bulunuyor 1.32V altı gerilimde led yanmıyor. 1.32V veya üstü gerilimde led yanıyor. Ya hep ya hiç mantığı aradaki 0,01 volt anahtarlama mekanizması sayesinde çalışır.
+Burada ise bir mantıksal devre örneği bulunuyor 1.67V altı gerilimde led yanmıyor. 1.67V veya üstü gerilimde led yanıyor. Ya hep ya hiç mantığı aradaki 0,01 volt anahtarlama mekanizması sayesinde çalışır.
 
 <Image 
   src={i2} 
-  alt="MOSFET ile mantıksal devre 1.32v altı gerilim" 
+  alt="MOSFET ile mantıksal devre 1.67v altı gerilim" 
   quality="mid"
+  style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
 />
 
 <Image 
   src={i3} 
-  alt="MOSFET ile mantıksal devre 1.32v üstü gerilim" 
+  alt="MOSFET ile mantıksal devre 1.67v üstü gerilim" 
   quality="mid"
+  style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
 />
 

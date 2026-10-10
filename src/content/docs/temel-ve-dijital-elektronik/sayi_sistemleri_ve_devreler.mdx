@@ -1,16 +1,15 @@
 ---
-title: 'İkili ve Çoklu Sistemler - RLC Devreleri'
-description: RLC devre elemanları nedir, nerede kullanılır.
+title: 'Sayı Sistemleri ve Devreler'
+description: Bu sayfa, ikili sayı sistemlerinden başlayıp gerilim, akım, Kirchhoff kanunları ve pasif devre elemanlarına (R, L, C) değinerek temel elektrik ve elektronik devre analizini anlatan bir ders içeriğidir.
 sidebar:
   order: 3
-  
-
 ---
 import { Image } from 'astro:assets';
 import NumberSystemConverter from '../../../components/NumberSystemConverter.astro';
 import i1 from '/src/assets/2/paralel_ve_seri_bagli_devre.png';
 import i2 from '/src/assets/2/paralel_ve_seri_ayni_devrede.png';
-
+import i3 from '/src/assets/2/esdeger_direnc_problemi.jpg';
+import i4 from '/src/assets/2/esdeger_direnc_problemi_cozumleme.png';
 
 ## Neden İkili Sistem?
 
@@ -167,28 +166,28 @@ Bir elektrik veya elektronik devresinin **seri mi yoksa paralel mi** olduğunu a
 Aşağıdaki devrede - ve + kutupları sırasıyla siyah ve kırmızı ile gösterilmiştir. Bir direncin serimi paralelmi olduğunun anlamanın en kolay yolu o direncin girişine bağlanan kablo herhangi bir direncin çıkışına bağlı mı sorusunu cevaplamaktır. Aşağıdaki örnekteki siyah hatta soldan sağa sırayla dirençler R1 ve R2 bulunuyor pilin eksi ucundan çıkan elektronlar ilk başta R1 e uğrar ve çıkış yapar sonra R2 nin girişine bağlanır buna seri bağlantı denir. Toplam dirençlerini bulmak için önce seri bağlı olan her direncin ohm değerlerini direkt toplarız artık tek bir direncimiz varmış gibi (R1+R2=RX) düşünür ve topladığımız ohm değerini o dirence atarız. Artık paralel iki direncimiz var:
 R1 ve R2 toplamı RX=6 ohm varsayarsak R3 direnci 3 ohm olursa şu formülü kullanarak devrenin eşdeğer direnicini bulabiliriz:
 
-<div class="formula-container">
-    R<sub>eq (Eşdeğer Direnç)</sub> &nbsp;=&nbsp;
-    <div class="fraction">
-        <span class="numerator">R<sub>X</sub> &times; R<sub>3</sub></span>
-        <span class="denominator">R<sub>X</sub> + R<sub>3</sub></span>
+<div class="formül-container">
+    R<sub>eş (Eşdeğer Direnç)</sub> &nbsp;=&nbsp;
+    <div class="kesir">
+        <span class="pay">R<sub>X</sub> &times; R<sub>3</sub></span>
+        <span class="payda">R<sub>X</sub> + R<sub>3</sub></span>
     </div>
 </div>
 
 <p>6 ohm ve 3 ohm'luk iki paralel direnç:</p>
 
-<div class="formula-container">
-    R<sub>eq</sub> &nbsp;=&nbsp;
-    <div class="fraction">
-        <span class="numerator">6 &times; 3</span>
-        <span class="denominator">6 + 3</span>
+<div class="formül-container">
+    R<sub>eş</sub> &nbsp;=&nbsp;
+    <div class="kesir">
+        <span class="pay">6 &times; 3</span>
+        <span class="payda">6 + 3</span>
     </div>
     &nbsp;=&nbsp;
-    <div class="fraction">
-        <span class="numerator">18</span>
-        <span class="denominator">9</span>
+    <div class="kesir">
+        <span class="pay">18</span>
+        <span class="payda">9</span>
     </div>
-    &nbsp;=&nbsp; 2 ohm &nbsp;=&nbsp; R<sub>eq</sub> 
+    &nbsp;=&nbsp; 2 ohm 
 </div>
 
 <Image 
@@ -198,5 +197,81 @@ R1 ve R2 toplamı RX=6 ohm varsayarsak R3 direnci 3 ohm olursa şu formülü kul
   style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
 />
 
+Yukarıdaki bilgileri kullanarak bu devrenin eşdeğer direncini bulmaya çalışalım (Breadboard tamamen görmezden gelinmelidir sadece bileşenleri tutmak için düşünülmeli);
 
+<Image 
+  src={i3} 
+  alt="Seri ve Paralel Bağlantı" 
+  quality="mid"
+  style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
+/>
 
+<Image
+  src={i4} 
+  alt="Seri ve Paralel Bağlantı Çözümü" 
+  quality="mid"
+  style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
+/>
+
+**A Noktası (Kırmızı Giriş):** Doğrudan R1 direncinin sol ucuna bağlanır.
+
+**C Noktası (Kırmızı Çizgi):** R1'in sağ ucu, R2'nin üst ucu ve R3'ün sol ucunun birleştiği ortak hattır.
+
+**D Noktası (Mor/Siyah Çizgi):** R6'nın sağ ucu, R2'nin alt ucu ve siyah eğik kablo sayesinde R3'ün sağ ucu ile en sağdaki dikey direncin üst ucu buraya bağlıdır.
+
+**B Noktası (Siyah Çıkış):** Doğrudan R6 direncinin sol ucuna bağlanır.
+
+**E Noktası (En Sağ Alt Köşe):** R3'ün sağ ucu ile R4'ün üst ucu burada birleşir.
+
+**F Noktası (En Sağ Alt Köşe):** R5'in sağ ucu ile R4'ün alt ucu burada birleşir.
+
+En sağ alt köşede yer alan F noktası devrenin başka hiçbir yerine ya da çıkışına bağlı değildir.
+Bu yüzden R5 direnci ve R4 direnci ucu açık bir döngüde kalır. Akım bu yola girip devreyi tamamlayamaz.
+
+**Sonuç:** R5 ve R4 devre dışı kalır ve yok sayılır.
+
+Ortadaki C ve D düğümleri arasına dikkatlice bakalım:
+**R<sub>2</sub> = 2&Omega;** direnci C ile D arasındadır.
+**R<sub>3</sub> = 6&Omega;** direnci de sol ucuyla C'ye, sağ ucuyla (çapraz kablo sayesinde) D'ye bağlıdır.
+Aynı iki düğüm arasında kalan R2 ve R3 dirençleri birbirine paraleldir. Bunların eşdeğerini R<sub>eş</sub> hesaplayalım:
+
+<div class="formül-container">
+    <b>R<sub>CD</sub> &nbsp;=&nbsp;</b>
+    <div class="kesir">
+        <span class="pay">R<sub>2</sub> &times; R<sub>3</sub></span>
+        <span class="payda">R<sub>2</sub> + R<sub>3</sub></span>
+    </div>
+
+    &nbsp;=&nbsp;
+    <div class="kesir">
+        <span class="pay">2 &times; 6</span>
+        <span class="payda">6 + 2</span>
+    </div>
+
+    &nbsp;=&nbsp;
+    <div class="kesir">
+        <span class="pay">12</span>
+        <span class="payda">8</span>
+    </div>
+    
+    &nbsp;=&nbsp;
+    <div class="kesir">
+        <b><span>1.5&Omega;</span></b>
+    </div>
+</div>
+
+Paralel olan orta kısmı tek bir direnç 1.5 &Omega; gibi düşündüğümüzde, devrenin geri kalanı A noktasından B noktasına kadar düz bir hat halinde seri hale gelir:
+
+**Girişteki direnç:** R<sub>1</sub> = 8&Omega;
+
+**Orta paralel kısım:** R<sub>CD</sub> = 1.5&Omega;
+
+**Çıkıştaki direnç:** R<sub>6</sub> = 12&Omega;
+
+<div class="formül-container">
+    <strong>R<sub>eş</sub> &nbsp;=&nbsp;</strong> R<sub>1</sub> + R<sub>CD</sub> + R<sub>6</sub> 
+</div>
+
+<div class="formül-container">
+    <strong>R<sub>eş</sub> &nbsp;=&nbsp;</strong> 12 + 8  + 1.5 = <strong>21.5&Omega;</strong> olarak bulunur.
+</div>

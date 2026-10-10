@@ -38,7 +38,6 @@ let error: string | null = null;
 let decimalValue: number | null = null;
 let results = { binary: '—', octal: '—', decimal: '—', hex: '—' };
 let asciiInfo = '—';
-let hexByteInfo = '—';
 
 try {
   if (inputValue === '') {
@@ -61,12 +60,6 @@ try {
   } catch {
     asciiInfo = '—';
   }
-  // HEX byte: sayısal karşılığın en az 2 haneli HEX gösterimi.
-  try {
-    hexByteInfo = ns.formatHex(decimalValue, Math.max(2, ns.decimalToHex(decimalValue).length));
-  } catch {
-    hexByteInfo = '—';
-  }
 } catch (e) {
   error = e instanceof Error ? e.message : String(e);
   decimalValue = null;
@@ -74,10 +67,10 @@ try {
 
 function labelForBase(base: number): string {
   switch (base) {
-    case ns.BASES.BINARY: return 'İkili';
-    case ns.BASES.OCTAL: return 'Sekizli';
-    case ns.BASES.DECIMAL: return 'Onluk';
-    case ns.BASES.HEX: return 'HEX';
+    case ns.BASES.BINARY: return 'İkili (Binary)';
+    case ns.BASES.OCTAL: return 'Sekizli (Octal)';
+    case ns.BASES.DECIMAL: return 'Onluk (Decimal)';
+    case ns.BASES.HEX: return 'Onaltılık (Hexadecimal)';
     default: return `${base} tabanı`;
   }
 }
@@ -136,28 +129,24 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
 
     <div class="number-system-converter__results" data-nsc-results hidden={!!error}>
       <div class="number-system-converter__row">
-        <span class="number-system-converter__label">İkili</span>
+        <span class="number-system-converter__label">İkili (Binary)</span>
         <span class="number-system-converter__value" data-nsc-out-binary>{results.binary}</span>
       </div>
       <div class="number-system-converter__row">
-        <span class="number-system-converter__label">Sekizli</span>
+        <span class="number-system-converter__label">Sekizli (Octal)</span>
         <span class="number-system-converter__value" data-nsc-out-octal>{results.octal}</span>
       </div>
       <div class="number-system-converter__row number-system-converter__row--highlight">
-        <span class="number-system-converter__label">Onluk</span>
+        <span class="number-system-converter__label">Onluk (Decimal)</span>
         <span class="number-system-converter__value" data-nsc-out-decimal>{results.decimal}</span>
       </div>
       <div class="number-system-converter__row">
-        <span class="number-system-converter__label">Onaltılık</span>
+        <span class="number-system-converter__label">Onaltılık (Hexadecimal)</span>
         <span class="number-system-converter__value" data-nsc-out-hex>{results.hex}</span>
       </div>
       <div class="number-system-converter__row number-system-converter__row--ascii">
         <span class="number-system-converter__label">ASCII</span>
         <span class="number-system-converter__value" data-nsc-out-ascii>{asciiInfo}</span>
-      </div>
-      <div class="number-system-converter__row number-system-converter__row--hexbytes">
-        <span class="number-system-converter__label">HEX byte</span>
-        <span class="number-system-converter__value" data-nsc-out-hexbyte>{hexByteInfo}</span>
       </div>
     </div>
   </div>
@@ -396,11 +385,6 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
     color: var(--nsc-green);
   }
 
-  .number-system-converter__row--hexbytes .number-system-converter__value {
-    font-size: 0.95rem;
-    color: var(--nsc-blue);
-  }
-
   .number-system-converter__error-marker {
     margin-left: 0.35rem;
     font-size: 0.9rem;
@@ -408,7 +392,7 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
 </style>
 
 <script>
-  import { BASES, normalizeBaseN, baseToDecimal, decimalToBinary, decimalToOctal, decimalToHex, asciiCodeToChar, formatHex } from '../js/number-systems.js';
+  import { BASES, normalizeBaseN, baseToDecimal, decimalToBinary, decimalToOctal, decimalToHex, asciiCodeToChar } from '../js/number-systems.js';
   function initConverter(root) {
     const input = root.querySelector('[data-nsc-input]');
     if (!input || input.dataset.nscBound === '1') return;
@@ -423,7 +407,6 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
       dec: root.querySelector('[data-nsc-out-decimal]'),
       hex: root.querySelector('[data-nsc-out-hex]'),
       asc: root.querySelector('[data-nsc-out-ascii]'),
-      hb: root.querySelector('[data-nsc-out-hexbyte]'),
     };
     function curBase() {
       const c = radios.find((r) => r.checked);
@@ -446,7 +429,6 @@ const baseOptions = [ns.BASES.BINARY, ns.BASES.OCTAL, ns.BASES.DECIMAL, ns.BASES
         out.dec.textContent = String(dec);
         out.hex.textContent = decimalToHex(dec);
         try { out.asc.textContent = asciiCodeToChar(dec); } catch { out.asc.textContent = '—'; }
-        try { out.hb.textContent = formatHex(dec, Math.max(2, decimalToHex(dec).length)); } catch { out.hb.textContent = '—'; }
         if (errEl) { errEl.textContent = ''; errEl.hidden = true; }
         if (resEl) resEl.hidden = false;
         if (subEl) subEl.textContent = 'Değeri seçilen tabandan diğer tabanlara çevir';
