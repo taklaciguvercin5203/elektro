@@ -13,76 +13,76 @@ import i4 from '/src/assets/2/esdeger_direnc_problemi_cozumleme.png';
 
 ## Neden İkili Sistem?
 
-Bilgisayarların elektrik var ve yok mantığı ile çalıştığını öğrenmiştik. Ama neden 1 ve 0 kullanıyoruz ve bu endüstri standardı oldu? 10'luk sayı sistemini neden kullanmıyoruz. Onluk sayı sistemi aslında teorik bir formülden değil direkt 10 parmağımızın olmasından geliyor. İnsanlar en eski çağlardan beri saymak için parmaklarını kullanmıştır. MÖ 3000'lerde Onluk sistemin ilk izleri ve temel kullanımı Antik Mısır hiyerogliflerinde ve sümerlerde görülmeye başlandı.
+Bilgisayarların elektrik var ve yok mantığı ile çalıştığını öğrenmiştik. Ama neden 1 ve 0 kullanıyoruz ve bu endüstri standardı oldu? 10'luk sayı sistemini neden kullanmıyoruz? Onluk sayı sistemi aslında teorik bir formülden değil doğrudan 10 parmağımızın olmasından geliyor. İnsanlar en eski çağlardan beri saymak için parmaklarını kullanmıştır. MÖ 3000'lerde Onluk sistemin ilk izleri ve temel kullanımı Antik Mısır hiyerogliflerinde ve Sümerlerde görülmeye başlandı.
 
-Biz insanlar 10'luk sayı sistemiyle algılarız. Ama makinelerin işlem yapma mantığı çok farklıdır. Onlar karmaşık harfleri veya sayıları bizim gibi değil, farklı taban matematiksel hesapları ile işlerler.
-Örneğin, 8'lik (Oktal) tabandaki bir veriyi 16'lık (Heksadesimal) tabana dönüştürmeleri gerekebilir; 
+Biz insanlar 10'luk sayı sistemiyle algılarız. Ama makinelerin işlem yapma mantığı çok farklıdır. Onlar karmaşık harfleri veya sayıları bizim gibi değil, farklı tabanlı matematiksel hesaplar ile işlerler.
+Örneğin, 8'lik (Oktal) tabandaki bir veriyi 16'lık (Heksadesimal) tabana dönüştürmeleri gerekebilir. 
 
 
 ### Sayı Dönüşüm Aracı
 
-Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değeri diğer sistemlere çevirebilirsiniz
+Aşağıdaki interaktif aracı kullanarak herhangi bir sayı sistemindeki değeri diğer sistemlere çevirebilirsiniz.
 
 <NumberSystemConverter value="255" fromBase={10} />
 
 
 ### Peki Bu Makinelere Hayat Veren Şey Nedir?
 
-Bu devasa mantık kapılarının ve sistemlerin çalışabilmesi için enerjiye ihtiyacı vardır. İşte burada devreye kaynaklarımız girer.
+Bu devasa mantık kapılarının ve sistemlerin çalışabilmesi için enerjiye ihtiyaçları vardır. İşte burada devreye kaynaklarımız girer.
 Elektronları bir borudaki su gibi düşünürseniz, onları ileri doğru zorlayan güce gerilim (voltaj) deriz. Devrelerimizde hem sabit bir itme gücü sağlayan Doğru Akım (DC) gerilim kaynaklarını hem de dalgalı bir itme gücü sağlayan Alternatif Akım (AC) kaynaklarını kullanırız. 
 
-Bir de doğrudan akımın (suyun) miktarını belirleyen Akım Kaynakları vardır. Gerçek hayattan örnek vermek gerekirse isterseniz milyonlarca volt ile çarpılın eğer amper yani akım şiddeti düşükse hayatta kalabilirsiniz ama iç ve dış direncinizi aşan çok küçük bir volt ve biraz akım şiddeti sizi çok rahat öldürebilir. Bunu Ohm Kanunu ile ölçebiliriz:
+Bir de doğrudan akımın (suyun) miktarını belirleyen Akım Kaynakları vardır. Gerçek hayattan örnek vermek gerekirse isterseniz milyonlarca volt ile çarpılsanız bile, eğer amper yani akım şiddeti düşükse hayatta kalabilirsiniz ama iç ve dış direncinizi aşan çok küçük bir voltaj ve biraz akım şiddeti sizi çok rahat öldürebilir. Bunu Ohm Kanunu ile hesaplayabiliriz:
 
 • **Gerilim (V) 50 Volt olsun**
 
-• **Kuru İnsan İç Direnci (R) Yaklaşık 100.000 ohm (Ω)**
+• **Kuru insan iç direnci (R) Yaklaşık 100.000 ohm (Ω)**
 
-• **Formülü Uygulayalım:** `50V / 100.000R = 0,0005A`
+• **Formülü Uygulayalım:** `50 V / 100.000 Ω = 0,0005 A`
 
-• **Sonuç:** Vücudunuzdan geçen akım sadece 0.5 miliamper olur. Bu değer ölümcül sınır olan 50 miliamper'in altındadır. Gücü bu yüksek direnci aşmaya yetmez. Vücudunuzda elektriği gıdıklanma olarak hissedebilirsiniz, yani güvendesinizdir.
+• **Sonuç:** Vücudunuzdan geçen akım sadece 0,5 miliamper olur. Bu değer ölümcül sınır olan 50 miliamperin altındadır. Gücü bu yüksek direnci aşmaya yetmez. Vücudunuzda elektriği gıdıklanma olarak hissedebilirsiniz, yani güvendesinizdir.
 
-> Gerilim demek yüksek direnci aşmaya çalışan elektriksel baskı demek olduğu için gerilim yükseldikçe (örneğin 220V veya 1000V) aynı 100.000 ohm dirençten geçen akım da katlanarak artar. Burada kastettiğimiz durum, 50V gibi düşük bir gerilimin yüksek direnci aşarak tehlikeli düzeyde akım geçirmeye yetmemesidir. Voltaj yükseldikçe insan vücudunun dış direncini düşürmeye başlar belirli bir eşiği aştığında, derinin bu koruyucu direnci elektriksel olarak delinir yani bu kural her zaman işe yaramaz insan hayatı açısından asıl tehlikeli olan gerilimin kendisi değil, vücuttan geçen akım şiddetidir. Gerilim, bu akımı geçirmek için gereken basıncı sağlar. 
+> Gerilim demek yüksek direnci aşmaya çalışan elektriksel baskı demek olduğu için gerilim yükseldikçe (örneğin 220V veya 1000V) aynı 100.000 ohm'luk dirençten geçen akım da katlanarak artar. Burada kastettiğimiz durum, 50 V gibi düşük bir gerilimin yüksek direnci aşarak tehlikeli düzeyde akım geçirmeye yetmemesidir. Voltaj yükseldikçe insan vücudunun dış direncini düşürmeye başlar, belirli bir eşiği aştığında, derinin bu koruyucu direnci elektriksel olarak delinir, yani bu kural her zaman işe yaramaz insan hayatı açısından asıl tehlikeli olan gerilimin kendisi değil, vücuttan geçen akım şiddetidir. Gerilim, bu akımı geçirmek için gereken basıncı sağlar. 
 
-##### Hangi Durumlarda tehlikedeyiz!
+##### Hangi Durumlarda Tehlikedeyiz?
 
-Küvet, jakuzi veya havuz gibi vücudun neredeyse tamamının su altında olduğu ve suyun iletkenliğinin ter, tuz veya klor gibi maddeler nedeniyle yüksek olduğu durumlarda cilt direnci neredeyse tamamen sıfırlanır adeta bir kabloya dönersiniz. Başka senaryoda eğer elektrik iletimi deriden değil de açık bir yara, kesik veya tıbbi bir iğne aracılığıyla doğrudan vücut sıvılarının ve kasların bulunduğu iç dokulara temas ederse, cildin koruyucu yalıtkanlığı tamamen devre dışı kalır. İnsan vücudunun içindeki tuzlu su, kas ve sinir dokularının kendi saf iç direnci zaten 300 ila 500 ohm arasındadır.
+Küvet, jakuzi veya havuz gibi vücudun neredeyse tamamının su altında olduğu ve suyun iletkenliğinin ter, tuz veya klor gibi maddeler nedeniyle yüksek olduğu durumlarda cilt direnci neredeyse tamamen sıfırlanır, adeta bir kabloya dönersiniz. Başka bir senaryoda, eğer elektrik iletimi deriden değil de açık bir yara, kesik veya tıbbi bir iğne aracılığıyla doğrudan vücut sıvılarının ve kasların bulunduğu iç dokulara temas ederse, cildin koruyucu yalıtkanlığı tamamen devre dışı kalır. İnsan vücudunun içindeki tuzlu su, kas ve sinir dokularının kendi saf iç direnci zaten 300 ila 500 ohm arasındadır.
 
 Aynı formülü kıyamet senaryosu için kullanalım:
 
-• **Gerilim (V) 30 Volt**
+• **Gerilim (V) 30 volt olsun**
 
-• **Tuz ve Kimyasallara Maruz Kalmış Islak İnsan İç Direnci (R) Yaklaşık 300 ohm (Ω)**
+• **Tuz ve kimyasallara Maruz Kalmış Islak İnsan İç Direnci (R) Yaklaşık 300 ohm (Ω)**
 
-• **Formülü Uygulayalım:** `30V / 300R = 0.1A`
+• **Formülü Uygulayalım:** `30 V / 300 Ω = 0,1 A`
 
 Bu 100 miliamper demektir yani sizi çok rahat öldürmeye yeter.
 
 #### Akımı Ne İle Ölçeriz?
 
-Evet akım gözümüzü korkuttuğuna göre ampermetre ve çıplak el ile ölçemeyeceğimizi anlamamız gerek. Çünkü Multimetre veya Ampermetre kullandığımız zaman bu cihaz akımı ölçmek için devreye seri bağlanmak zorundadır Devredeki akımın cihaz yüzünden yavaşlamaması veya voltajın düşmemesi için iç direnci 0'a yakın alır. Eğer güneş panelinizden, jeneratörden veya ana şebekeden gelen akım çok büyükse, bunu standart bir cihazla ölçmeye kalkmak o cihazı saniyeler içinde kül eder. Probları eritebilir ve kör eden ışık patlamalarına (elektrik arkı çok yüksek sıcaklıkta ışık ve yoğun ultraviyole (UV) ile kızılötesi (IR) radyasyon yayar. Ark sıcaklığı güneşin yüzey sıcaklığından neredeyse 5 daha fazladır ve yoğun UV ışınları gözdeki korneayı yakabilir) yol açabilir.
+Evet akım gözümüzü korkuttuğuna göre ampermetre ve çıplak el ile ölçemeyeceğimizi anlamamız gerekir. Çünkü Multimetre veya Ampermetre kullandığımız zaman bu cihaz akımı ölçmek için devreye seri bağlanmak zorundadır. Devredeki akımın cihaz yüzünden yavaşlamaması veya voltajın düşmemesi için iç direnci 0'a yakın alır. Eğer güneş panelinizden, jeneratörden veya ana şebekeden gelen akım çok büyükse, bunu standart bir cihazla ölçmeye kalkmak o cihazı saniyeler içinde kül eder. Probları eritebilir ve kör edici ışık patlamalarına (elektrik arkı çok yüksek sıcaklıkta ışık ve yoğun ultraviyole (UV) ile kızılötesi (IR) radyasyon yayar. Ark sıcaklığı güneşin yüzey sıcaklığından neredeyse 5 kat daha fazladır ve yoğun UV ışınları gözdeki korneayı yakabilir) yol açabilir.
 
 Bu yüzden büyük akımları güvenle ölçmek ve kontrol etmek için Akım Transformatörü adı verilen bileşenleri kullanırız.
 
 **Ancak burada şakası olmayan altın bir kural daha vardır:** Akım transformatörlerinin primer (birinci) ve sekonder (ikinci) sargı uçları asla açılmaz (boşta bırakılmaz). 
-Eğer açarsanız, o devasa enerji demanyetize edici zıt manyetik alanın ortadan kalkar ve sistemi havaya uçuracak kadar tehlikeli yüksek gerilimler üretir. Ya kıvılcım olarak atmaya çalışır yada etrafındaki herşeyi indükleyerek (Elektrik üretme) çarpar.
+Eğer açarsanız, o devasa enerji, demanyetize edici zıt manyetik alan ortadan kalkar ve sistemi havaya uçuracak kadar tehlikeli yüksek gerilimler üretir. Ya kıvılcım olarak atmaya çalışır ya da etrafındaki her şeyi indükleyerek (Elektrik üretme) çarpar.
 
 **• Normal Çalışma:** Akım trafoları normalde sekonderi kısa devreye yakın çok düşük dirençle çalışacak şekilde tasarlanmıştır. Sekonderden akan akım, primer akımının oluşturduğu manyetik akıyı dengeler ve nüvedeki (manyetik alanın dağılmasını önleyerek onu üzerinde toplayan ve yönlendiren metal blok) toplam manyetik alanı güvenli bir seviyede tutar.
 
 **• Açık Devre Durumu:** Sekonder devre açıldığında, sekonder akımı sıfıra düşer. Bu durumda primeri dengeleyecek bir karşı manyetik alan kalmaz.
 
-**• Sonuç:** Primer akımının tamamı nüveyi mıknatıslamaya başlar. Nüve aşırı doyuma ulaşır (satürasyon) ve sekonder terminallerinde binlerce voltluk (kV yani Vol'tun binlerce katı) tehlikeli bir yüksek gerilim indükler (üretir).
+**• Sonuç:** Primer akımının tamamı nüveyi mıknatıslamaya başlar. Nüve aşırı doyuma ulaşır (satürasyon) ve sekonder terminallerinde binlerce voltluk (kV, yani voltun binlerce katı) tehlikeli bir yüksek gerilim indükler (üretir).
 
 #### Elektroniğin Kutsal Üçlüsü: R, L ve C 
 
-**Enerjiyi ürettik, transistörlere veya makinelere göndereceğiz. Peki yolda bu enerjiyi nasıl şekillendireceğiz?** Karşımıza üç temel pasif devre elemanı çıkar: **`Direnç R (Resistor)`**,**` Bobin/İndüktör L (Lenz's Law)`** ve **`Kapasite/Kapasitör C (Capacitor)`**.
+**Enerjiyi ürettik, transistörlere veya makinelere göndereceğiz. Peki yolda bu enerjiyi nasıl şekillendireceğiz?** Karşımıza üç temel pasif devre elemanı çıkar: **`Direnç R (Resistor)`**, **`Bobin/İndüktör L (Inductor)`** ve **`Kapasite/Kapasitör C (Capacitor)`**.
 
-**Tüm bu elemanların çalışma kurallarını belirleyen evrensel yasa ise **Ohm Kanunu'dur**: Bir devredeki gerilimin akıma bölümü her zaman sabittir .**
+**Tüm bu elemanların çalışma kurallarını belirleyen evrensel yasa ise **Ohm Kanunu'dur**: Bir devredeki gerilimin akıma bölümü her zaman sabittir.**
 
 ### Peki bu üçlü ne işe yarar?  
 
-**`Direnç (R):`** Direnç tam bir eşkiyadır koskoca otobanı kapatan tek şeride düşüren ve araçların verimini düşürüp ısınmasına hararet yapmasına neden olan bir eşkiyadır. Devredeki gerilimi düşürmek için alanı daraltır elektronlar dar alanda birbirine ve atomlara çarpması ile fazlaca ısınır bu çarpışmalar elektronların hareketini zorlaştırır. İşte bu zorluğa direnç denir birimi ohm (Ω)'dur.
+**`Direnç (R):`** Direnç tam bir eşkiyadır koskoca otobanı kapatan tek şeride düşüren ve araçların verimini düşürüp ısınmasına hararet yapmasına neden olan bir eşkiyadır. Devredeki gerilimi düşürmek için alanı daraltır elektronlar dar alanda birbirine ve atomlara çarpışmasıyla fazlaca ısınır bu çarpışmalar elektronların hareketini zorlaştırır. İşte bu zorluğa direnç denir birimi ohm (Ω)'dur.
 
-**`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak yukarıda bahsettiğimiz Primer ve Sekonder birer bobindir, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur. 
+**`Bobin ve Kondansatör (L ve C):`** İkisi de devrelerde "enerji depolayan elemanlar" olarak görev yapar. Bobin enerjiyi manyetik alan olarak yukarıda bahsettiğimiz Primer ve Sekonder birer bobinlerdir, kondansatör ise elektrik alanı olarak tutar. Bu ikisinin birleşmesi devrenin kapasitesini (davranış karakterini) oluşturur. 
 
 **1. Kondansatör (C) : Gerilimin (Voltajın) Bekçisi ve Elektrik Barajı**
 
@@ -100,7 +100,7 @@ Kondansatörü ortasından esnek bir zar geçen bir su borusu veya şehir hatlar
 
     **Nasıl Çalışır?** İçinden akım (elektronlar) geçtiği anda etrafında görünmez bir Manyetik Alan oluşur. Enerjiyi bu manyetik alanda kinetik (hareketli) olarak depolar.
 
-    **Karakteri:** Kondansatör voltaj değişimine direnirken, Bobin akımın aniden değişmesinden nefret eder (Buna Lenz's Kanunu denir). Dönen ağır bir değirmen taşını aniden durduramazsınız, aniden de hızlandıramazsınız. Fişi çektiğinizde bobinin etrafındaki manyetik alan çöker ve içindeki enerjiyi devasa bir voltaj olarak devreye geri kusar (Önceki konudaki akım trafosunda sekonder açıldığında patlamasının sebebi tam olarak budur).
+    **Karakteri:** Kondansatör voltaj değişimine direnirken, Bobin akımın aniden değişmesinden nefret eder (Buna Lenz Kanunu denir). Dönen ağır bir değirmen taşını aniden durduramazsınız, aniden de hızlandıramazsınız. Fişi çektiğinizde bobinin etrafındaki manyetik alan çöker ve içindeki enerjiyi devasa bir voltaj olarak devreye geri kusar (Önceki konudaki akım trafosunda sekonder açıldığında patlamasının sebebi tam olarak budur).
 
     **Görevi:** Akımdaki ani sıçramaları engeller, devreye giren akımın yavaşça yükselmesini ve yavaşça düşmesini sağlar.
 
@@ -108,19 +108,19 @@ Kondansatörü ortasından esnek bir zar geçen bir su borusu veya şehir hatlar
 
 Siz akımı aniden artırmak veya kesmek istediğinizde, o kendi içinde ters bir gerilim indükleyerek (bobin etkisi) bu değişime direnir. Yani elektronlara "Durun bakalım, öyle kafanıza göre hızlanıp yavaşlayamazsınız!" diyerek devredeki değişimi yumuşatır. 
 
-**Kirchhoff'un Gerilimler Kanunu:** Nasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
+**Kirchhoff'un Gerilim Kanunu:** Nasıl ki doğada hiçbir şey kaybolmuyorsa, kapalı bir elektrik devresinde de enerjinin korunumu esastır. Kirchhoff'un meşhur kanunu der ki: Kapalı bir devrede dönüp dolaşıp aynı noktaya geliyorsan, gerilimlerin toplam değişimi sıfırdır.
 
-Yani kaynağın ürettiği gerilim, direncin harcadığı gerilim ile toplandığında sonuç koca bir sıfır olmalıdır **`V_i + -V_R = 0`** Ne kadar enerji sağlarsan, o kadarını harcarsın. Evren borçlu kalmayı sevmez.
+Yani kaynağın ürettiği gerilim, direncin harcadığı gerilim ile toplandığında sonuç koca bir sıfır olmalıdır **`V_i - V_R = 0`** Ne kadar enerji sağlarsan, o kadarını harcarsın. Evren borçlu kalmayı sevmez.
 
-**Kirchhoff'un Akımlar Kanunu** ise elektrik devrelerindeki düğüm noktasına giren ve çıkan akımlar arasındaki ilişkiyi açıklar. Bir düğüm noktasına giren akımların toplamı, o düğümden çıkan akımların toplamına eşittir. Elektrik yükü yok olamaz veya durduk yere var edilemez bir noktaya ne kadar yük girerse aynı sürede o kadar yük çıkmak zorundadır. **`I_1 + I_2 + I_3 + I_4 + ... = 0`** her zaman sıfıra eşit olmak zorundadır.
+**Kirchhoff'un Akım Kanunu** ise elektrik devrelerindeki düğüm noktasına giren ve çıkan akımlar arasındaki ilişkiyi açıklar. Bir düğüm noktasına giren akımların toplamı, o düğümden çıkan akımların toplamına eşittir. Elektrik yükü yok olamaz veya durduk yere var edilemez bir noktaya ne kadar yük girerse aynı sürede o kadar yük çıkmak zorundadır. **`I_1 + I_2 + I_3 + I_4 + ... = 0`** her zaman sıfıra eşit olmak zorundadır.
 
 > Örnek:
-> 4 ayrı kablonun kesiştiği bir düğüme gelen ilk üç kablodaki akımlar sırasıyla düğüme doğru **3A, 2A ve 1A** olduğuna göre, 4. kablodan geçen akımın yönü ve büyüklüğü nedir?
+> 4 ayrı kablonun kesiştiği bir düğüme gelen ilk üç kablodaki akımlar sırasıyla düğüme doğru **3A, 2A ve 1A** ise, 4. kablodan geçen akımın yönü ve büyüklüğü nedir?
 
 <details>
 <summary>Çözüm İçin Tıklayın</summary>
 
-> Kirchhoff'un Akımlar Kanununa göre bir düğüme **giren akımların toplamı, çıkan akımların toplamına eşit** olmalıdır 
+> Kirchhoff'un Akım Kanununa göre bir düğüme **giren akımların toplamı, çıkan akımların toplamına eşit** olmalıdır 
 > 
 > Formülü kurarsak:
 > 
@@ -130,14 +130,14 @@ Yani kaynağın ürettiği gerilim, direncin harcadığı gerilim ile toplandı�
 > 
 > 6A + I<sub>4</sub> = 0
 >  
-> I<sub>4</sub>7 = -6 
+> I<sub>4</sub> = -6 A
 >
 > **Sonuç:** 4. kablodan **6A** büyüklüğünde akım geçer ve yönü **düğümden dışarı doğru**dur.
 
 </details>
 
 
-### Bir devrenin serimi paralelmi olduğunu nasıl anlarız?
+### Bir devrenin seri mi paralel mi olduğunu nasıl anlarız?
 
 
 Bir elektrik veya elektronik devresinin **seri mi yoksa paralel mi** olduğunu anlamak için akımın izlediği yola ve elemanların bağlanma şekline bakmanız gerekir:
@@ -163,8 +163,8 @@ Bir elektrik veya elektronik devresinin **seri mi yoksa paralel mi** olduğunu a
 
     **`Seri Devre:`** Elemanlar uç uca (arka arkaya) bağlanır. Bir elemanın çıkışı, diğer elemanın girişine bağlıdır.
 
-Aşağıdaki devrede - ve + kutupları sırasıyla siyah ve kırmızı ile gösterilmiştir. Bir direncin serimi paralelmi olduğunun anlamanın en kolay yolu o direncin girişine bağlanan kablo herhangi bir direncin çıkışına bağlı mı sorusunu cevaplamaktır. Aşağıdaki örnekteki siyah hatta soldan sağa sırayla dirençler R1 ve R2 bulunuyor pilin eksi ucundan çıkan elektronlar ilk başta R1 e uğrar ve çıkış yapar sonra R2 nin girişine bağlanır buna seri bağlantı denir. Toplam dirençlerini bulmak için önce seri bağlı olan her direncin ohm değerlerini direkt toplarız artık tek bir direncimiz varmış gibi (R1+R2=RX) düşünür ve topladığımız ohm değerini o dirence atarız. Artık paralel iki direncimiz var:
-R1 ve R2 toplamı RX=6 ohm varsayarsak R3 direnci 3 ohm olursa şu formülü kullanarak devrenin eşdeğer direnicini bulabiliriz:
+Aşağıdaki devrede - ve + kutupları sırasıyla siyah ve kırmızı ile gösterilmiştir. Bir direncin seri mi paralel mi olduğunun anlamanın en kolay yolu o direncin girişine bağlanan kablo herhangi bir direncin çıkışına bağlı mı sorusunu cevaplamaktır. Aşağıdaki örnekteki siyah hatta soldan sağa sırayla dirençler R1 ve R2 bulunuyor pilin eksi ucundan çıkan elektronlar ilk başta R1'e uğrar ve çıkış yapar, sonra R2'nin girişine bağlanır Buna seri bağlantı denir. Toplam dirençlerini bulmak için önce seri bağlı olan her direncin ohm değerlerini direkt toplarız artık tek bir direncimiz varmış gibi (R1+R2=RX) düşünürüz ve topladığımız ohm değerini o dirence atarız. Artık paralel iki direncimiz var:
+R1 ve R2 toplamı RX=6 ohm varsayarsak R3 direnci 3 ohm olursa şu formülü kullanarak devrenin eşdeğer direncini bulabiliriz:
 
 <div class="formül-container">
     R<sub>eş (Eşdeğer Direnç)</sub> &nbsp;=&nbsp;
@@ -197,7 +197,7 @@ R1 ve R2 toplamı RX=6 ohm varsayarsak R3 direnci 3 ohm olursa şu formülü kul
   style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
 />
 
-Yukarıdaki bilgileri kullanarak bu devrenin eşdeğer direncini bulmaya çalışalım (Breadboard tamamen görmezden gelinmelidir sadece bileşenleri tutmak için düşünülmeli);
+Yukarıdaki bilgileri kullanarak bu devrenin eşdeğer direncini bulmaya çalışalım (Breadboard tamamen görmezden gelinmelidir, sadece bileşenleri tutmak için düşünülmeli);
 
 <Image 
   src={i3} 
@@ -226,14 +226,14 @@ Yukarıdaki bilgileri kullanarak bu devrenin eşdeğer direncini bulmaya çalı�
 **F Noktası (En Sağ Alt Köşe):** R5'in sağ ucu ile R4'ün alt ucu burada birleşir.
 
 En sağ alt köşede yer alan F noktası devrenin başka hiçbir yerine ya da çıkışına bağlı değildir.
-Bu yüzden R5 direnci ve R4 direnci ucu açık bir döngüde kalır. Akım bu yola girip devreyi tamamlayamaz.
+Bu yüzden R5 ve R4 dirençleri ucu açık bir döngüde kalır. Akım bu yola girip devreyi tamamlayamaz.
 
 **Sonuç:** R5 ve R4 devre dışı kalır ve yok sayılır.
 
 Ortadaki C ve D düğümleri arasına dikkatlice bakalım:
 **R<sub>2</sub> = 2&Omega;** direnci C ile D arasındadır.
 **R<sub>3</sub> = 6&Omega;** direnci de sol ucuyla C'ye, sağ ucuyla (çapraz kablo sayesinde) D'ye bağlıdır.
-Aynı iki düğüm arasında kalan R2 ve R3 dirençleri birbirine paraleldir. Bunların eşdeğerini R<sub>eş</sub> hesaplayalım:
+Aynı iki düğüm arasında kalan R2 ve R3 dirençleri birbirine paraleldir. Bunların eşdeğerini, R<sub>eş</sub>'i hesaplayalım:
 
 <div class="formül-container">
     <b>R<sub>CD</sub> &nbsp;=&nbsp;</b>
@@ -260,7 +260,7 @@ Aynı iki düğüm arasında kalan R2 ve R3 dirençleri birbirine paraleldir. Bu
     </div>
 </div>
 
-Paralel olan orta kısmı tek bir direnç 1.5 &Omega; gibi düşündüğümüzde, devrenin geri kalanı A noktasından B noktasına kadar düz bir hat halinde seri hale gelir:
+Paralel olan orta kısmı tek bir direnç, 1,5 &Omega; gibi düşündüğümüzde, devrenin geri kalanı A noktasından B noktasına kadar düz bir hat halinde seri hale gelir:
 
 **Girişteki direnç:** R<sub>1</sub> = 8&Omega;
 
@@ -273,5 +273,5 @@ Paralel olan orta kısmı tek bir direnç 1.5 &Omega; gibi düşündüğümüzde
 </div>
 
 <div class="formül-container">
-    <strong>R<sub>eş</sub> &nbsp;=&nbsp;</strong> 12 + 8  + 1.5 = <strong>21.5&Omega;</strong> olarak bulunur.
+    <strong>R<sub>eş</sub> &nbsp;=&nbsp;</strong> 8 + 12 + 1,5 = <strong>21.5&Omega;</strong> olarak bulunur.
 </div>
