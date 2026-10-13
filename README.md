@@ -11,6 +11,6 @@ Buradaki temel amaç; karmaşık fiziksel/mühendislik kavramlarını benzetmele
 | Hafta | Konu Başlığı | Bağlantı |
 | :---: | :--- | :---: |
 | **01** | **Elektron'dan Yapay Zekaya** | [Kesin Oku](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/) |
-| **02** | **Elektriği Şekillendiren Evrensel Yasalar**  | [Oku](http://localhost:4321/elektro/temel-ve-dijital-elektronik/sayi_sistemleri_ve_devreler/) |
+| **02** | **Elektriği Şekillendiren Evrensel Yasalar**  | [Oku](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/sayi_sistemleri_ve_devreler/) |
 
 *(Her hafta yeni bir konu eklenecektir.)*
