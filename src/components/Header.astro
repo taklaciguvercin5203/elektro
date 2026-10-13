@@ -19,6 +19,7 @@ import Search from 'virtual:starlight/components/Search';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
 import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
 import config from 'virtual:starlight/user-config';
+import AiAssistant from './AiAssistant.astro';
 
 /** Arama kutusunun yalnızca Pagefind ya da Search override'ı varken basılması gerekir. */
 const shouldRenderSearch =
@@ -68,6 +69,9 @@ const version = 'v0.1';
     <path d="M6 3.5L10.5 8 6 12.5" />
   </svg>
 </button>
+
+<!-- Sağ alttaki Houston yapay zekâ sohbet butonu (tüm sayfalarda görünür) -->
+<AiAssistant />
 
 <style>
   /* --- Menü kapalıyken sol kenardaki "menüyü aç" sekmesi --- */
