@@ -24,7 +24,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   type="button"
   class="ha-fab"
   id="houston-fab"
-  title="Houston'a sor — anlamadığın konuyu sor"
+  title="Houston'a anlamadığın konuyu sor belki cevap verir"
   aria-label="Houston yapay zekâ asistanını aç"
   aria-expanded="false"
   aria-controls="houston-panel"
@@ -41,26 +41,23 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       </span>
     </span>
       <span class="ha-houston__zzz" aria-hidden="true"><i>z</i><i>z</i><i>z</i></span>
+      <span class="ha-houston__hearts" aria-hidden="true"><i>♥</i><i>♥</i><i>♥</i></span>
 
   </span>
 </button>
 
-<!-- Houston küstükten sonra geri çağırmak için telsiz butonu (başta gizli) -->
+<!-- Houston küstükten sonra geri çağırmak için sağ kenar sekmesi (başta gizli) -->
 <button
   type="button"
   class="ha-radio"
   id="houston-radio"
-  title="Houston'ı telsizle geri çağır"
-  aria-label="Houston'ı telsizle geri çağır"
+  title="Houston'ı geri çağır"
+  aria-label="Houston'ı geri çağır"
   hidden
 >
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M9 3.5 6.8 7 9 7.6" />
-    <path d="M7 8v11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8" />
-    <rect x="9.5" y="9.5" width="5" height="6" rx="1" />
-    <circle cx="15.5" cy="12.5" r="1" fill="currentColor" stroke="none" />
+  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M10 3.5L5.5 8 10 12.5" />
   </svg>
-  <span class="ha-radio__ping" aria-hidden="true"></span>
 </button>
 
 <section
@@ -100,7 +97,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
         class="ha-input"
         rows="1"
         maxlength="1200"
-        placeholder="Hangi konuyu anlamadın? Örn: MOSFET nedir?"
+        placeholder="Neyi anlamadın? Örn: MOSFET nedir?"
         aria-label="Sorunuzu yazın"
       ></textarea>
       <button type="submit" class="ha-send" title="Gönder" aria-label="Soruyu gönder">
@@ -153,66 +150,48 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       height 320ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* --- Telsiz: Houston küstükten sonra geri çağırmak için (başta gizli) --- */
+  /* --- Geri çağırma sekmesi: Header'daki menü sekmesinin sağ kenar aynası ---
+     Houston küstükten sonra sağdan kayarak belirir. */
   .ha-radio {
     position: fixed;
-    inset-inline-end: 1rem;
     inset-block-end: max(1rem, env(safe-area-inset-bottom, 0px));
+    inset-inline-end: 0;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3rem;
-    height: 3rem;
+    width: 1.5rem;
+    height: 2.5rem;
     padding: 0;
-    border: 1px solid var(--sl-color-gray-5);
-    border-radius: 50%;
-    background: linear-gradient(145deg, var(--sl-color-gray-6), var(--sl-color-bg));
-    color: #4af2c8;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--sl-color-hairline-light);
+    border-inline-end: none;
+    border-start-start-radius: 0.45rem;
+    border-end-start-radius: 0.45rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-gray-2);
     cursor: pointer;
-    transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1),
+      color 150ms ease, background 150ms ease;
   }
 
   .ha-radio[hidden] {
     display: none !important;
   }
 
+  /* Houston gidince sekme sağdan kayarak içeri girer */
+  .ha-radio:not([hidden]) {
+    transform: translateX(0);
+  }
+
   .ha-radio:hover {
-    transform: translateY(-2px) scale(1.05);
-    border-color: #4af2c8;
-    box-shadow: 0 8px 22px rgba(74, 242, 200, 0.35);
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-text-accent);
   }
 
   .ha-radio:focus-visible {
-    outline: 2px solid #4af2c8;
-    outline-offset: 3px;
-  }
-
-  /* Dikkat çekmek için nabız halkası */
-  .ha-radio__ping {
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    border: 2px solid #4af2c8;
-    opacity: 0;
-    pointer-events: none;
-    animation: ha-radio-ping 2s ease-out infinite;
-  }
-
-  @keyframes ha-radio-ping {
-    0% {
-      transform: scale(0.85);
-      opacity: 0.9;
-    }
-    70% {
-      transform: scale(1.25);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1.25);
-      opacity: 0;
-    }
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: 2px;
   }
 
   /* Açıkken Houston büyür ve canlanır */
@@ -412,9 +391,16 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     filter: saturate(0.55) brightness(0.8);
   }
 
-  /* Uykuda yüz merkezde kalır, hafif öne/aşağı kayar — "bitkin" duruş. */
+  /* Uykuda yüz merkezde kalır, hafift öne/aşağı kayar — "bitkin" duruş. */
   .ha-fab.ha-sleep .ha-houston__face {
     transform: translate(0, 12%);
+  }
+
+  /* Uyanma anında gözler çizgiden daireye yavaşça büyür (kademeli açılış).
+     Sadece .ha-waking sınıfı varken aktif; normal göz kırpmayı etkilemez. */
+  .ha-fab.ha-waking .eye {
+    transition: aspect-ratio 420ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      border-radius 420ms ease;
   }
 
   /* Uykudayken sağ üstten süzülüp giden z z z */
@@ -456,6 +442,60 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
   .ha-fab.ha-sleep .ha-houston__zzz i:nth-child(3) {
     animation-delay: 1.6s;
+  }
+
+  /* Sevgi pozu: kalp gözlerden uçan kalpler (panel KAPALIYKEN belirir) */
+  .ha-houston__hearts {
+    position: absolute;
+    top: -1.1em;
+    right: -0.2em;
+    line-height: 1;
+    color: #f52691;
+    pointer-events: none;
+  }
+
+  .ha-houston__hearts i {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 0.6em;
+    font-style: normal;
+    opacity: 0;
+    transform: translate(0, 0.4em) scale(0.6);
+  }
+
+  .ha-houston__hearts i:nth-child(2) {
+    font-size: 0.85em;
+  }
+
+  .ha-houston__hearts i:nth-child(3) {
+    font-size: 1.1em;
+  }
+
+  .ha-fab.ha-love .ha-houston__hearts i {
+    animation: ha-heart-float 2.6s ease-out infinite;
+  }
+
+  .ha-fab.ha-love .ha-houston__hearts i:nth-child(2) {
+    animation-delay: 0.85s;
+  }
+
+  .ha-fab.ha-love .ha-houston__hearts i:nth-child(3) {
+    animation-delay: 1.7s;
+  }
+
+  @keyframes ha-heart-float {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0.5em) scale(0.5) rotate(-8deg);
+    }
+    25% {
+      opacity: 0.95;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(0.5em, -1.6em) scale(1.2) rotate(10deg);
+    }
   }
 
   @keyframes ha-zzz {
@@ -816,6 +856,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     .ha-houston__face,
     .ha-houston__zzz,
     .ha-houston__zzz i,
+    .ha-houston__hearts,
+    .ha-houston__hearts i,
     .ha-fab.ha-crying .eye::after,
     .ha-word,
     .ha-throw,
@@ -887,6 +929,10 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   let haRect = null;
   let haBlinkTimer = 0;
   let haTalkTimer = 0;
+  let haWakeT1 = 0;
+  let haWakeT2 = 0;
+  let haWakeT3 = 0;
+  let haPose = 'default'; // aktif poz — göz kırpma aralığını uzatmak için izlenir
 
   function haParts() {
     const fab = document.getElementById('houston-fab');
@@ -901,6 +947,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   function haSetPose(name) {
     const p = haParts();
     if (!p) return;
+    haPose = name;
     const [eye0, mouth, eye1] = HA_POSES[name] || HA_POSES.default;
     p.left.dataset.shape = eye0;
     p.mouth.dataset.shape = mouth;
@@ -960,7 +1007,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       if (haTracking && !haSleeping && !haPerforming) haSetPose('happy');
     }, 1500);
 
-    haBlinkTimer = setTimeout(haBlinkLoop, 1800);
+    haBlinkTimer = setTimeout(haBlinkLoop, 5400);
   }
 
   /**
@@ -986,7 +1033,11 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       q.mouth.dataset.shape = prev[1];
       q.right.dataset.shape = prev[2];
     }, 120);
-    haBlinkTimer = setTimeout(haBlinkLoop, 2400 + Math.random() * 2600);
+    // Grumpy pozundayken göz kırpma aralığını 3 katına uzat (somurtkan, daha az kırpar).
+    const haBlinkGap = haPose === 'grumpy'
+      ? 3 * (7200 + Math.random() * 7800)
+      : 7200 + Math.random() * 7800;
+    haBlinkTimer = setTimeout(haBlinkLoop, haBlinkGap);
   }
 
   /** Yanıt beklenirken ağız konuşma animasyonu yapar (eklentinin talk() mantığı). */
@@ -1017,22 +1068,22 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
   const HA_IDLE_GRUMPY = 60000; // panel açık, 1 dk yazı yok → somurtur
   const HA_IDLE_SAD = 300000; // 5 dk → üzülür
-  const HA_LOVE = 600000; // 10 dk Houston'a hiç yazılmadıysa → kalp gözler
+  const HA_IDLE_SLEEP = 600000; // 10 dk → uyku moduna geçer
   const HA_SHOCK_LEN = 50; // bu uzunlukta soru → şok
 
   let haIdleTimer = 0;
   let haIdleStage = 0;
-  let haLoveTimer = 0;
-  let haLoveActive = false;
+  let haIdleClosedTimer = 0;
+  let haIdleClosedActive = false;
   let haSleeping = false;
   let haSleepAt = 0; // uykuya geçiş zamanı — hemen sonraki focus'ları yoksaymak için
-  const HA_WAKE_GRACE = 1200; // ms — window.open sonrası anlık odak darbesine karşı bekleme
+  const HA_WAKE_GRACE = 2500; // ms — window.open sonrası anlık odak darbesine karşı bekleme
 
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   let haPerforming = false; // diyalog sahnesi sürerken karşılama/blink pozları ezmesin
 
-  /** Panel açıkken yazı yazılmazsa somurtur → sonra üzülür. Her yazımda sıfırlanır. */
+  /** Panel açıkken yazı yazılmazsa somurtur → üzülür → uykuya geçer. Her yazımda sıfırlanır. */
   function haResetIdle() {
     clearTimeout(haIdleTimer);
     haIdleStage = 0;
@@ -1045,22 +1096,36 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
         if (!haTracking || haSleeping) return;
         haIdleStage = 2;
         haSetPose('sad');
+        // Sad moduna geçince sohbete üzgün mesajı yazılır.
+        pushMsg('bot', 'Beni unuttun galiba… 🥺');
+        haIdleTimer = setTimeout(() => {
+          if (!haTracking || haSleeping) return;
+          haIdleStage = 3;
+          haSleep();
+        }, HA_IDLE_SLEEP - HA_IDLE_SAD);
       }, HA_IDLE_SAD - HA_IDLE_GRUMPY);
     }, HA_IDLE_GRUMPY);
   }
 
-  /** 10 dk boyunca Houston'a hiç dokunulmazsa kalp gözlerle bakar. */
-  function haResetLove() {
-    clearTimeout(haLoveTimer);
-    if (haLoveActive) {
-      haLoveActive = false;
+  /** Panel kapalıyken 10 dk boyunca Houston'a hiç dokunulmazsa uyku moduna
+   *  geçer (kapalı gözler + z z z). Panel açılırsa/tıklanırsa anında iptal edilir. */
+  function haResetIdleClosed() {
+    clearTimeout(haIdleClosedTimer);
+    const fab = document.getElementById('houston-fab');
+    if (haIdleClosedActive) {
+      haIdleClosedActive = false;
+      if (fab) fab.classList.remove('ha-love');
       if (!haSleeping) haSetPose(haTracking ? 'happy' : 'default');
     }
-    haLoveTimer = setTimeout(() => {
+    haIdleClosedTimer = setTimeout(() => {
+      // Uyku ve açık panel durumlarında tetiklenmez
       if (haSleeping) return;
-      haLoveActive = true;
-      haSetPose('love');
-    }, HA_LOVE);
+      const panel = document.getElementById('houston-panel');
+      if (panel && !panel.hidden) return;
+      const el = document.getElementById('houston-fab');
+      if (!el || el.classList.contains('ha-gone')) return;
+      haSleep();
+    }, HA_IDLE_SLEEP);
   }
 
   /** Soru gönderildikten sonra: kullanıcı sayfaya dönene kadar uyur. */
@@ -1087,16 +1152,41 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     if (Date.now() - haSleepAt < HA_WAKE_GRACE) return;
     haSleeping = false;
     fab.classList.remove('ha-sleep');
-    haSetPose(haTracking ? 'happy' : 'default');
-    // Uyku blink döngüsünü öldürmüştü; panel açıksa göz kırpmayı yeniden başlat.
-    if (haTracking) {
-      clearTimeout(haBlinkTimer);
-      haBlinkTimer = setTimeout(haBlinkLoop, 1800);
-      // Ölçü tazelenir ki uyanıştan hemen sonraki ilk harekette takip doğru olsun.
-      haCacheRect();
-    }
-    haResetIdle();
-    haResetLove();
+
+    // Kademeli uyanma: önce zzz kesilir (yüz hâlâ uykulu), sonra tek göz
+    // açılır, ardından diğeri, en son mutlu hâle geçer.
+    clearTimeout(haWakeT1);
+    clearTimeout(haWakeT2);
+    clearTimeout(haWakeT3);
+    fab.classList.add('ha-waking');
+    const p = haParts();
+    // 1) zzz kesildi; gözler kapalı çizgide, yüz merkezden kalkar.
+    if (p) { p.left.dataset.shape = 'bar'; p.right.dataset.shape = 'bar'; }
+    haPose = 'default';
+    // 2) sağ göz yavaşça açılır.
+    haWakeT1 = setTimeout(() => {
+      const q = haParts();
+      if (q) q.right.dataset.shape = 'circle';
+    }, 320);
+    // 3) sol göz daire olur (hâlâ sakin, gülümseme yok).
+    haWakeT2 = setTimeout(() => {
+      const q = haParts();
+      if (q) q.left.dataset.shape = 'circle';
+    }, 840);
+    // 4) mutlu hâle geç: gülümseyen ağız + parlak kenarlık.
+    haWakeT3 = setTimeout(() => {
+      fab.classList.remove('ha-waking');
+      haSetPose(haTracking ? 'happy' : 'default');
+      if (haTracking) {
+        // Uyku blink döngüsünü öldürmüştü; panel açıksa göz kırpmayı yeniden başlat.
+        clearTimeout(haBlinkTimer);
+        haBlinkTimer = setTimeout(haBlinkLoop, 5400);
+        // Ölçü tazelenir ki uyanıştan hemen sonraki ilk harekette takip doğru olsun.
+        haCacheRect();
+      }
+      haResetIdle();
+      haResetIdleClosed();
+    }, 1300);
   }
 
   /** Perplexity ikonunu sayfanın en üst ortasına fırlatır. */
@@ -1116,7 +1206,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     fab.classList.add('ha-crying');
     haSetPose('cry');
     clearTimeout(haIdleTimer);
-    clearTimeout(haLoveTimer);
+    clearTimeout(haIdleClosedTimer);
     // Gözyaşları izlenebilsin: damlalar 2 tur aksın, sonra küsüp gitsin.
     // Houston gidince telsiz butonu belirir — geri çağırmak için.
     setTimeout(() => {
@@ -1142,7 +1232,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     // Houston geri döner
     fab.classList.remove('ha-gone', 'ha-crying');
     haSetPose('happy');
-    setOpen(true);
+    // Tüm eski mesajlar silinir, WELCOME eklenmeden panel bomboş açılır.
+    setOpen(true, { skipWelcome: true });
 
     pushMsg('user', 'Houston, bir problemimiz var');
 
@@ -1161,7 +1252,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
     haPerforming = false;
     haResetIdle();
-    haResetLove();
+    haResetIdleClosed();
   }
 
   /** Mesajı kelime kelime fade-in ile yazar; ağız haTalk sayesinde konuşur.
@@ -1199,7 +1290,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     renderMsg('bot', WELCOME);
   }
 
-  function setOpen(open) {
+  function setOpen(open, opts) {
     const panel = document.getElementById('houston-panel');
     const fab = document.getElementById('houston-fab');
     if (!panel || !fab) return;
@@ -1207,10 +1298,19 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     fab.setAttribute('aria-expanded', String(open));
     haSetActive(open);
     if (open) {
-      resetChat();
+      // Panel açılırsa love sahnesi derhal biter (sayaç da sıfırlanır).
+      haResetIdleClosed();
+      // Geri çağırma sahnesinde WELCOME mesajı istenmez: panel bomboş açılır.
+      const skipWelcome = !!(opts && opts.skipWelcome);
+      if (skipWelcome) {
+        const box = document.getElementById('houston-msgs');
+        if (box) box.replaceChildren();
+      } else {
+        resetChat();
+      }
       clearLive();
       haResetIdle();
-      haResetLove();
+      haResetIdleClosed();
       const input = document.getElementById('houston-input');
       if (input instanceof HTMLTextAreaElement) {
         input.value = '';
@@ -1536,6 +1636,10 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
         /* yoksay — bağlantı mesajda her hâlükârda mevcut */
       }
 
+      // Yeni sekme açıldı: visibilitychange'in yeni sekme açılırken tetiklediği
+      // anlık görünür olaylarına karşı koruma penceresini yenile.
+      haSleepAt = Date.now();
+
       // Houston hâlihazırda uykuda (yukarıda haSleep çağrıldı); yalnızca emin
       // olmak için tekrar uyutulur — kullanıcı sayfaya dönene kadar kalır.
       haSleep();
@@ -1574,6 +1678,40 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     }
   });
 
+  // İmleç kapat (X) tuşunun üstüne gelirse Houston hemen sad moduna geçer —
+  // basılmazsa ve imleç uzaklaşırsa normal akışa döner.
+  let haOverClose = false;
+  document.addEventListener(
+    'pointerover',
+    (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (!target.closest('#houston-close')) return;
+      if (haOverClose || haSleeping || haPerforming) return;
+      haOverClose = true;
+      haSetPose('sad');
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    'pointerout',
+    (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const to = event.relatedTarget;
+      if (to instanceof Element && to.closest('#houston-close')) return;
+      if (!haOverClose) return;
+      haOverClose = false;
+      // Gerçekten kapatılmadıysa (küskünlük başlamadıysa) normale dön
+      const fab = document.getElementById('houston-fab');
+      if (!fab || fab.classList.contains('ha-crying')) return;
+      if (haSleeping || haPerforming) return;
+      haSetPose(haTracking ? 'happy' : 'default');
+    },
+    { passive: true }
+  );
+
   document.addEventListener('submit', (event) => {
     const form = event.target;
     if (!(form instanceof HTMLFormElement) || form.id !== 'houston-form') return;
@@ -1594,9 +1732,12 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   // hidden→visible) Houston uyanır. Düz `focus` olayı window.open sonrası
   // false-positive verip uykuyu bozduğu için bilinçli olarak kullanılmıyor;
   // ayrıca FAB'a tıklamak da uyandırır (yukarıdaki click delegasyonunda).
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) haWake();
-  });
+  // Uyandırma YALNIZCA kullanıcının gerçek etkileşimiyle olur:
+  //   • Houston'a tıklanınca (yukarıdaki click delegasyonunda haWake)
+  //   • sohbet kutusuna yazı yazılınca (aşağıdaki input handler'ında haWake)
+  // Sekme gizlilik/görünürlük değişimi (visibilitychange) BİLİNÇLİ olarak
+  // kullanılmıyor — yeni sekme açılırken anlık "görünür" sinyalleri uykuyu
+  // bozduğu için. Kullanıcı sayfaya dönünce tıklayarak/yazarak uyandırır.
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
@@ -1621,7 +1762,10 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
     // Yazarken: boşta kalma sayacı sıfırlanır, 10 dk sevgi sayacı sıfırlanır
     haResetIdle();
-    haResetLove();
+    haResetIdleClosed();
+
+    // Uykudaysa yazı yazmak onu uyandırır (tek yollardan biri).
+    if (haSleeping) haWake();
 
     // Çok uzun soru → şok
     if (target.value.trim().length >= HA_SHOCK_LEN && haTracking && !haSleeping) {
@@ -1638,6 +1782,6 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   });
 
   // Sayfa açılışında 10 dk boyunca hiç yazılmazsa Houston kalp gözlere geçer
-  haResetLove();
+  haResetIdleClosed();
 </script>
 
