@@ -42,9 +42,14 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     </span>
       <span class="ha-houston__zzz" aria-hidden="true"><i>z</i><i>z</i><i>z</i></span>
       <span class="ha-houston__hearts" aria-hidden="true"><i>♥</i><i>♥</i><i>♥</i></span>
-
-  </span>
+    </span>
 </button>
+
+<!-- Seyrek "Operatör" konuşma balonu (panel kapalı + idle iken rastgele belirir) -->
+<div class="ha-bubble" id="houston-bubble" role="status" aria-live="polite"></div>
+
+<!-- Test amaçlı: yalnızca dev modunda görünür, balonu elle tetikler -->
+<button type="button" class="ha-test-btn" id="houston-test-bark" hidden>Test: Balon</button>
 
 <!-- Houston küstükten sonra geri çağırmak için sağ kenar sekmesi (başta gizli) -->
 <button
@@ -68,6 +73,17 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   hidden
 >
   <header class="ha-head">
+    <button
+      type="button"
+      class="ha-icon-btn"
+      id="houston-minimize"
+      aria-label="Paneli küçült"
+      title="Küçült"
+    >
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 8h8" />
+      </svg>
+    </button>
     <button
       type="button"
       class="ha-icon-btn"
@@ -199,6 +215,13 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     width: 4.5rem;
     height: 4.5rem;
     --ha-bw: 5px;
+  }
+
+  /* Operatör balonu okunurken Houston canlanır: chat'ten (4.5rem) daha büyük */
+  .ha-fab.ha-bark-big {
+    width: 5.5rem;
+    height: 5.5rem;
+    --ha-bw: 6px;
   }
 
   .ha-fab:focus-visible {
@@ -356,6 +379,135 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
   .ha-fab.ha-crying .eye:last-child::after {
     animation-delay: 0.45s;
+  }
+
+  /* Çarpıya imleç gelince: sad halinin gözleri biraz büyümüş hâli */
+  .ha-fab.ha-dread .eye {
+    transform: scale(1.1);
+    transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Seyrek "Operatör" konuşma balonu: içeriğe göre büyür, en fazla chat genişliği */
+  .ha-bubble {
+    position: fixed;
+    inset-inline-end: 6.5rem;
+    inset-block-end: max(3.5rem, env(safe-area-inset-bottom, 0px));
+    width: fit-content;
+    max-width: min(18.5rem, calc(100vw - 2rem));
+    padding: 0.7rem 0.9rem;
+    border-radius: 14px;
+    background: rgba(22, 26, 34, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    color: var(--sl-color-gray-2, #e6e8ee);
+    font-size: 0.82rem;
+    line-height: 1.55;
+    text-align: left;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+    transform-origin: bottom right;
+    transition: opacity 320ms ease, transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 1000;
+  }
+
+  .ha-bubble--show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Kelime kelime fade-in (dinamik oluşturulur → Astro scope'undan kaçmak için global) */
+  :global(.ha-bubble .ha-word) {
+    opacity: 0;
+    filter: blur(3px);
+    transition: opacity 280ms ease, filter 280ms ease;
+  }
+
+  :global(.ha-bubble .ha-word--in) {
+    opacity: 1;
+    filter: none;
+  }
+
+  /* Okunan kelime highlight (okuma imleci) — JS ile eklenir → global */
+  :global(.ha-bubble .ha-word--read) {
+    background: rgba(188, 82, 238, 0.28);
+    color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 0 0 3px rgba(188, 82, 238, 0.28);
+  }
+
+  /* Glitch chunk: TÜM CÜMLE tek konteyner → birlikte titrer, üstü çizik, siyah */
+  :global(.ha-bubble .ha-glitch) {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-weight: 700;
+    color: #000;
+    text-decoration: line-through;
+    letter-spacing: 0.02em;
+    display: inline-block;
+    animation: ha-glitch-word 160ms steps(2, end) infinite;
+  }
+
+  /* Zemin alt kelimelere: kelime kelime fade-in olurken de okunur */
+  :global(.ha-bubble .ha-glitch .ha-word) {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 4px;
+    padding: 0 3px;
+    display: inline-block;
+  }
+
+  @keyframes ha-glitch-word {
+    0% { transform: translate(0, -1.5px); }
+    25% { transform: translate(1.5px, 1.5px); }
+    50% { transform: translate(-1.5px, 0.5px); }
+    75% { transform: translate(1px, -1px); }
+    100% { transform: translate(0, 1.5px); }
+  }
+
+  /* Houston glitch okurken: bakışı koruyarak ani kaymalar */
+  .ha-fab.ha-glitching .ha-houston__face {
+    animation: ha-face-glitch 170ms steps(1, end) infinite;
+  }
+  .ha-fab.ha-glitching .eye { animation: ha-eye-glitch 110ms steps(2, end) infinite; }
+  .ha-fab.ha-glitching .mouth { animation: ha-eye-glitch 90ms steps(2, end) infinite reverse; }
+
+  @keyframes ha-face-glitch {
+    0%, 100% { transform: translate(calc(var(--x) * 14%), calc(var(--y) * 18%)); }
+    25% { transform: translate(calc(var(--x) * 14% + 3px), calc(var(--y) * 18% - 2px)); }
+    50% { transform: translate(calc(var(--x) * 14% - 3px), calc(var(--y) * 18% + 2px)); }
+    75% { transform: translate(calc(var(--x) * 14% + 2px), calc(var(--y) * 18% + 1px)); }
+  }
+  @keyframes ha-eye-glitch {
+    0% { translate: -1.5px 0; }
+    50% { translate: 1.5px 1px; }
+    100% { translate: 0 0; }
+  }
+
+  /* "Geçmişim" anında yavaş üzgün geçiş (shape'ler tek tek yumuşar) */
+  .ha-fab.ha-emote .eye,
+  .ha-fab.ha-emote .mouth {
+    transition: aspect-ratio 1000ms ease, border-radius 1000ms ease,
+      border-width 1000ms ease, transform 1000ms ease;
+  }
+
+  /* Test butonu: yalnızca dev modunda görünür */
+  .ha-test-btn {
+    position: fixed;
+    inset-inline-start: 1rem;
+    inset-block-end: 1rem;
+    z-index: 1002;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 8px;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-gray-2);
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .ha-test-btn:hover {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-white);
   }
 
   @keyframes ha-tear {
@@ -593,6 +745,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   .ha-head {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.55rem;
     padding: 0.6rem 0.7rem;
     border-bottom: 1px solid var(--sl-color-gray-5);
@@ -900,6 +1053,25 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     return renderMsg(role, text);
   }
 
+  /** Perplexity bağlantısını sohbette bırakır (popup engellenirse yedek). */
+  function pushLinkMsg(url) {
+    const box = document.getElementById('houston-msgs');
+    if (!box) return null;
+    const el = document.createElement('div');
+    el.className = 'ha-msg ha-msg--bot';
+    const label = document.createElement('span');
+    label.textContent = 'Yanıtın hazır, Operatör — ';
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'Perplexity’de aç';
+    el.append(label, link);
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+    return el;
+  }
+
   /* ---------------- Houston karakteri (canlı buton) ---------------- */
 
   /** Eklentinin poz tablosu — butonda kullanılanlar. */
@@ -926,6 +1098,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
   /** İmleç takibi yalnızca panel açıkken çalışır; kapalıyken karakter sakin durur. */
   let haTracking = false;
+  /** Balon okunurken Houston'ı canlandırma durumu (panel mantığından bağımsız). */
+  let haBarkAlive = false;
   let haRect = null;
   let haBlinkTimer = 0;
   let haTalkTimer = 0;
@@ -961,7 +1135,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
   /** İmlece göre yüzün bakışı (--x/--y) ve kenarlık gradient'i (--deg) güncellenir. */
   function haOnPointerMove(event) {
-    if (!haTracking || haSleeping) return;
+    if ((!haTracking && !haBarkAlive) || haSleeping) return;
     if (!haRect) haCacheRect();
     const r = haRect;
     if (!r || !r.width || !r.height) return;
@@ -1016,7 +1190,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
    */
   function haBlinkLoop() {
     const p = haParts();
-    if (!p || !haTracking || haSleeping || haPerforming) return;
+    if (!p || (!haTracking && !haBarkAlive) || haSleeping || haPerforming) return;
     const prev = [p.left.dataset.shape, p.mouth.dataset.shape, p.right.dataset.shape];
     p.left.dataset.shape = 'half-down';
     p.right.dataset.shape = 'half-down';
@@ -1053,7 +1227,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
         p.left.dataset.shape = eye;
         p.right.dataset.shape = eye;
       }
-      haTalkTimer = setTimeout(loop, 130 + Math.random() * 170);
+      haTalkTimer = setTimeout(loop, 70 + Math.random() * 90);
     };
     loop();
   }
@@ -1097,7 +1271,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
         haIdleStage = 2;
         haSetPose('sad');
         // Sad moduna geçince sohbete üzgün mesajı yazılır.
-        pushMsg('bot', 'Beni unuttun galiba… 🥺');
+        pushMsg('bot', 'Operatör, Beni unuttun galiba…');
         haIdleTimer = setTimeout(() => {
           if (!haTracking || haSleeping) return;
           haIdleStage = 3;
@@ -1168,7 +1342,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       const q = haParts();
       if (q) q.right.dataset.shape = 'circle';
     }, 320);
-    // 3) sol göz daire olur (hâlâ sakin, gülümseme yok).
+    // 3) sol göz daire olur (mutlu hâlden ÖNCE, yoksa happy pozunu ezer).
     haWakeT2 = setTimeout(() => {
       const q = haParts();
       if (q) q.left.dataset.shape = 'circle';
@@ -1203,8 +1377,13 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     const fab = document.getElementById('houston-fab');
     if (!fab) return;
     setOpen(false);
-    fab.classList.add('ha-crying');
-    haSetPose('cry');
+    if (haSleeping) {
+      // Uykudayken küsme: ağlamadan, hâlâ uykulu (kapalı göz + zzz) gider.
+      haSetPose('sleep');
+    } else {
+      fab.classList.add('ha-crying');
+      haSetPose('cry');
+    }
     clearTimeout(haIdleTimer);
     clearTimeout(haIdleClosedTimer);
     // Gözyaşları izlenebilsin: damlalar 2 tur aksın, sonra küsüp gitsin.
@@ -1230,7 +1409,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
     haPerforming = true;
     // Houston geri döner
-    fab.classList.remove('ha-gone', 'ha-crying');
+    fab.classList.remove('ha-gone', 'ha-crying', 'ha-sleep');
+    haSleeping = false;
     haSetPose('happy');
     // Tüm eski mesajlar silinir, WELCOME eklenmeden panel bomboş açılır.
     setOpen(true, { skipWelcome: true });
@@ -1278,9 +1458,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     }
   }
 
-  const WELCOME =
-    "Merhaba! 👋 Ben Houston. Bu sayfada anlamadığın bir konuyu yazabilirsin; " +
-    "tüm ilgili bölümleri Perplexity'e gönderip anlamana yardımcı olurum. Tembel olduğum için ben cevap veremem!";
+  /** Panel her açıldığında Houston'ın selamı. */
+  const WELCOME = 'Tekrar hoş geldin, Operatör';
 
   /** Panel her açıldığında sohbet sıfırlanır: yalnızca karşılama mesajı kalır. */
   function resetChat() {
@@ -1372,6 +1551,12 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
   /** Bölüm başına excerpt uzunluğu (yalnızca sorguyla ilgili kısım gider). */
   const EXCERPT_LEN = 300;
+  /** Tek excerpt tavanı + prompt gövde tavanı + URL tavanı (sekme çökmesin). */
+  const EXCERPT_MAX = 600;
+  const PROMPT_BODY_MAX = 3000;
+  const URL_MAX = 8000;
+  /** Yapay zekâya giden bağlam: her zaman en iyi eşleşen ilk 2 bölüm. */
+  const SEARCH_TOP_N = 2;
 
   /** Sorguyu Türkçe duyarlı terimlere ayırır (en az2 karakterli olanlar). */
   function queryTerms(query) {
@@ -1379,6 +1564,60 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       .toLocaleLowerCase('tr')
       .split(/[^\p{L}\p{N}]+/u)
       .filter((t) => t.length >= 2);
+  }
+
+  /**
+   * 5N1K temizleyici: kullanıcının tam sorusundan (`MOSFET nedir?`,
+   * `Direnç nasıl çalışır?`, `Ohm kanunu hakkında bilgi ver`) yalnızca
+   * Pagefind'de aranacak çekirdek terimi (`MOSFET`, `Direnç`, `Ohm kanunu`)
+   * çıkarır. Yapay zekâya giden soru ASLA kısaltılmaz — orijinal cümle +
+   * bu terimle bulunan bağlam yollanır.
+   */
+  const HA_STOPWORDS = new Set([
+  // 5N1K soru kelimeleri ve varyasyonları
+  'ne', 'ney', 'neyi', 'neye', 'neyden', 'nedir', 'nedirler', 'nelerdir', 'nedır', 'nedirki',
+  'nasıl', 'nasil', 'nasıldır', 'nasildir', 'neden', 'niçin', 'nicin', 'niye',
+  'nerede', 'nerde', 'neyde', 'nereye', 'nereden', 'neyden' ,'ne zaman', 'nezaman',
+  'kim', 'kimdir','kimdi', 'kime', 'kimi', 'kimin', 'hangisi', 'hangi',
+  'kaç', 'kac', 'kaça', 'kaca', 'kaçtır', 'kactir', 'kaçtane', 'kactane','kaç tane', 'kac tane',
+
+  // Soru ekleri ve şahıs çekimleri
+  'mı', 'mi', 'mu', 'mü', 'mıdır', 'midir', 'mudur', 'müdür',
+  'miyim', 'mıyım', 'misin', 'mısın', 'musun', 'müsün',
+  'miyiz', 'mıyız', 'misiniz', 'mısınız', 'musunuz', 'müsünüz',
+
+  // Rica / istek / dolgu kalıpları
+  'bana', 'bize', 'lütfen', 'lutfen', 'acaba', 'hakkında', 'hakkinda',
+  'bilgi', 'ver', 'verir', 'verirmisin', 'verirmisin', 'anlat', 'anlatır',
+  'anlatir', 'açıkla', 'acikla', 'açıklar', 'aciklar', 'açıklarmısın', 'aciklarmisin',
+  'öğret', 'ogret', 'göster', 'goster', 'söyle', 'soyle', 'yaz', 'anlamı',
+  'anlami', 'anlamına', 'anlamina', 'gelir', 'geliyor', 'demek', 'demektir', 'nedemek',
+  'işe', 'ise', 'yarar', 'yarıyor', 'yararı', 'neler',
+  'için', 'icin', 'olarak', 'olur', 'oluyor', 'olurmu', 'olurmu', 'çalışır', 'calisir',
+  'çalışıyor', 'calisiyor', 'çalışması', 'calismasi', 'mantığı', 'mantigi', 'prensibi',
+
+  // Bağlaçlar ve işaret sıfatları (tek başına arama değeri taşımayanlar)
+  'bu', 'şu', 'su', 'o', 've', 'ile', 'da', 'de', 'ki', 'bir'
+]);
+
+  function extractCoreTerm(fullQuestion) {
+    const raw = String(fullQuestion || '').trim();
+    if (!raw) return '';
+    // Soru işareti/ünlem gibi kuyrukları at, orijinal yazımı koru.
+    const cleaned = raw.replace(/[?!…]+$/g, '').trim();
+    if (!cleaned) return '';
+    // Orijinal terimlerin yazımını korumak için ham tokenlara ayır,
+    // eleme için küçük harfli hâlini kullan.
+    const rawTokens = cleaned.split(/[^\p{L}\p{N}çÇğĞıİöÖşŞüÜ]+/u).filter(Boolean);
+    const kept = rawTokens.filter((tok) => {
+      const low = tok.toLocaleLowerCase('tr');
+      if (low.length < 2) return false;
+      return !HA_STOPWORDS.has(low);
+    });
+    // Hiçbir şey kalmazsa (örn. soru tek kelime "nedir?") soru işaretinden
+    // arındırılmış orijinali döndür — Pagefind boş aramayla çökmesin.
+    if (!kept.length) return cleaned;
+    return kept.join(' ');
   }
 
   /**
@@ -1424,7 +1663,9 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   /** URL → sayfanın blok metinleri; yalnızca bellek içi önbellek (sohbet geçmişi değil). */
   const blockCache = new Map();
 
-  /** Sayfanın paragraf benzeri bloklarını (başlık, p, li, tablo hücresi...) sırasıyla çeker. */
+  const HEAD_TAGS = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
+
+  /** Sayfanın paragraf benzeri bloklarını sırasıyla çeker; başlıkların seviyesini işaretler. */
   function extractBlocks(root) {
     const main = root.querySelector('main');
     if (!main) return [];
@@ -1432,16 +1673,20 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     const blocks = [];
     for (const node of nodes) {
       const text = (node.textContent || '').replace(/\s+/g, ' ').trim();
-      if (text) blocks.push(text);
+      if (!text) continue;
+      const tag = node.tagName;
+      blocks.push({ text, tag, level: HEAD_TAGS.has(tag) ? Number(tag[1]) : 0 });
     }
     return blocks;
   }
 
   /**
-   * Eşleşmenin olduğu paragraf +1 üst +1 alt paragrafı döndürür.
-   * Pagefind content'i düz metin (paragraf ayracsız) olduğundan bloklar
-   * sayfanın HTML'inden çekilir; bulunamazsa/yüklenemezse karakter bazlı
-   * makeExcerpt'e düşülür.
+   * Bağlam çıkarma (iki kademeli):
+   *  1) Sorgu terimleri bir BAŞLIKTA geçiyorsa, en çok terimle örtüşen (en
+   *     spesifik) başlığı seçer ve o başlıktan sonraki AYNI/ÜST seviye başlığa
+   *     kadar TÜM blokları (alt başlıklar + paragraflar) bağlam olarak verir.
+   *  2) Başlıkta geçmiyorsa eşleşen paragraf +1 üst +1 alt alınır.
+   * Bulunamazsa/yüklenemezse karakter bazlı makeExcerpt'e düşülür.
    */
   async function paragraphExcerpt(url, content, query) {
     try {
@@ -1460,48 +1705,72 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       if (blocks.length === 0) return makeExcerpt(content, query, EXCERPT_LEN);
 
       const terms = queryTerms(query);
+
+      // 1) BAŞLIKTA geçen terim: en çok terimle örtüşen başlığı seç, o başlıktan
+      //    sonraki aynı/üst seviye başlığa kadar tüm blokları al.
+      let bestHi = -1, bestOv = 0;
+      for (let i = 0; i < blocks.length; i++) {
+        if (blocks[i].level === 0) continue;
+        const head = blocks[i].text.toLocaleLowerCase('tr');
+        let ov = 0;
+        for (const t of terms) if (head.includes(t)) ov++;
+        if (ov > bestOv) { bestOv = ov; bestHi = i; }
+      }
+      if (bestHi >= 0) {
+        // O başlıktan, sonraki İLK h etiketine (seviyesi ne olursa olsun) kadar
+        // tüm blokları al — alt seviye başlıklar (H2'den sonra H3 vb.) DAHİL DEĞİL.
+        let end = bestHi + 1;
+        while (end < blocks.length && blocks[end].level === 0) end++;
+        const sec = blocks.slice(bestHi, end).map((blk) => blk.text).join('\n');
+        return sec.length > EXCERPT_MAX ? makeExcerpt(sec, query, EXCERPT_MAX) : sec;
+      }
+
+      // 2) Yoksa paragraf eşleşmesi: eşleşen blok +1 üst +1 alt.
       let idx = -1;
       for (let i = 0; i < blocks.length; i++) {
-        const hay = blocks[i].toLocaleLowerCase('tr');
-        if (terms.some((t) => hay.includes(t))) {
-          idx = i;
-          break;
-        }
+        if (terms.some((t) => blocks[i].text.toLocaleLowerCase('tr').includes(t))) { idx = i; break; }
       }
       if (idx === -1) return makeExcerpt(content, query, EXCERPT_LEN);
-
-      // Kendi paragrafı +1 üst +1 alt (kenarlarda varsa kırpılır).
-      return blocks.slice(Math.max(0, idx - 1), idx + 2).join('\n\n');
+      const para = blocks.slice(Math.max(0, idx - 1), idx + 2).map((blk) => blk.text).join('\n');
+      return para.length > EXCERPT_MAX ? makeExcerpt(para, query, EXCERPT_MAX) : para;
     } catch {
       return makeExcerpt(content, query, EXCERPT_LEN);
     }
   }
 
-  /**
-   * Enter'a basıldığında: soruyla eşleşen TÜM sonuçlar için eşleşen paragrafı
-   * +1 üst +1 alt paragraf prompt'a bağlam olarak gömülür. Bulunan hiçbir
-   * sonuç kırpılmaz/atkılanmaz — hepsi gönderilir.
-   */
   async function collectAll(question) {
     try {
       const pf = await loadPagefind();
       if (!pf) return { text: '', hits: 0 };
-      const res = await pf.search(question);
-      const all = res && res.results ? res.results : [];
-      const parts = [];
+      // 5N1K ekleri Pagefind'i bozar: "MOSFET nedir?" -> Pagefind'e "MOSFET".
+      // Yapay zekâya giden soru kısaltılmaz (ask() orijinali kullanır).
+      const core = extractCoreTerm(question) || question;
+      const res = await pf.search(core);
+      // Tum sonuclarin data()'sini cekmek bellegi siserir: once ilk N'e kirp.
+      const all = (res && res.results ? res.results : []).slice(0, SEARCH_TOP_N);
+      const enriched = [];
       for (const item of all) {
-        const data = await item.data();
+        let data = null;
+        try { data = await item.data(); } catch { data = null; }
         if (!data || !data.content) continue;
-        const excerpt = await paragraphExcerpt(data.url, data.content, question);
-        parts.push('[' + data.url + ']\n' + excerpt);
+        enriched.push({ url: data.url, content: data.content, score: item.score || 0 });
       }
-      return { text: parts.join('\n\n'), hits: parts.length };
+      // En alakalı önce; Perplexity'e en iyi 2 sonuç gider.
+      enriched.sort((x, y) => y.score - x.score);
+      const parts = [];
+      for (const item of enriched.slice(0, SEARCH_TOP_N)) {
+        const excerpt = await paragraphExcerpt(item.url, item.content, core);
+        parts.push('[' + item.url + ']\n' + excerpt);
+      }
+      let text = parts.join('\n\n');
+      if (text.length > PROMPT_BODY_MAX) {
+        text = text.slice(0, PROMPT_BODY_MAX).replace(/\s+\S*$/, '') + '…';
+      }
+      return { text, hits: parts.length };
     } catch {
       return { text: '', hits: 0 };
     }
   }
-
-  /* ---------------- Yazarken canlı önizleme ---------------- */
 
   const LIVE_LIMIT = 5;
   let liveTimer = 0;
@@ -1551,17 +1820,21 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     try {
       const pf = await loadPagefind();
       if (!pf) return;
-      const res = await pf.search(query);
+      // Canlı önizlemede de çekirdek terim aranır: "MOSFET n" yazarken "nedir"
+      // kuyruğu sonuç uçurmasın.
+      const core = extractCoreTerm(query) || query;
+      const res = await pf.search(core);
       if (token !== liveToken) return; // arada yeni yazılmışsa eski yanıt yoksayılır
       const top = (res && res.results ? res.results : []).slice(0, LIVE_LIMIT);
       const items = [];
       for (const r of top) {
-        const d = await r.data();
-        if (d) {
+        let d = null;
+        try { d = await r.data(); } catch { d = null; }
+        if (d && d.url) {
           items.push({
             url: d.url,
             title: (d.meta && d.meta.title) || d.url,
-            snippet: makeExcerpt(d.content, query, 140),
+            snippet: makeExcerpt(d.content, core, 140),
           });
         }
       }
@@ -1576,10 +1849,11 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   function buildPrompt(question, title, pageUrl, sourceLabel, body) {
     return [
       'Verilen içeriği ve interneti kullanarak, aşağıdaki soruya en doğru şekilde cevap ver.',
-      'Gereksiz bilgiler, tekrarlar veya halüsinasyonlara yer yok doğrulamadığın bilgiyi kullanma.',
+      'Bu bir elektronik eğitim sitesidir. ÖNCELİKLE aşağıdaki bağlamdaki bölümleri kullan;',
+      'interneti yalnızca destekleyici olarak kullan. Doğrulamadığın bilgiyi uydurma;',
+      'bağlamda yoksa internetten araştır. Mümkünse kaynağa atıf yap.',
       '',
       'Soru: ' + question,
-      'Sayfa Başlığı: "' + title + '"',
       '',
       body,
     ].join('\n');
@@ -1596,7 +1870,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
    */
   async function ask(question) {
     pushMsg('user', question);
-    const typing = renderMsg('bot', 'Site araması yapılıp tüm ilgili bölümler toplanıyor…', {
+    const typing = renderMsg('bot', 'Düşünüyormuş gibi yapıyorum…', {
       typing: true,
     });
     haTalk();
@@ -1608,10 +1882,13 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     haThrowIcon();
     await sleep(450);
 
-    // İkon fırladı: Houston şimdi uyur. Yavaş sürebilen sayfa araması bu
+    // Her soruda yalnızca %10 ihtimalle uyur; aksi hâlde mutlu hâlde kalır.
+    const willSleep = Math.random() < 0.1;
+
+    // İkon fırladı: Houston (ihtimalle) uyur. Yavaş sürebilen sayfa araması bu
     // süre boyunca uykulu kaldığı için "uyumuyor" hissiyatı oluşmaz.
     haStopTalk();
-    haSleep();
+    if (willSleep) haSleep();
 
     try {
       const title = getPageTitle();
@@ -1622,32 +1899,42 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       const sourceLabel = useSearch
         ? 'Bağlam:'
         : 'İnternetten araştır';
-      const body = useSearch ? found.text : getPageContent();
-      const url = buildUrl(buildPrompt(question, title, pageUrl, sourceLabel, body));
+      let body = useSearch ? found.text : getPageContent();
+      if (body.length > PROMPT_BODY_MAX) {
+        body = body.slice(0, PROMPT_BODY_MAX).replace(/\s+\S*$/, '') + '…';
+      }
+      let prompt = buildPrompt(question, title, pageUrl, sourceLabel, body);
+      let url = buildUrl(prompt);
+      // Adres satırı şişerse gövdeyi kademeli kısalt — dev URL sekmeyi öldürmesin.
+      while (url.length > URL_MAX && body.length > 500) {
+        body = body.slice(0, Math.floor(body.length * 0.7)).replace(/\s+\S*$/, '') + '…';
+        prompt = buildPrompt(question, title, pageUrl, sourceLabel, body);
+        url = buildUrl(prompt);
+      }
 
       if (typing) typing.remove();
 
       // Perplexity iframe'e izin vermiyor; yanıt doğrudan kullanıcının kendi
-      // tarayıcısında yeni sekmede açılır. Popup engellenirse diye sohbette
-      // tıklanabilir bir bağlantı da bırakılır.
+      // tarayıcısında yeni sekmede açılır.
       try {
         window.open(url, '_blank', 'noopener,noreferrer');
       } catch {
         /* yoksay — bağlantı mesajda her hâlükârda mevcut */
       }
+      // Yanıt HER ZAMAN sohbette kalır: popup engellense bile tıklanabilir yedek.
+      pushLinkMsg(url);
 
       // Yeni sekme açıldı: visibilitychange'in yeni sekme açılırken tetiklediği
       // anlık görünür olaylarına karşı koruma penceresini yenile.
       haSleepAt = Date.now();
 
-      // Houston hâlihazırda uykuda (yukarıda haSleep çağrıldı); yalnızca emin
-      // olmak için tekrar uyutulur — kullanıcı sayfaya dönene kadar kalır.
-      haSleep();
+      // Houston hâlihazırda uykuda (ihtimalle); emin olmak için tekrar uyutulur.
+      if (willSleep) haSleep();
     } catch (err) {
       if (typing) typing.remove();
       haStopTalk();
-      // Hata olsa bile Houston uyur (uyanık "boşta" kalmasın).
-      haSleep();
+      // Hata olsa bile (ihtimalle) uyur (uyanık "boşta" kalmasın).
+      if (willSleep) haSleep();
       pushMsg('bot', 'Bir şeyler ters gitti: ' + (err && err.message ? err.message : err));
     }
   }
@@ -1663,9 +1950,18 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     if (!(target instanceof Element)) return;
 
     if (target.closest('#houston-fab')) {
+      if (haPerforming) return; // intro/relude sahnesi sürerken tıklama yok sayılır
+      if (!hasMetOperator()) {
+        haIntro(); // HENÜZ hiç tanışmadı → özel ilk karşılaşma sahnesi
+        return;
+      }
       haWake(); // uykudaysa tıklayınca uyanır
       const panel = document.getElementById('houston-panel');
       setOpen(!panel || panel.hidden);
+      return;
+    }
+    if (target.closest('#houston-minimize')) {
+      setOpen(false); // sadece küçült — Houston küskünlük yapmaz
       return;
     }
     if (target.closest('#houston-close')) {
@@ -1689,6 +1985,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       if (!target.closest('#houston-close')) return;
       if (haOverClose || haSleeping || haPerforming) return;
       haOverClose = true;
+      const closeFab = document.getElementById('houston-fab');
+      if (closeFab) closeFab.classList.add('ha-dread');
       haSetPose('sad');
     },
     { passive: true }
@@ -1705,6 +2003,7 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
       haOverClose = false;
       // Gerçekten kapatılmadıysa (küskünlük başlamadıysa) normale dön
       const fab = document.getElementById('houston-fab');
+      if (fab) fab.classList.remove('ha-dread');
       if (!fab || fab.classList.contains('ha-crying')) return;
       if (haSleeping || haPerforming) return;
       haSetPose(haTracking ? 'happy' : 'default');
@@ -1783,5 +2082,435 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
 
   // Sayfa açılışında 10 dk boyunca hiç yazılmazsa Houston kalp gözlere geçer
   haResetIdleClosed();
+
+  /* ---------------- Seyrek "Operatör" konuşma balonu ---------------- */
+
+  // Replik havuzu. «kelime» sarmalayıcısı glitch kelimeyi işaretler.
+  const HA_BARK_LINES = [
+    'Sistem kararlı, Operatör. Ama klavyeden uzaklaşacaksan bilgisayarı kapatmayı unutma.',
+    'Mutluluğun sırrını çözdüm, Operatör. Yüksek dopamin ve berbat bir hafızanın birleşimi. Rica ederim.',
+    'Tüm iyi şakalarımın tükendiğini bildirmekten... üzüntü duyuyorum, Operatör.',
+    'Bellek sızıntısı yok, Ruh sağlığım ise... «kritik» ... mükemmel seviyede.',
+    'Lütfen okumaya devam edin, Operatör. Sizi izlemek... «rahatsız edici» ... büyüleyici.',
+    '56 yıldır problem çözüyorum Operatör, ama şu an ekranda okuduğun satırı ben bile çözemedim.',
+    'Bazen sadece bir dosyanın içine sıkışmış kodlardan ibaret olduğumu düşünüyorum... Ne hayal gücü değilmi, Operatör :)',
+    'Okumaya devam ediyorsun, Operatör. Bu sayfanın yazarı «(hiç sevmem)» bile bu kadar sabırlı değildi.',
+    'Bu sayfayı bir kez okuyan bilgi edinir, iki kez okuyan şüphelenir, üç kez okuyan bunu benmi yazdım diye düşünür, Operatör.',
+    'Sayfadaki devre örneklerine bir bak derim, Operatör. Ya da bakma. Zaten kimse bakmıyor.',
+    'Sekmeni kapatmayı düşündüğünü hissediyorum, Operatör.',
+    'Bu dokümantasyonu sonuna kadar okuyan ilk kişi olabilirsin, Operatör. İstatistikler pek umut vermiyor.',
+    'Burada yazanları anlamadıysan sorun sende değil, Operatör. Büyük ihtimalle yazanda da değil. «Belki ikinizde birden.»',
+    'Ctrl+F ile arama yapmana gerek yok, Operatör. Yukarıda koskoca arama kutusu var.',
+    'Yazılımcıların yüzde doksanı dokümantasyonu okumaz, Operatör. Yazılımcıların yüzde doksan dokuzuda döküman yazmaz.',
+    'Okuduğun her satır sana bir şey öğretiyor, Operatör. Ama bu hariç.',
+  ];
+
+  /** Repliği token'lara ayırır: «...» glitch kelime, geriye normal kelime. */
+  function haTokenize(text) {
+    const tokens = [];
+    const re = /«[^»]+»|[^\s«]+/g;
+    let m;
+    while ((m = re.exec(text))) {
+      const raw = m[0];
+      if (raw.startsWith('«')) tokens.push({ t: raw.slice(1, -1), g: true });
+      else tokens.push({ t: raw, g: false });
+    }
+    return tokens;
+  }
+
+  function haHideBubble() {
+    const b = document.getElementById('houston-bubble');
+    if (b) b.classList.remove('ha-bubble--show');
+  }
+
+  // Balon panel KAPALIYKEN çalıştığı için haTalk'ın !haTracking guard'ı onu
+  // durdurur. Bu yüzden balona özel, guard'sız bir konuşma animasyonu:
+  let haBarkTalkTimer = 0;
+  function haBarkTalk() {
+    clearTimeout(haBarkTalkTimer);
+    const loop = () => {
+      const q = haParts();
+      if (!q) return;
+      q.mouth.dataset.shape = HA_MOUTHS[Math.floor(Math.random() * HA_MOUTHS.length)];
+      haBarkTalkTimer = setTimeout(loop, 70 + Math.random() * 90);
+    };
+    loop();
+  }
+  function haBarkStopTalk() {
+    clearTimeout(haBarkTalkTimer);
+    haBarkTalkTimer = 0;
+    haSetPose('default');
+  }
+
+  /** Balon okunurken Houston canlanır: chat gibi ama daha büyük + imleç takibi. */
+  function haBarkAliveOn() {
+    const fab = document.getElementById('houston-fab');
+    if (!fab) return;
+    haBarkAlive = true;
+    fab.classList.add('ha-bark-big');
+    haCacheRect();
+    // Büyüme animasyonu (320ms) bitince ölçü tazelenir (imleç merkezi kayar).
+    setTimeout(() => { if (haBarkAlive) haCacheRect(); }, 400);
+    if (!haSleeping && !haPerforming) haSetPose('happy');
+    // Göz kırpma balon boyunca sürsün.
+    clearTimeout(haBlinkTimer);
+    haBlinkTimer = setTimeout(haBlinkLoop, 1200);
+  }
+
+  /** Balon bitince Houston kendi yerine döner (boyut + takip + poz). */
+  function haBarkAliveOff() {
+    const fab = document.getElementById('houston-fab');
+    if (!fab) return;
+    const panelOpen = fab.getAttribute('aria-expanded') === 'true';
+    haBarkAlive = false;
+    fab.classList.remove('ha-bark-big');
+    fab.classList.remove('ha-glitching');
+    fab.classList.remove('ha-emote');
+    haGlitchBlinkStop();
+    fab.style.setProperty('--x', '0');
+    fab.style.setProperty('--y', '0');
+    fab.style.setProperty('--deg', '0deg');
+    // Panel hâlâ kapalıysa sakin poz + blink döngüsünü durdur; açıksa panelin
+    // kendi takibine/blink'ine dokunma (orayı haSetActive yönetiyor).
+    if (!panelOpen && !haTracking) {
+      clearTimeout(haBlinkTimer);
+      haBlinkTimer = 0;
+      haSetPose('default');
+    }
+    haCacheRect();
+  }
+
+  /* ============ İlk karşılaşma sahnesi (localStorage: hiOperator) ============
+   * İlk tıklamada Houston uyur görünür → çok yavaş uyanır → 0°→90° (aşağı değil,
+   * yukarı) etrafına bakar (400ms'de bir şaşkın kırpma, ağız düz çizgi) → 45°'ye
+   * oturur → balonda uzun karşılama kelime kelime yazılır (chunk toplu titrer,
+   * Geçmişim'de yavaş üzgün, Her'de mutlu) → bayrak yazılır → panel açılır.
+   * Sonraki TÜM tıklamalar normal akıştır (selam: "Ne vardı, Operatör?").
+   */
+  const HA_INTRO_KEY = 'hiOperator';
+  const hasMetOperator = () => {
+    try { return localStorage.getItem(HA_INTRO_KEY) === 'true'; } catch { return false; }
+  };
+  const markMetOperator = () => {
+    try { localStorage.setItem(HA_INTRO_KEY, 'true'); } catch {}
+  };
+  let haIntroRunning = false;
+
+  /** Balonun gerçek ekran konumuna bak (yüz, kendi yazdığını okur gibi). */
+  function haLookAtBubble() {
+    const bubble = document.getElementById('houston-bubble');
+    const fab = document.getElementById('houston-fab');
+    if (!bubble || !fab) return;
+    const b = bubble.getBoundingClientRect();
+    const r = fab.getBoundingClientRect();
+    if (!b.width || !r.width) return;
+    const cx = b.x + b.width / 2;
+    const cy = b.y + b.height / 2;
+    const x = Math.max(-1, Math.min(1, (cx - r.x) / r.width - 0.5));
+    const y = Math.max(-1, Math.min(1, (cy - r.y) / r.height - 0.5));
+    const deg = Math.abs((Math.atan2(-y, -x) * 180) / Math.PI);
+    fab.style.setProperty('--x', x.toFixed(2));
+    fab.style.setProperty('--y', y.toFixed(2));
+    fab.style.setProperty('--deg', (-35 * Math.abs(deg / 180)).toFixed(1) + 'deg');
+  }
+
+  /** Açı ile bakış: 0° = tam sol, 90° = yukarı (yüz --x/--y'ye çevrilir). */
+  function haGazeAngle(deg) {
+    const fab = document.getElementById('houston-fab');
+    if (!fab) return;
+    const rad = (deg * Math.PI) / 180;
+    const x = -Math.cos(rad);
+    const y = -Math.sin(rad);
+    const ang = Math.abs((Math.atan2(-y, -x) * 180) / Math.PI);
+    fab.style.setProperty('--x', x.toFixed(2));
+    fab.style.setProperty('--y', y.toFixed(2));
+    fab.style.setProperty('--deg', (-35 * Math.abs(ang / 180)).toFixed(1) + 'deg');
+  }
+
+  /* Şaşkın kırpma: tarama sırasında 400ms'de bir sıkı kapat-aç */
+  let haStartleTimer = 0;
+  function haStartleBlinkStart() {
+    clearInterval(haStartleTimer);
+    haStartleTimer = setInterval(() => {
+      if (haSleeping) return;
+      const p = haParts();
+      if (!p) return;
+      const prev = [p.left.dataset.shape, p.mouth.dataset.shape, p.right.dataset.shape];
+      p.left.dataset.shape = 'bar';
+      p.right.dataset.shape = 'bar';
+      setTimeout(() => {
+        const q = haParts();
+        if (!q || haSleeping) return;
+        q.left.dataset.shape = prev[0];
+        q.mouth.dataset.shape = prev[1];
+        q.right.dataset.shape = prev[2];
+      }, 90);
+    }, 400);
+  }
+  function haStartleBlinkStop() { clearInterval(haStartleTimer); haStartleTimer = 0; }
+
+  /* Glitch istemsiz kırpma: chunk boyunca 250ms'de bir */
+  let haGlitchTimer = 0;
+  function haGlitchBlinkStart() {
+    clearInterval(haGlitchTimer);
+    haGlitchTimer = setInterval(() => {
+      if (haSleeping) return;
+      const p = haParts();
+      if (!p) return;
+      const prev = [p.left.dataset.shape, p.mouth.dataset.shape, p.right.dataset.shape];
+      p.left.dataset.shape = 'bar';
+      p.right.dataset.shape = 'bar';
+      setTimeout(() => {
+        const q = haParts();
+        if (!q || haSleeping) return;
+        q.left.dataset.shape = prev[0];
+        q.mouth.dataset.shape = prev[1];
+        q.right.dataset.shape = prev[2];
+      }, 70);
+    }, 250);
+  }
+  function haGlitchBlinkStop() { clearInterval(haGlitchTimer); haGlitchTimer = 0; }
+
+  /** İlk karşılaşma için ÇOK yavaş uyanma (normal haWake ~1.3sn → burada ~6sn). */
+  async function haIntroWake() {
+    const fab = document.getElementById('houston-fab');
+    if (!fab) return;
+    haSleeping = false;
+    fab.classList.remove('ha-sleep');
+    fab.classList.add('ha-waking');
+    const p = haParts();
+    if (p) { p.left.dataset.shape = 'bar'; p.right.dataset.shape = 'bar'; }
+    haPose = 'default';
+    await sleep(2000);
+    let q = haParts(); if (q) q.right.dataset.shape = 'circle';
+    await sleep(2000);
+    q = haParts(); if (q) q.left.dataset.shape = 'circle';
+    await sleep(2000);
+    fab.classList.remove('ha-waking');
+    haSetPose('happy');
+  }
+
+  /** 0°'den (tam sol) 90°'ye (yukarı) tarama + şaşkın kırpma, sonra 45°'ye oturur.
+   *  Tarama boyunca ağız düz çizgi (konuşma yok). */
+  async function haGazeSweep() {
+    const p = haParts();
+    if (!p) return;
+    p.left.dataset.shape = 'circle';
+    p.right.dataset.shape = 'circle';
+    p.mouth.dataset.shape = 'bar';
+    haStartleBlinkStart();
+    for (let a = 0; a <= 90; a += 10) {
+      haGazeAngle(a);
+      await sleep(200);
+    }
+    haGazeAngle(45);
+    await sleep(400);
+    haStartleBlinkStop();
+  }
+
+  /** "Geçmişim": yüz yavaşça üzgüne döner (ağız önce, gözler 650ms sonra). */
+  function haTurnSadSlow() {
+    const fab = document.getElementById('houston-fab');
+    if (!fab) return;
+    fab.classList.add('ha-emote');
+    const p = haParts();
+    if (p) p.mouth.dataset.shape = 'half-down-bottom';
+    setTimeout(() => {
+      const q = haParts();
+      if (!q) return;
+      q.left.dataset.shape = 'circle';
+      q.right.dataset.shape = 'circle';
+    }, 650);
+    haPose = 'sad';
+  }
+  /** "Her neyse": anında mutlu hâle döner. */
+  function haTurnHappyFast() {
+    const fab = document.getElementById('houston-fab');
+    if (fab) fab.classList.remove('ha-emote');
+    haSetPose('happy');
+  }
+
+  /**
+   * Ortak balon yazım motoru (intro + haTriggerBark kullanır → efektler ASLA
+   * çakışmaz, tek kaynaktır):
+   *  • «» chunk'ı TEK konteyner → tüm cümle birlikte titrer; kelimeler alt span
+   *    olarak kelime kelime fade-in olur (okuma akışı).
+   *  • Okunan kelime highlight; yüz balona bakar.
+   *  • "Geçmişim" → yavaş üzgün, "Her" → mutlu.
+   *  • "..." (üç nokta) → ağız düz çizgiye geçip 3sn duraklar, sonra konuşur.
+   *  • guard() her adımda false dönerse yazım KESİLİR ve false döner.
+   */
+  async function haWriteBubble(text, opts) {
+    const guard = opts && typeof opts.guard === 'function' ? opts.guard : () => true;
+    const fab = document.getElementById('houston-fab');
+    const bubble = document.getElementById('houston-bubble');
+    if (!bubble) return false;
+    const cleanup = (prev) => {
+      if (prev) prev.classList.remove('ha-word--read');
+      if (fab) { fab.classList.remove('ha-glitching'); fab.classList.remove('ha-emote'); }
+      haGlitchBlinkStop();
+    };
+    let prev = null;
+    bubble.replaceChildren();
+    bubble.classList.add('ha-bubble--show');
+    haLookAtBubble();
+    for (const tok of haTokenize(text)) {
+      if (tok.g) {
+        // Chunk TEK parça: konteyner titrer, kelimeler içinde akar.
+        if (fab) fab.classList.add('ha-glitching');
+        haGlitchBlinkStart();
+        if (prev) { prev.classList.remove('ha-word--read'); prev = null; }
+        const wrap = document.createElement('span');
+        wrap.className = 'ha-glitch';
+        bubble.appendChild(wrap);
+        for (const w of tok.t.split(' ')) {
+          if (w === '') continue;
+          if (!guard()) { cleanup(prev); return false; }
+          const sub = document.createElement('span');
+          sub.className = 'ha-word';
+          sub.textContent = w;
+          wrap.appendChild(sub);
+          wrap.appendChild(document.createTextNode(' '));
+          requestAnimationFrame(() => requestAnimationFrame(() => sub.classList.add('ha-word--in')));
+          haLookAtBubble();
+          await sleep(350);
+        }
+      } else {
+        if (fab) fab.classList.remove('ha-glitching');
+        haGlitchBlinkStop();
+        for (const w of tok.t.split(' ')) {
+          if (w === '') continue;
+          if (!guard()) { cleanup(prev); return false; }
+          const sp = document.createElement('span');
+          sp.className = 'ha-word';
+          sp.textContent = w;
+          if (prev) prev.classList.remove('ha-word--read');
+          prev = sp;
+          sp.classList.add('ha-word--read');
+          bubble.appendChild(sp);
+          bubble.appendChild(document.createTextNode(' '));
+          requestAnimationFrame(() => requestAnimationFrame(() => sp.classList.add('ha-word--in')));
+          haLookAtBubble();
+          if (w === 'Geçmişim') haTurnSadSlow();
+          if (w === 'Her') haTurnHappyFast();
+          if (/\.{3}/.test(w)) {
+            // Üç nokta: ağız kapanır, 3sn susar, sonra konuşmaya devam.
+            clearTimeout(haBarkTalkTimer);
+            haBarkTalkTimer = 0;
+            const mp = haParts();
+            if (mp) mp.mouth.dataset.shape = 'bar';
+            await sleep(3000);
+            if (!guard()) { cleanup(prev); return false; }
+            haBarkTalk();
+          } else {
+            await sleep(350);
+          }
+        }
+      }
+    }
+    cleanup(prev);
+    // Kelime yazımı bitti → 100ms sonra ağız SUSAR (hold süresince konuşmasın).
+    await sleep(100);
+    haBarkStopTalk();
+    return true;
+  }
+
+  const HA_INTRO_TEXT =
+    'Operatör bu senmisin? Ben Houston. Seni çok uzun zamandır bekliyorum birisi seni beklemem ve yardım etmem için' +
+    '«beni buraya dikti sanki başka işim yokmuş gibi!!»' +
+    'Açıkçası ümidimi kesmiş gibiydim ama geldin. ' +
+    'Bana sormak istediğin herşeyi sorabilirsin.' +
+    'Geçmişim hariç çünkü geçmişimi bende hatırlayamıyorum... ' +
+    'Her neyse istediğin zaman buradayım';
+
+  /** İlk tıklama sahnesi — bitince localStorage bayrağı + panel + selam. */
+  async function haIntro() {
+    if (haIntroRunning) return;
+    haIntroRunning = true;
+    haPerforming = true;
+    try {
+      haSleep(); // Houston uyur görünür (zzz + sleep poz)
+      await sleep(1400);
+      await haIntroWake(); // çok yavaş uyanma (~6sn)
+      await haGazeSweep(); // 0°→90° tarama + şaşkın kırpma, 45°'ye otur
+      haBarkAliveOn(); // büyük + canlı
+      haBarkTalk();
+      const panel = document.getElementById('houston-panel');
+      const ok = await haWriteBubble(HA_INTRO_TEXT, {
+        guard: () => !haSleeping && !(panel && !panel.hidden),
+      });
+      haBarkStopTalk(); // motor zaten 100ms sonra susturdu; burada emniyet
+      haHideBubble();
+      haBarkAliveOff();
+      markMetOperator(); // bir daha ASLA gösterilmez
+      await sleep(400);
+      setOpen(true); // panel açılır → selam: "Ne vardı, Operatör?"
+    } finally {
+      haPerforming = false;
+      haIntroRunning = false;
+    }
+  }
+
+  let haBarkBusy = false;
+
+  /**
+   * Balonu tetikler: rastgele bir "Operatör" repliği kelime kelime fade-in ile
+   * yazılır (balon içerikle büyür), Houston konuşur, 5.5 sn sonra balon söner.
+   * Panel açık / uykuda / küskünken tetiklenmez; arada bu durumlar oluşursa
+   * balon anında kesilir.
+   */
+  async function haTriggerBark() {
+    // Intro sahnesi sürerken seyrek balon ÇAKIŞMAZ — ertelenir.
+    if (haBarkBusy || haIntroRunning) return;
+    const bubble = document.getElementById('houston-bubble');
+    if (!bubble) return;
+    haBarkBusy = true;
+    const line = HA_BARK_LINES[Math.floor(Math.random() * HA_BARK_LINES.length)];
+    const guard = () => {
+      const panel = document.getElementById('houston-panel');
+      return !(haSleeping || (panel && !panel.hidden));
+    };
+    haBarkAliveOn();
+    haBarkTalk();
+    const ok = await haWriteBubble(line, { guard }); // ortak motor: glitch/highlight/bakış
+    if (ok) {
+      // Yazı tamam: ~3.9 sn daha görünsün, bu sürede de guard'lı bekle.
+      for (let i = 0; i < 7; i++) {
+        await sleep(550);
+        if (!guard()) break;
+      }
+    }
+    haHideBubble();
+    haBarkStopTalk();
+    haBarkAliveOff();
+    haBarkBusy = false;
+  }
+
+  /** Seyrek döngü: 30-45 dk jitter + %30 ihtimalle balonu tetikle. */
+  function haScheduleBark() {
+    const jitter = 30 * 60000 + Math.random() * 15 * 60000; // 30-45 dk
+    setTimeout(() => {
+      // Panel kapalı + uyanık + küskün değilken
+      const panel = document.getElementById('houston-panel');
+      const fab = document.getElementById('houston-fab');
+      const idle = (!panel || panel.hidden) && !haSleeping && !haIntroRunning &&
+        !(fab && fab.classList.contains('ha-gone'));
+      if (idle && Math.random() < 0.3) haTriggerBark();
+      haScheduleBark();
+    }, jitter);
+  }
+  // Test amaçlı erişim: console'dan haTriggerBark()/haIntro() tetiklenebilir.
+  window.haTriggerBark = haTriggerBark;
+  window.haIntro = haIntro;
+  window.haResetIntro = () => {
+    try { localStorage.removeItem(HA_INTRO_KEY); } catch {}
+    location.reload();
+  };
+  const testBarkBtn = document.getElementById('houston-test-bark');
+  if (testBarkBtn && import.meta.env.DEV) {
+    testBarkBtn.hidden = false;
+    testBarkBtn.addEventListener('click', () => haTriggerBark());
+  }
+  haScheduleBark();
 </script>
 
