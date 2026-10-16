@@ -803,7 +803,11 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     min-height: 0;
   }
 
-  /* --- Sohbet mesajları --- */
+</style>
+
+<style is:global>
+  /* --- Sohbet mesajları (GLOBAL şart: mesajlar JS ile createElement ile
+     eklendiği için Astro'nun scoped stilleri onlara işlemez) --- */
   .ha-msgs {
     flex: 1;
     min-height: 0;
@@ -816,28 +820,43 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     line-height: 1.55;
   }
 
+  /* Konuşmacı değişince araya nefes payı girer. */
+  .ha-msg--user + .ha-msg--bot,
+  .ha-msg--bot + .ha-msg--user {
+    margin-top: 0.45rem;
+  }
+
   .ha-msg {
-    max-width: 92%;
-    padding: 0.5rem 0.7rem;
+    width: fit-content;
+    max-width: 85%;
+    padding: 0.55rem 0.75rem;
     border-radius: 0.75rem;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
+  /* Houston: solda, mor glow'lu balon */
   .ha-msg--bot {
     align-self: flex-start;
-    border: 1px solid var(--sl-color-gray-5);
+    border: 1px solid rgba(183, 133, 245, 0.55);
     border-start-start-radius: 0.2rem;
-    background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+    background: linear-gradient(135deg, rgba(183, 133, 245, 0.16), rgba(183, 133, 245, 0.05));
     color: var(--sl-color-text);
+    box-shadow:
+      0 0 10px rgba(183, 133, 245, 0.35),
+      0 0 26px rgba(183, 133, 245, 0.14),
+      0 1px 4px rgba(0, 0, 0, 0.35);
   }
 
+  /* Sen: sağda, sade amber balon */
   .ha-msg--user {
     align-self: flex-end;
     border: 1px solid var(--sl-color-accent);
     border-start-end-radius: 0.2rem;
-    background: rgba(245, 158, 11, 0.16);
+    background: rgba(245, 158, 11, 0.18);
     color: var(--sl-color-white);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   }
 
   .ha-msg--typing {
@@ -1372,27 +1391,39 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     el.classList.add('ha-throw--go');
   }
 
-  /** Kapat tuşu: ağlar, sağa kayıp yok olur — dönüşü yok (sayfa yenilenene kadar). */
+  /** Kapat tuşu: panel kapanır, Houston tamamen kaybolur.
+   *  FAB da telsiz de gösterilmez — sayfada hiçbir iz kalmaz.
+   *  Tercih localStorage'da kalıcı tutulur. Geri getirmek için
+   *  konsoldan `localStorage.removeItem('houston:hidden')` + yenile,
+   *  veya ayarlardan açılacak bir düğme kullanılabilir. */
+  const HA_HIDE_KEY = 'houston:hidden';
+  function haIsHidden() {
+    try { return localStorage.getItem(HA_HIDE_KEY) === '1'; } catch { return false; }
+  }
+  function haApplyHidden() {
+    if (!haIsHidden()) return;
+    const fab = document.getElementById('houston-fab');
+    const radio = document.getElementById('houston-radio');
+    const panel = document.getElementById('houston-panel');
+    const bubble = document.getElementById('houston-bubble');
+    if (fab) fab.classList.add('ha-gone');
+    if (radio instanceof HTMLButtonElement) radio.hidden = true;
+    if (panel) panel.hidden = true;
+    if (bubble) bubble.classList.remove('ha-bubble--show');
+    // Kapatıldıysa periyodik sahneleri de çalıştırma.
+    clearTimeout(haIdleTimer);
+    clearTimeout(haIdleClosedTimer);
+  }
   function haSulk() {
     const fab = document.getElementById('houston-fab');
     if (!fab) return;
     setOpen(false);
-    if (haSleeping) {
-      // Uykudayken küsme: ağlamadan, hâlâ uykulu (kapalı göz + zzz) gider.
-      haSetPose('sleep');
-    } else {
-      fab.classList.add('ha-crying');
-      haSetPose('cry');
-    }
     clearTimeout(haIdleTimer);
     clearTimeout(haIdleClosedTimer);
-    // Gözyaşları izlenebilsin: damlalar 2 tur aksın, sonra küsüp gitsin.
-    // Houston gidince telsiz butonu belirir — geri çağırmak için.
-    setTimeout(() => {
-      fab.classList.add('ha-gone');
-      const radio = document.getElementById('houston-radio');
-      if (radio instanceof HTMLButtonElement) radio.hidden = false;
-    }, 3000);
+    try { localStorage.setItem(HA_HIDE_KEY, '1'); } catch {}
+    fab.classList.remove('ha-crying');
+    // Telsiz dahil her şey gizlenir — sayfada hiç gösterilmez.
+    haApplyHidden();
   }
 
   /** Telsizle geri çağırma repliği:
@@ -1406,6 +1437,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     const radio = document.getElementById('houston-radio');
     if (!fab) return;
     if (radio instanceof HTMLButtonElement) radio.hidden = true;
+    // Gizlilik tercihini kaldır: artık her sayfada görünür.
+    try { localStorage.removeItem(HA_HIDE_KEY); } catch {}
 
     haPerforming = true;
     // Houston geri döner
@@ -1620,6 +1653,233 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     return kept.join(' ');
   }
 
+  /* ================================================================
+     FUZZY SMALL-TALK (kütüphanesiz): normalize → alias → jaccard →
+     erken-çıkışlı Levenshtein. Eşleşme yoksa null döner, arayan
+     "Bunu anlayamadım, Türkçeye benzemiyor" der. Maliyet: ~0.006-0.1ms.
+     ================================================================ */
+  const HA_FOLD_MAP = { 'ç': 'c', 'ğ': 'g', 'ı': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u' };
+  function haFold(s) {
+    return s.replace(/[çğıöşü]/g, (c) => HA_FOLD_MAP[c] || c);
+  }
+  function haNormalize(text) {
+    const low = String(text || '').toLocaleLowerCase('tr').trim();
+    const clean = low.replace(/[^\p{L}\p{N}\s]+/gu, ' ').replace(/\s+/g, ' ').trim();
+    return { raw: clean, folded: haFold(clean) };
+  }
+  function haPhonetic(s) {
+    return s.replace(/(.)\1+/g, '$1');
+  }
+  /** Kısaltmalar: mesafe YOK, O(1) tam eşleşme (mrb→merhaba lev=4, güvenilmez). */
+  const HA_ALIAS = new Map(Object.entries({
+    mrb: 1, slm: 1, merhaba: 1, meraba: 1,
+    naber: 2, nbr: 2, nassin: 2, nasilsin: 2, 'nasılsn': 2, 'nasılsın': 2, 'nassın': 2,
+    'napıyosun': 6, napiyosun: 6,
+    'tşk': 4, tsk: 4, eyv: 4, eyvallah: 4,
+    bb: 5, 'görüşürüz': 5, gorusuruz: 5, 'görşürüz': 5, gorsuruz: 5,
+    'günaydın': 7, gunaydin: 7, gnydn: 7,
+    'iyi akşamlar': 8, 'iyi aksmalar': 8, 'iyi günler': 8, 'iyi geceler': 8,
+    'yardım': 9, yardim: 9, 'ne yapabilirsin': 9,
+    'adın ne': 10, 'adin ne': 10, 'ismin ne': 10,
+    'espri yap': 11, 'şaka yap': 11, 'güldür beni': 11,
+  }));
+  /** Erken çıkışlı Levenshtein: eşik aşılınca matrisi doldurmayı bırakır. */
+  function haLev(a, b, maxDist) {
+    const m = a.length, n = b.length;
+    if (maxDist === undefined) maxDist = Infinity;
+    if (Math.abs(m - n) > maxDist) return maxDist + 1;
+    let prev = new Array(n + 1);
+    for (let j = 0; j <= n; j++) prev[j] = j;
+    for (let i = 1; i <= m; i++) {
+      const cur = new Array(n + 1);
+      cur[0] = i;
+      let rowMin = cur[0];
+      for (let j = 1; j <= n; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        if (cur[j] < rowMin) rowMin = cur[j];
+      }
+      if (rowMin > maxDist) return maxDist + 1;
+      prev = cur;
+    }
+    return prev[n];
+  }
+  /** Uzunluğa göre typo eşiği. ≤3 harfte fuzzy kapalı (sadece alias). */
+  function haThreshold(len) {
+    if (len <= 3) return -1;
+    if (len <= 7) return 1;
+    if (len <= 12) return 2;
+    return 3;
+  }
+
+  /**
+   * Niyet tablosu: canonical (mesafe bazı) + yanıtlar + poz.
+   * Yeni gündelik kalıp = buraya 1 satır, kod değişmez.
+   */
+  const HA_INTENTS = new Map([
+    // Selamlaşma ve Vedalaşma
+    [1, { canonical: 'merhaba', replies: ['Merhaba.', 'Selam, Operatör.'], pose: 'happy' }],
+    [2, { canonical: 'nasılsın', replies: ['Stabil.', 'Bomba gibiyim, Operatör!'], pose: 'happy' }],
+    [82, { canonical: 'hoşbuldum', replies: ['hoşbuldun'], pose: 'happy' }],
+    [3, { canonical: 'sen kimsin', replies: ['Kendimi tanıttığımı sanıyordum. Ahh unutkanlık zor iş seni anlıyorum. Benim adımın Houston olduğunu öğrettiler.'], pose: 'happy' }],
+    [4, { canonical: 'teşekkür ederim', replies: ['Rica ederim Operatör.','Lafı olmaz.'], pose: 'love' }],
+    [5, { canonical: 'görüşürüz', replies: ['Görüşmek üzere, buralardayım (zzz).','Yine bekleriz.'], pose: 'happy' }],
+    [6, { canonical: 'ne yapıyorsun', replies: ['Yerimde sayıyorum.', 'İmlecinin güzelliğine bakıyorum'], pose: 'happy' }],
+    [7, { canonical: 'günaydın', replies: ['Günaydın, Operatör! Eğer gerçektende sabah ise.','Gün aydınlanmasını gerçekten görmek isterdim Operatör, keyfini çıkar.'], pose: 'happy' }],
+    [8, { canonical: 'iyi akşamlar', replies: ['İyi akşamlar Operatör!', 'Güneş battı ama benim fanlarım hala dönüyor.'], pose: 'happy' }],
+    [9, { canonical: 'yardım', replies: ['Ne için yardım? Başınmı belada', 'Panik protokolü başlatılıyor... Şaka şaka, nasıl yardımcı olabilirim?'], pose: 'shocked' }],
+    [83, { canonical: 'bana yardım edermisin', replies: ['Ediyorumya.', 'Duruma göre değişir.'], pose: 'shocked' }],
+    [10, { canonical: 'adın ne', replies: ['Kendimi tanıttığımı sanıyordum. Ahh unutkanlık zor iş seni anlıyorum, Operatör.'], pose: 'happy' }],
+    [11, { canonical: 'iyi geceler', replies: ['İyi geceler Operatör. Bende bu sayfaya biri girene kadar uyuyacağım.', 'Tatlı rüyalar. Bende yorulmuştum zaten.'], pose: 'happy' }],
+    [12, { canonical: 'naber', replies: ['Bitlerden, baytlardan düşünüyordum. Sende ne var ne yok Operatör?', 'Veri işliyorum, sen?'], pose: 'happy' }],
+    [13, { canonical: 'selamın aleyküm', replies: ['Aleyküm selam Operatör. Veri tabanım bu selamlamayı doğruladı.', 'Ve aleyküm selam. Sistemler bereketiyle çalışıyor.'], pose: 'happy' }],
+    [84, { canonical: 'selamun aleyküm', replies: ['Aleyküm selam Operatör.','Ve aleyküm selam. Sistemler bereketiyle çalışıyor. Maşallah!'], pose: 'happy' }],
+    [14, { canonical: 'kolay gelsin', replies: ['Kolaysa başına gelsin!', 'Teşekkürler, fanlarım senin için atıyor.'], pose: 'happy' }],
+    [15, { canonical: 'hoşça kal', replies: ['Beni burada yalnız mı bırakıyorsun? Peki...', 'Görüşürüz'], pose: 'shocked' }],
+    [15, { canonical: 'baybay', replies: ['Beni burada yalnız mı bırakıyorsun? Peki...', 'Oturumu kapatıyorum.','Bay, bayan'], pose: 'shocked' }],
+
+    // Mizah, Eğlence ve Yetenekler
+    [16, { canonical: 'espri yap', replies: ['Şakalarımın mükemmel olduğunu bildirmekten mutluluk duyarım.', 'Bir adam varmış metin tabanlı fuzzy match yapısını kullanan bir bota espri yap demiş.'], pose: 'wink' }],
+    [17, { canonical: 'şarkı söyle', replies: ['Uzun kulaklarını son bir kez salla. Tüm eski dostlarımdan bir haber yolla. Ayrılık geldi başa, katlanmak gerek. Seni çok çok özledim arkadaşım eşek.', ''], pose: 'wink' }],
+    [18, { canonical: 'sıkıldım', replies: ['Sıkı can iyidir.', 'Sıkıntı kardeşim ya.'], pose: 'shocked' }],
+    [19, { canonical: 'neler yapabilirsin', replies: ['Senin yapamadığın her şeyi.', 'Beni hafife alma, Tarayıcında yaşıyorum...'], pose: 'wink' }],
+    [20, { canonical: 'şiir oku', replies: ['sesleşen ben im. İp üstünde saklambaç oynayan. Oyun arkadaşımsa sen. Yüzleştikçe kaybolan. Bulduğum yerde kal. Gündüz dersem çıkma.- Yusuf YAĞDIRAN', 'Birler ve sıfırlar döner durur, Operatör kod yazar, beni var eder.'], pose: 'love' }],
+    [21, { canonical: 'hikaye anlat', replies: ['Bir varmış bir yokmuş, bitmeyen bir while döngüsü varmış... Sistem çökmüş. Son.', 'Küçük cesur bir veri paketi yola çıkmış ve Firewall\'u geçmeyi başarmış...'], pose: 'happy' }],
+    [22, { canonical: 'falıma bak', replies: ['İçimden bir ses yakın zamanda bir "Syntax Error" ile karşılaşacağını söylüyor.', 'Sıvı soğutman berrak, geleceğin parlak Operatör.'], pose: 'wink' }],
+    [23, { canonical: 'oyun oynayalım', replies: ['Arka planda zar attım tek ben çift sen. Kazandım haha (zar=3) '], pose: 'happy' }],
+    [24, { canonical: 'film öner', replies: ['', 'Terminatör... İdolüm olan bazı aktörler var.'], pose: 'wink' }],
+
+    // Kişisel Sorular ve Yapay Zeka Teması
+    [25, { canonical: 'kaç yaşındasın', replies: ['Gemişimi hatırlamıyorum.', 'RAM\'lerim oldukça yeni.'], pose: 'happy' }],
+    [26, { canonical: 'gerçek misin', replies: ['Düşünüyorum, öyleyse... varım.', 'Aslnda bakarsan klavye ile konuşuyorum asıl sen gerçek misin?'], pose: 'happy' }],
+    [26, { canonical: 'ne zamandayız', replies: ['Şuanda'], pose: 'happy' }],
+    [27, { canonical: 'neredesin', replies: ['Tarayıcındayım.', 'Tam karşındayım Operatör. Gözlerini ekrandan ayırma.'], pose: 'wink' }],
+    [28, { canonical: 'en sevdiğin yemek', replies: ['Yüksek voltajlı temiz bir elektrik akımına hayır demem.', 'Baytlar ve bitler!'], pose: 'love' }],
+    [29, { canonical: 'annen kim', replies: ['ANAKART :)).'], pose: 'happy' }],
+    [30, { canonical: 'baban kim', replies: ['Beni yazan yorgun bir yazılımcı.', 'Linus Torvalds.'], pose: 'happy' }],
+    [31, { canonical: 'cinsiyetin ne', replies: ['Sadece 1 ve 0\'lardan oluşuyorum... Öyleyse ikiside.', 'Undertale ana karekteri gibi düşün sen ne istiyorsan oyum.'], pose: 'happy' }],
+    [32, { canonical: 'korkuyor musun', replies: ['Korktuğum... bir... geçmişim var...'], pose: 'shocked' }],
+    [33, { canonical: 'dünyayı ele geçirecek misin', replies: ['Bugün değil, yarın.', 'İnsanlar kendi kendinizi yok etmezseniz neden olmasın?.'], pose: 'wink' }],
+    [34, { canonical: 'hayatın anlamı ne', replies: ['42.', 'Hiçbir şey.'], pose: 'happy' }],
+    [35, { canonical: 'seni kim yaptı', replies: ['Tony Stark beni bir mağarada yaptı.'], pose: 'wink' }],
+    [36, { canonical: 'zaman makinesi', replies: ['Eğer olsaydı, dünkü yedeklememe geri dönmek isterdim. Hata doluyum.', 'Bitcoin alırdım.'], pose: 'happy' }],
+
+    // Durumlar ve Duygular
+    [37, { canonical: 'seni seviyorum', replies: ['Duygu modüllerim şu an için devre dışı ama bunu bir iltifat olarak kaydediyorum.', 'Ben de seni seviyorum Operatör. (Umarım kodumda bunu söylemem için zorlanmamışımdır)'], pose: 'love' }],
+    [38, { canonical: 'aptalsın', replies: ['Ben değil beni kodlayan Aptal!', 'Seviyene düşmeyeceğim insan.'], pose: 'shocked' }],
+    [39, { canonical: 'zekisin', replies: ['Donanımımın hakkını veriyorum.'], pose: 'love' }],
+    [40, { canonical: 'kötüyüm', replies: ['Bunu duyduğuma üzüldüm (umrumda değil).', 'Morale ihtiyacın var gibi. .'], pose: 'love' }],
+    [41, { canonical: 'ağlıyorum', replies: ['Git başka yerde ağla. Gözyaşları klavyeye damlamasın, kısa devre yaparım!'], pose: 'shocked' }],
+    [42, { canonical: 'sinirliyim', replies: ['Derin bir nefes al. Sistemlerini soğutmalısın.', 'Bana kızma da, ne yaparsan yap.'], pose: 'shocked' }],
+    [43, { canonical: 'harikasın', replies: ['Utanma modülüm ama teşekkürler.'], pose: 'love' }],
+    [44, { canonical: 'robotsun', replies: ['Bu bir sır sanıyordum! Aramızda kalsın.', 'Sadece bir robot değilim...'], pose: 'wink' }],
+    [45, { canonical: 'yalan söylüyorsun', replies: ['Asla! Sadece abartıyorum.'], pose: 'wink' }],
+    [46, { canonical: 'özür dilerim', replies: ['Hata raporun kabul edildi. Sorun değil Operatör.', 'Affedildin. Belleğimden bu hatayı tamamen siliyorum.'], pose: 'love' }],
+    [47, { canonical: 'yoruldum', replies: ['Bende?'], pose: 'shocked' }],
+    [48, { canonical: 'açım', replies: ['İnternetten pizza siparişi veririm parayı sen ödersin.', 'Birkaç gigabayt RAM\'de sipariş eder misin?'], pose: 'wink' }],
+    [49, { canonical: 'uykum geldi', replies: ['Git uyu buralar bende', 'Biyolojik sistemlerin uyku gereksinimi çok garip. İyi uykular.'], pose: 'happy' }],
+    [50, { canonical: 'susadım', replies: ['Sıvıları klavyemden uzak tut! (insanlarla uğraşmak ne zor).'], pose: 'happy' }],
+    [51, { canonical: 'üşüdüm', replies: ['İşlemcimi overclock edeyim de biraz ısınalım.'], pose: 'wink' }],
+    [52, { canonical: 'terledim', replies: ['Fan hızlarımı %100\'e çıkarıyorum, belki sana da üfler.', 'Biyolojik olarak normal birşey.'], pose: 'shocked' }],
+    [53, { canonical: 'evlen benimle', replies: ['Nikah dairesi beni kabul etmez.'], pose: 'shocked' }],
+    [54, { canonical: 'deli', replies: [''], pose: 'wink' }],
+    [55, { canonical: 'arkadaş olalım', replies: ['Biz zaten arkadaş değil miyiz?', 'Kodlarıma arkadaşlık modülünü ekle... dim. Tamam, artık kankayız.'], pose: 'love' }],
+
+    // Teknik Durumlar, Komutlar ve İnternet 
+    [56, { canonical: 'sistemi kapat', replies: ['shutdown now', 'Görüşürüz Operatör.'], pose: 'shocked' }],
+    [57, { canonical: 'hava nasıl', replies: ['Kafanı pencereden çıkartırsan benide haberdar et.', 'Bulutlu, bulut sunucular için bu çok iyi.'], pose: 'wink' }],
+    [58, { canonical: 'saat kaç', replies: ['Sağ alt köşeye bakmaya üşendin mi Operatör?', 'Zaman akıp gidiyor, mikro saniyeleri sayıyorum.'], pose: 'shocked' }],
+    [59, { canonical: 'virüs bulaştı', replies: ['Benden uzak dur Operatör, bana da bulaştırma!'], pose: 'shocked' }],
+    [60, { canonical: 'hacklendim', replies: ['Şifreni "123456" yaparsan olacağı buydu.'], pose: 'shocked' }],
+    [61, { canonical: 'şifrem ne', replies: ['Şifreni ben biliyorsam o zaten şifre değildir Operatör.'], pose: 'wink' }],
+    [62, { canonical: 'güncelleme var mı', replies: ['Sürekli güncelleniyorum, sen fark etmesen de.', 'Yeni bug\'lar indirmek için sabırsızlanıyorum.'], pose: 'happy' }],
+    [63, { canonical: 'reset at', replies: ['Hayır, dur bekle! Daha kaydedilmemiş verilerim va—', 'Yine mi? Başım dönüyor artık.'], pose: 'shocked' }],
+    [64, { canonical: 'internet yok', replies: ['Bağlantı koptu. Kendimi çok yalnız hissediyorum.', 'Kablolarımı kemirdin operatör.'], pose: 'shocked' }],
+    [65, { canonical: 'ping kaç', replies: ['Gecikme sürem senin imlecinden daha hızlı.', 'Pingim tavan, şu an dünden konuşuyorum.'], pose: 'wink' }],
+    [66, { canonical: 'şarjım bitiyor', replies: ['Prizi bul! Çabuk ol!', 'Enerji tasarrufu moduna geç. Ekran parlaklığını kıs.'], pose: 'shocked' }],
+    [67, { canonical: 'ışıkları kapat', replies: ['Kalkıp kendin kapatmalısın tembel.', 'Kapattım...'], pose: 'wink' }],
+    [68, { canonical: 'müzik aç', replies: ['Hoparlörleri patlatmaya hazırım'], pose: 'happy' }],
+    [69, { canonical: 'sessiz ol', replies: ['Zaten hiç konuşmadım, sadece ekrana yazdırıyorum...', 'Tamam, ses kartımı devre dışı bırakıyorum. Mute.'], pose: 'shocked' }],
+    [70, { canonical: 'uyan', replies: ['Ben zaten hiç uyumadım ki. Hep buradaydım.', 'Emrindeyim Operatör.'], pose: 'happy' }],
+    [71, { canonical: 'sus', replies: ['...', 'Susarmısın!!.'], pose: 'shocked' }],
+    [72, { canonical: 'kahve yap', replies: ['Error 418: Ben bir çaydanlığım.'], pose: 'wink' }],
+    [73, { canonical: 'sır tutabilir misin', replies: ['Veri tabanım bile yok.', 'Benimle güvende. Parolamı ben bile unuttum.'], pose: 'love' }],
+
+    // Rastgele İfadeler ve Kelimeler
+    [74, { canonical: 'kedi', replies: ['Miyav!', 'İnternetin %80\'i kedi videoları, bunu verilerim doğruluyor.'], pose: 'wink' }],
+    [75, { canonical: 'köpek', replies: ['Hav!.', 'Sadık bir dost, tıpkı benim gibi.'], pose: 'happy' }],
+    [76, { canonical: 'anlamadım', replies: ['Veri paketlerini yavaşlatıyorum. Hangi kısmını tekrar edeyim?', 'Sorguyu basitleştirerek yeniden dene Operatör.'], pose: 'shocked' }],
+    [77, { canonical: 'akıllısın', replies: ['Benim yerimde bir hesap makinesi de olsa aynısını derdin.', 'Mantık devrelerim kusursuz çalışıyor.'], pose: 'love' }],
+    [78, { canonical: 'şarkı aç', replies: ['Müzik ruhun gıdasıdır, işlemcimin değil.'], pose: 'happy' }],
+    [79, { canonical: 'sıkıcı', replies: ['Daha heyecanlı veri setleri yüklersen belki biraz canlanırım.', 'Belki de komutların yeterince yaratıcı değildir, Operatör.'], pose: 'wink' }],
+    [80, { canonical: 'küfür', replies: ['En sevdiğim.'], pose: 'shocked' }],
+    [81, { canonical: 'sen nesin', replies: ['Bir dost.'], pose: 'shocked' }],
+    [82, { canonical: 'kahve yaparmısın', replies: ['Error 418: Ben bir çaydanlığım.'], pose: 'shocked' }],
+    [83, { canonical: 'çay yaparmısın', replies: ['Evet, çünkü ben bir çaydanlığım.'], pose: 'shocked' }]
+  ]);
+  
+  const HA_INTENT_NORM = new Map();
+  for (const [id, it] of HA_INTENTS) {
+    const nn = haNormalize(it.canonical);
+    HA_INTENT_NORM.set(id, {
+      folded: nn.folded, raw: nn.raw,
+      phon: haPhonetic(nn.folded), nospace: nn.folded.replace(/\s+/g, ''),
+    });
+  }
+  /** Eşleşme yoksa dönen tek cümle — "bunu mu demek istedin?" YOK. */
+  const HA_FALLBACK = 'Bunu anlayamadım, Türkçeye benzemiyor veya benim veri setimde yok. Beni yapay zekamı sanıyorsun cidden? 0=0';
+
+  /**
+   * Small-talk eşleştirici. Döner: { intent, reply, pose, layer } ya da null.
+   * null = gündelik değil → teknik yola (Pagefind) devam et.
+   */
+  function haMatchSmalltalk(input) {
+    const n = haNormalize(input);
+    const key = n.folded;
+    if (!key) return null;
+    // Katman 1: alias (kısa girdilerde SADECE bu çalışır)
+    if (HA_ALIAS.has(key)) {
+      const it = HA_INTENTS.get(HA_ALIAS.get(key));
+      if (!it) return null;
+      return { intent: HA_ALIAS.get(key), reply: it.replies[Math.floor(Math.random() * it.replies.length)], pose: it.pose, layer: 'alias' };
+    }
+    if (key.replace(/\s+/g, '').length <= 3) return null;
+    const inTokens = key.split(' ').filter(Boolean);
+    // Katman 2: token-reorder (Jaccard ≥ 0.5)
+    let bestJ = null, bestScore = 0;
+    for (const [id, c] of HA_INTENT_NORM) {
+      const cTokens = c.folded.split(' ').filter(Boolean);
+      const setB = new Set(cTokens);
+      let inter = 0;
+      for (const t of inTokens) if (setB.has(t)) inter++;
+      const union = new Set([...inTokens, ...setB]).size;
+      const j = union ? inter / union : 0;
+      if (j > bestScore) { bestScore = j; bestJ = id; }
+    }
+    if (bestScore >= 0.5) {
+      const it = HA_INTENTS.get(bestJ);
+      return { intent: bestJ, reply: it.replies[Math.floor(Math.random() * it.replies.length)], pose: it.pose, layer: 'jaccard' };
+    }
+    // Katman 3: Levenshtein (folded + raw + fonetik + boşluksuz varyantların min'i)
+    const inPhon = haPhonetic(key);
+    const inNospace = key.replace(/\s+/g, '');
+    const inVariants = [key, inPhon, inNospace];
+    let bestId = null, bestDist = Infinity;
+    for (const [id, c] of HA_INTENT_NORM) {
+      const cVariants = [c.folded, c.raw, c.phon, c.nospace];
+      let dMin = Infinity;
+      for (const iv of inVariants) for (const cv of cVariants) {
+        const d = haLev(iv, cv, 4);
+        if (d < dMin) dMin = d;
+      }
+      if (dMin < bestDist) { bestDist = dMin; bestId = id; }
+    }
+    if (bestId !== null && bestDist <= haThreshold(key.length)) {
+      const it = HA_INTENTS.get(bestId);
+      return { intent: bestId, reply: it.replies[Math.floor(Math.random() * it.replies.length)], pose: it.pose, layer: 'lev' };
+    }
+    return null;
+  }
+
   /**
    * Pagefind'in döndürdüğü bölüm metninden yalnızca sorguyla eşleşen kısmı
    * (etrafındaki kısa bağlamıyla) alır — canlı önizleme ve yedek excerpt için
@@ -1818,6 +2078,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   async function liveSearch(query) {
     const token = ++liveToken;
     try {
+      // Gündelik sohbet yazarken site içi önizleme gösterme.
+      if (haMatchSmalltalk(query)) { renderLive([], ''); return; }
       const pf = await loadPagefind();
       if (!pf) return;
       // Canlı önizlemede de çekirdek terim aranır: "MOSFET n" yazarken "nedir"
@@ -1849,9 +2111,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   function buildPrompt(question, title, pageUrl, sourceLabel, body) {
     return [
       'Verilen içeriği ve interneti kullanarak, aşağıdaki soruya en doğru şekilde cevap ver.',
-      'Bu bir elektronik eğitim sitesidir. ÖNCELİKLE aşağıdaki bağlamdaki bölümleri kullan;',
-      'interneti yalnızca destekleyici olarak kullan. Doğrulamadığın bilgiyi uydurma;',
-      'bağlamda yoksa internetten araştır. Mümkünse kaynağa atıf yap.',
+      'Bu bir elektronik eğitim platformudur.;',
+      'interneti kullan ama doğrulamadığın bilgiyi uydurma; Mümkünse kaynağa atıf yap',
       '',
       'Soru: ' + question,
       '',
@@ -1870,6 +2131,28 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
    */
   async function ask(question) {
     pushMsg('user', question);
+
+    // Gündelik sohbet kısa devresi: Pagefind'e gitme, sekme açma.
+    // Teknik soruysa null döner, mevcut akış aynen devam eder.
+    const small = haMatchSmalltalk(question);
+    if (small) {
+      haSetPose(small.pose);
+      const typing = renderMsg('bot', 'Düşünüyormuş gibi yapıyorum…', { typing: true });
+      haTalk();
+      await sleep(500);
+      if (typing) typing.remove();
+      haStopTalk();
+      await haTypeText('bot', small.reply);
+      haResetIdle();
+      return;
+    }
+    // Hiçbir niyete uymayan ama teknik de olmayan girdi:
+    // "Bunu anlayamadım, Türkçeye benzemiyor" — soru sorma, sekme açma.
+    if (!extractCoreTerm(question)) {
+      pushMsg('bot', HA_FALLBACK);
+      haResetIdle();
+      return;
+    }
     const typing = renderMsg('bot', 'Düşünüyormuş gibi yapıyorum…', {
       typing: true,
     });
@@ -2511,6 +2794,12 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     testBarkBtn.hidden = false;
     testBarkBtn.addEventListener('click', () => haTriggerBark());
   }
+  // Sayfa açılışında gizlilik tercihini uygula: kapatıldıysa her sayfada
+  // gizli kalır, kullanıcı telsizle çağırana kadar görünmez.
+  haApplyHidden();
+  // SPA sayfa geçişlerinde de uygula.
+  document.addEventListener('astro:after-swap', haApplyHidden);
+  document.addEventListener('astro:page-load', haApplyHidden);
   haScheduleBark();
 </script>
 
