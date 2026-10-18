@@ -6,13 +6,37 @@ sidebar:
 ---
 
 import { Image } from 'astro:assets';
+import i1 from '/src/assets/3/Silicon-Atom.png';
+import i2 from '/src/assets/3/Silicon-Atom-Net-Charge.png';
+import i3 from '/src/assets/3/Silicon-Crystal.png';
+import i4 from '/src/assets/3/Silicon-Covalent-Bonds.png';
+import i5 from '/src/assets/3/Hole-Creation.png';
+import i6 from '/src/assets/3/Flow-of-Free-Electrons-and-Holes.gif';
+import i7 from '/src/assets/3/n-Type-Semiconductor-Crystal.png';
+import i8 from '/src/assets/3/p-Type-Semiconductor-Crystal.png';
+import i9 from '/src/assets/3/Depletion-Region.png';
+import i10 from '/src/assets/3/Diode-Symbol.png';
+import i11 from '/src/assets/3/ideal_diyot.png';
+import i12 from '/src/assets/3/Diode-IV-Characteristics.png';
+import i13 from '/src/assets/3/Halfwave-Rectifier.png';
+import i14 from '/src/assets/3/Halfwave-Rectifier-During-Positive-Half-Cycle.png';
+import i15 from '/src/assets/3/Halfwave-Rectifier-During-Negative-Half-Cycle.png';
+import i16 from '/src/assets/3/Halfwave-Signal.png';
+import i17 from '/src/assets/3/Fullwave-Rectifier.png';
+import i18 from '/src/assets/3/Fullwave-Bridge-Rectifier.png';
+import i19 from '/src/assets/3/Bridge-Rectifier-During-Positive-Half-Cycle.png';
+import i20 from '/src/assets/3/Bridge-Rectifier-During-Negative-Half-Cycle.png';
+import i21 from '/src/assets/3/Filtered-Fullwave-Signal.png';
+import i22 from '/src/assets/3/Bridge-Rectifier-with-Smoothing-Capacitor.png';
 
-# Temel Kanunlar: Evrenin Borç Defteri
 
-Elektriği anlamak için evrenin iki temel muhasebe kuralını bilmemiz gerekir. Hiçbir enerji yoktan var edilemez, var olan enerji kaybolamaz. Kirchhoff bu durumu iki basit kuralla devre sistemlerine uyarlamıştır:
+
+# Temel Kanunlar
+
+Elektriği anlamak için evrenin iki temel muhasebe kuralını bilmemiz gerekir. **Hiçbir enerji yoktan var edilemez, var olan enerji kaybolamaz.** Kirchhoff bu durumu iki basit kuralla devre sistemlerine uyarlamıştır:
 
 1. **Kirchhoff Akım Kanunu:** Bir düğüm noktasına giren akımların toplamı, çıkan akımların toplamına eşittir. Matematiksel olarak ifade edersek devredeki akımların toplamı sıfırdır **I<sub> i </sub>= 0.**
-2. **Kirchhoff Gerilim Kanunu:** Kapalı bir devre (döngü) boyunca tüm gerilim düşümlerinin toplamı, sağlanan gerilime eşittir **V<sub> i </sub>= 0.**.
+2. **Kirchhoff Gerilim Kanunu:** Kapalı bir devre (döngü) boyunca tüm gerilim düşümlerinin toplamı, sağlanan gerilime eşittir **V<sub> i </sub>= 0.**
 
 Eğer ürettiğimiz gücü transistörlere ve işlemcilere aktaracaksak, bu gücü yolda stabil hale getirmemiz gerekir. Bunu yapmak için aşağıdaki bileşenlerin ruhunu anlamalıyız.
 
@@ -20,11 +44,9 @@ Eğer ürettiğimiz gücü transistörlere ve işlemcilere aktaracaksak, bu güc
 
 **Kondansatör (Kapasitör)**, elektrik enerjisini bir elektrik alanı içinde geçici olarak depolayan devre elemanıdır. Mantık olarak küçük ve çok hızlı şarj/deşarj olabilen bir pile benzetilebilir; ancak piller gibi enerjiyi kimyasal olarak değil, doğrudan elektrostatik yük olarak saklar. Aralarında yalıtkan bulunan iki iletken levhadan oluşur.
 
-(BURAYA RESİM GELEBİLİR)
-
 Kondansatörü anlamak için klasik kova benzetmesini yapalım. Elektrik akımını bir musluktan akan su, kondansatörü ise altına koyduğumuz bir kova olarak düşünün. Ama bu kova dolduğunda kendisine gelen su akışını tamamen keser, kapasite yoksa (dolduracak alan kalmadıysa) şarj durur.
 
-Devrede ani elektrik kesintisi olursa şarj edilmiş kondansatör hemen devreye girer ve plakasındaki elektrik yükünün, bağlı olduğu devreyi hemen besler yani işlem sırasında geçici bir pil gibi davranır. Flaş patlatma (anlık yüksek güç), elektrik kesintisinde hafıza koruma ve zamanlayıcı devrelerinde en çok kullanılırç
+Devrede ani elektrik kesintisi olursa şarj edilmiş kondansatör hemen devreye girer ve plakasındaki elektrik yükünün, bağlı olduğu devreyi hemen besler yani işlem sırasında geçici bir pil gibi davranır. Flaş patlatma (anlık yüksek güç), elektrik kesintisinde hafıza koruma ve zamanlayıcı devrelerinde en çok kullanılır.
 
 ### Peki kondansatörlerin kapasitesini (Farad) fiziksel olarak nasıl artırırız?
 Levhaların uzunluğunun (yani yüzey alanının) artması kapasiteyi artırır. Plakalar birbirine yaklaştıkça aralarındaki çekim kuvveti ve elektrik alanı güçlenir (elektronlar protonları daha kuvvetli yakalamak ister).Plakalar arasında hava yerine katsayısı yüksek yalıtkan bir malzeme **(örneğin seramik, mika veya süperkapasitör sıvıları)** kullanmak kapasiteyi katlar 
@@ -39,9 +61,41 @@ Biz normalde seri dirençleri bir direnç gibi toplar. Paralel dirençleride par
 Elektronikte bir değeri arttırmak istiyorsak diğer değerlerden ödün vermek bir takas yapmak zorundayız.
 
 **Paralel Bağlama:** Eğer devrede daha büyük bir kova (yüksek kapasite) istiyorsanız, onları yan yana (paralel) bağlarsınız. Kapasiteler doğrudan toplanır eşdeğer kapasite bulunur:
- **C<sub>eş</sub> = C<sub>1</sub> + C<sub>2</sub> + ...** 
+ **C<sub>eş</sub> = C<sub>1</sub> + C<sub>2</sub> + ... + C<sub>n</sub>** 
 
-**Seri Bağlama:** Eğer daha yüksek bir voltaja (basınca) dayanacak bir sisteme ihtiyacınız varsa, kondansatörleri seri bağlarsınız. Toplam kapasite formülü değişmez **C<sub>eş</sub> = C<sub>1</sub> + C<sub>2</sub> + ...** şeklinde dirençlerin tam tersi mantıkta hesaplanır.
+**Seri Bağlama:** Eğer daha yüksek bir voltaja (basınca) dayanacak bir sisteme ihtiyacınız varsa, kondansatörleri seri bağlarsınız. Toplam kapasite formülü değişir: 
+
+<div class="formül-container">
+    <div class="kesir">
+        <span class="pay">1</span>
+        <span class="payda">C<sub>toplam</sub></span>
+    </div> 
+    <span>=</span> 
+    <div class="kesir">
+        <span class="pay">1</span>
+        <span class="payda">C<sub>1</sub></span>
+    </div> 
+    <span>+</span> 
+    <div class="kesir">
+        <span class="pay">1</span>
+        <span class="payda">C<sub>2</sub></span>
+    </div> 
+    <span>+</span> 
+    <div class="kesir">
+        <span class="pay">1</span>
+        <span class="payda">C<sub>3</sub></span>
+    </div> 
+    <span>+ ... +</span>  
+    <div class="kesir">
+        <span class="pay">1</span>
+        <span class="payda">C<sub>n</sub></span>
+    </div>
+    
+    
+</div>
+
+
+ şeklinde dirençlerin tam tersi mantıkta hesaplanır.
 
 Tüm kondansatörler özdeş ise şu pratik N adet (kondansatör sayısı) C kapasite yolu kullanılabilir.
 
@@ -66,35 +120,73 @@ Tüm kondansatörler özdeş ise şu pratik N adet (kondansatör sayısı) C kap
 ## Atomların mantığı, Silisyum ve Katkılama
 
 Silisyum bir yarı iletken örneğidir. Atomik yapısına bakalım:
-https://lastminuteengineers.com/wp-content/uploads/basic/Silicon-Atom.png
 
-Silisyum, tek başına çok sıradandır. Atomları birbirleriyle güçlü kovalent bağlar oluşturur ve dış dünyayla iletişimini keserek **soygaz olmaya çalışır**. Saf silisyum mükemmel bir yalıtkandır.
+<Image 
+  src={i1} 
+  alt="Silisyum Atomu" 
+  quality="mid"
+  style={{ maxWidth: '170px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+Silisyum, tek başına çok sıradandır. Atomları birbirleriyle güçlü kovalent bağlar oluşturur ve dış dünyayla iletişimini keserek **soygaz olmaya çalışır**. Oda sıcaklığındaki saf silisyum elektriğe karşı büyük bir direnç gösterir ve neredeyse bir yalıtkan gibi davranır.
 
 Bir silisyum atomunda 14 proton ve 14 elektron bulunur. İlk yörünge iki elektron, ikinci yörünge ise sekiz elektron içerir. Kalan dört elektron ise değerlik yörüngesindedir.
 
 Silisyum atomunun çekirdek gövdesi, çekirdeğindeki 14 proton ve ilk iki yörüngesindeki 10 elektron sebebiyle net +4 yüke sahiptir. Aşağıdaki şekilde bir silisyum atomunun çekirdek gövdesi vardır.
-https://lastminuteengineers.com/wp-content/uploads/basic/Silicon-Atom-Net-Charge.png
+
+<Image 
+  src={i2} 
+  alt="Yüklenmiş Silisyum Atomu" 
+  quality="mid"
+  style={{ maxWidth: '170px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
 
 #### Silisyum Kristalleri
 Silisyum atomları bir kristal oluşturmak üzere bir araya geldiklerinde, kendilerini sistemli bir düzen içinde sıralarlar. Her silisyum atomu, değerlik elektronlarını dört komşu atomla paylaşır; böylece her atomun değerlik yörüngesinde sekiz elektron bulunmuş olur.
 Aşağıdaki şekil, bir silisyum atomunun elektronlarını dört komşusuyla nasıl paylaştığını göstermektedir.
-https://lastminuteengineers.com/wp-content/uploads/basic/Silicon-Crystal.png
+
+<Image 
+  src={i3} 
+  alt="Silisyum Kristal Yapısı" 
+  quality="mid"
+  style={{ maxWidth: '170px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
 
 
 #### Kovalent Bağlar
 Ortak kullanım nedeniyle, değerlik elektronları artık tek bir atoma ait değildir. Ortaklaşa kullanılan bu değerlik elektronları, komşu atomlar tarafından eşit ve zıt yönlü kuvvetlerle çekilerek aralarında bir bağ oluştururlar. Bu tür kimyasal bağlara Kovalent bağ adı verilir.
 Aşağıdaki şekil, her bir düz çizginin ortaklaşa kullanılan bir elektronu temsil ettiğini ve kovalent bağ kavramını göstermektedir.
-https://lastminuteengineers.com/wp-content/uploads/basic/Silicon-Covalent-Bonds.png
+<Image 
+  src={i4} 
+  alt="Silisyum Kovalent Bağları" 
+  quality="mid"
+  style={{ maxWidth: '170px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
 
 #### Oyuklar (Boşluklar)
 Oda sıcaklığında havadaki termal (ısısal) enerji, silisyum kristalindeki atomların titreşmesine neden olur. Bu titreşimler, elektronun değerlik yörüngesinden kopmasına yol açar. Kopan bu serbest elektron, kristal boyunca rastgele hareket etmeye başlar.
 
 Elektronun ayrılması, değerlik yörüngesinde oyuk (hole) adı verilen bir boşluk oluşturur. Bir elektronun kaybı o noktada pozitif bir yük dengesizliği ürettiği için bu oyuk, pozitif bir yük gibi davranır. Elektronlar oyukları doldurmaya çalışırlar ve hareket ederler.
-https://lastminuteengineers.com/wp-content/uploads/basic/Hole-Creation.png
+<Image 
+  src={i5} 
+  alt="Oyuklar" 
+  quality="mid"
+  style={{ maxWidth: '170px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
 
-İşte serbest elektronları ve oyukları görebilmek için silikon kristaline bir pil bağlayalım. Isısal enerjisi kristal içinde bir serbest elektron ile bir oyuk oluşturduğunu görelim.
 
-https://lastminuteengineers.com/wp-content/uploads/basic/Flow-of-Free-Electrons-and-Holes.gif
+İşte serbest elektronları ve oyukları görebilmek için silisyum kristaline bir pil bağlayalım. Isısal enerjisi kristal içinde bir serbest elektron ile bir oyuk oluşturduğunu görelim.
+<Image 
+  src={i6} 
+  alt="Serbest Elektronlar ve Oyukların Hareketi" 
+  quality="mid"
+  style={{ maxWidth: '350px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
 
 
 
@@ -104,36 +196,55 @@ Silisyumun bu soygaz olma çabasını kırmak için **Katkılama (Doping)** işl
  **N-Tipi (Negatif) Yarı İletken:** 
 Serbest elektron sayısını artırmak için silisyuma fosfor, antimon veya arsenik gibi beş değerlikli katkı maddeleri eklenir. 
 N-tipi bir yarı iletkende, merkezde yer alan beş değerlikli bir atomun etrafı dört silisyum atomu ile çevrilmiştir. Daha önce olduğu gibi, komşu silisyum atomları beş değerlikli atom ile dört elektronu ortaklaşa paylaşır. Ancak bu kez, geriye fazladan bir elektron kalır çünkü değerlik yörüngesi en fazla sekiz elektron barındırabilir.
-https://lastminuteengineers.com/wp-content/uploads/basic/n-Type-Semiconductor-Crystal.png
+<Image 
+  src={i7} 
+  alt="N Tipi Yarı İletken Kristal Yapısı" 
+  quality="mid"
+  style={{ maxWidth: '170px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+    
 
 **P-Tipi (Pozitif) Yarı İletken:** 
 Oyuk sayısını artırmak için silisyuma alüminyum, bor veya galyum gibi üç değerlikli katkı maddeleri eklenir.
 
 P-tipi yarı iletkende, merkezde yer alan üç değerlikli bir atomun etrafı dört silisyum atomu ile çevrilmiştir. Üç değerlikli atom başlangıçta yalnızca üç değerlik elektronuna sahip olduğu ve her bir komşu atom birer elektron paylaştığı için, değerlik yörüngesinde yalnızca sekiz yerine yedi elektron bulunur. Bu durum, her bir üç değerlikli atomun değerlik yörüngesinde bir oyuk oluştuğu anlamına gelir.
-https://lastminuteengineers.com/wp-content/uploads/basic/p-Type-Semiconductor-Crystal.png
-
-
-
-
-
+<Image 
+  src={i8} 
+  alt="P Tipi Yarı İletken Kristal Yapısı" 
+  quality="mid"
+  style={{ maxWidth: '170px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
 
 
 #### P-N Birleşimi ve Evrensel Kural
-Fizik kuralları çok nettir: **"Elektron pozitife gitmek ister."** 
-Laboratuvar ortamında N-Tipi ve P-Tipi bu iki materyali yan yana getirdiğinizde, elektronlar karşıdaki boşluklara doğru fırlarlar. Ancak bir süre sonra sınır hattında bir duvar örülür. Bu duvara **Ölü Bölge (Depletion Region)** denir.
+Fizik kuralları çok nettir: **"Elektron pozitife gitmek ister."**
 
-Bu ölü bölge o kadar eşsiz bir yapıdır ki, iki kutup arasında adeta yalıtkan bir duvar oluşturarak bir "Kondansatör" gibi davranır. Yarı iletken maddelerin bir araya gelmesiyle oluşan bu yapı, hem **İletken** hem de **Yalıtkan (kapasite)** özellikleri taşıyan birleşik devre elemanlarının atasıdır.
+Bunu anlamak için N-Tipi malzemeyi, tıklım tıklım elektron dolu kalabalık bir oda gibi düşünün. İçeride o kadar çok serbest elektron vardır ki, sıkışıklıktan birbirlerini iterler ve kaçacak yer (yayılacak bir alan) ararlar.
 
-{/* 
+**Sınırı Geçiş ve Tuzağa Düşme**
+Bu itiş kakış sırasında bazı elektronlar sınırı geçip komşu P-Tipi tarafa kaçarlar. P-tarafında onları bekleyen "pozitif boşluklar" (oyuklar) vardır. Sınırı geçen bir elektron bu boşluklardan birine yuvarlandığı an, o boşluk kapanır. Elektron artık özgürce dolaşamaz, atoma hapsolur.
+
+**Dengenin Bozulması ve Elektrikli Duvar**
+P-tarafındaki atom fazladan bir elektron yuttuğu için kimyasal dengesi bozulur ve **eksi (-) yüklü** hale gelir. N-tarafında elektronunu kaybeden atom ise **artı (+)** yüklü kalır. Sınır boyunca karşılıklı dizilen bu artı ve eksi yüklü atom çiftlerine "dipol" diyoruz.
+
+**Ölü Bölgenin Doğuşu**
+Sınır hattındaki boşluklar doldukça ve elektronlar oraya hapsoldukça, bu bölgede hareket edebilecek, akım taşıyabilecek hiçbir "serbest" eleman kalmaz. Adeta iki taraf arasına geçilmesi zor, yalıtkan bir duvar örülür. İçinde hareketin ve canlılığın kalmadığı bu sınır hattına **Ölü Bölge (Depletion Region)** diyoruz.
+
 <Image 
-  src={i1} 
-  alt="P-N Birleşimi ve Ölü Bölge Kapasitesi" 
+  src={i9} 
+  alt="Ölü Bölge" 
   quality="mid"
-  style={{ maxWidth: '700px', width: '100%', height: 'auto' }}
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
 />
-*/}
 
 İşte bu P-N birleşimi, modern elektroniğin tek yönlü vanası olan **Diyotların** ta kendisidir!
+
+<Image 
+  src={i10} 
+  alt="Diyot Sembolü" 
+  quality="mid"
+  style={{ maxWidth: '60px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
 
 ---
 
@@ -141,22 +252,51 @@ Bu ölü bölge o kadar eşsiz bir yapıdır ki, iki kutup arasında adeta yalı
 
 Diyot, elektrik akımının tek bir yönde akmasına izin veren bir bileşendir. Peki diyot tam olarak nasıl davranır? Bunu iki aşamada inceleriz:
 
-### 1. İdeal Diyot Modeli
+### İdeal Diyot Modeli
 Eğer mühendislik kitaplarındaki o kusursuz, kayıpsız evrende yaşasaydık; ideal diyot şu şekilde çalışırdı:
-- **İleri Yönde Voltaj (V > 0):** Diyot anında tam bir **"İletken"** olur ve hiçbir kayıp olmadan **Kısa Devre** gibi davranırdı.
-- **Ters Yönde Voltaj (V < 0):** Diyot anında tam bir **"Yalıtkan"** olur ve yolu taş gibi keserek **Açık Devre** gibi davranırdı.
-- Kısaca İdeal Diyot; *"Ya iletken, ya yalıtkan"* prensibiyle çalışır.
 
-{/*
+**İleri Yönde Voltaj (V > 0):** Diyot anında tam bir **"İletken"** olur ve hiçbir kayıp olmadan **Kısa Devre** gibi davranırdı.
+
+**Ters Yönde Voltaj (V < 0):** Diyot anında tam bir **"Yalıtkan"** olur ve yolu taş gibi keserek **Açık Devre** gibi davranırdı.
+
+Kısaca İdeal Diyot; *"Ya iletken, ya yalıtkan"* prensibiyle çalışır.
+
 <Image 
-  src={i2} 
-  alt="İdeal ve Gerçek Diyot V-I Eğrileri" 
+  src={i11} 
+  alt="İdeal Diyot Modeli" 
   quality="mid"
-  style={{ maxWidth: '600px', width: '100%', height: 'auto' }}
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
 />
-*/}
 
-### 2. Gerçek Diyot Modeli ve Potansiyel Şartı
+### Gerçek Diyot Modeli ve Potansiyel Şartı
+
+**Engel (Eşik) Potansiyeli: Görünmez Kapı Görevlisi**
+
+Hatırlarsanız sınır hattında artı ve eksi iyonlardan oluşan "Ölü Bölge" adında yalıtkan bir duvar örülmüştü. İşte bu duvarın kendi içinde görünmez bir gücü vardır: **Elektrik Alan.**
+
+**Görünmez Bouncer (Fedai) Etkisi**
+Artı ve eksi iyonlar yan yana dizildiğinde, aralarında bir gerilim hattı oluşur. N-tarafında kalan diğer serbest elektronlar sınırı geçip P-tarafına atlamaya çalıştığında, bu elektrik alan adeta bir kapı görevlisi gibi davranır ve elektronu gerisin geri N-bölgesine doğru iter.
+
+**Sistem Nasıl Dengeye Ulaşır?**
+Sınırı geçen her yeni elektronla birlikte ölü bölgedeki iyon sayısı artar. İyon sayısı arttıkça bu görünmez elektrik alan **daha da güçlenir**. En sonunda elektrik alanın geri itme gücü o kadar artar ki, artık hiçbir elektron sınırı geçemez hale gelir. Elektron geçişi tamamen durur ve sistem kusursuz bir **Dengeye (Equilibrium)** ulaşır.
+
+**Giriş Ücreti: Eşik Gerilimi**
+İşte iyonlar arasında oluşan bu elektrik alan, aşılması gereken bir voltaj engeli yaratır. Buna **Engel (Eşik) Potansiyeli** diyoruz. 
+
+Bir diyotun akım geçirmesini (kapıyı açmasını) istiyorsak, dışarıdan uygulayacağımız voltajın bu görünmez engeli yenmesi gerekir. Oda sıcaklığında bu "giriş ücreti":
+
+* **Silisyum (Silikon) Diyotlar için:** Yaklaşık **0.7 Volt**
+* **Germanyum Diyotlar için:** Yaklaşık **0.3 Volt**
+
+Yani elimizde silisyum bir diyot varsa, kaynağımız bu 0.7 Volt'luk engeli aşmadığı sürece diyot kapıyı açmaz ve akım geçirmeyi reddeder!
+
+<Image 
+  src={i12} 
+  alt="Diyot I-V Karakteristiği" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
 Ama gerçek dünya entropiyle doludur. Gerçek bir diyotun içindeki o "Ölü Bölgeyi" aşabilmek için elektronların bir eşik gerilimi (Genellikle 0.7V) ödemesi gerekir. Ayrıca diyotun üzerinden geçen akım (`I`), diyotun üzerine düşen gerilim (`Vd`) ile doğru orantılıdır.
 
 **Çok Önemli Bir Detay:** Diyotun çalışması için iki ucu (Anot ve Katot) arasında bir Potansiyel Fark olmalıdır.
@@ -209,57 +349,155 @@ Peki kim ne kadar enerji tüketiyor? Devredeki harcanan güç (P = V &times I) h
 
 İkisini topladığınızda **50 mW** yapar. 5 Volt kaynağın 10 mA akımla ürettiği güç de tam olarak 50 mW'tır. Formülümüz doğrulandı; **"Toplam devredeki güç, kullanılan güce eşittir."** Evrende hiçbir enerji kaybolmadı!
 
-<details>
-<summary>💡 Farklı Voltajlar İçin Etkileşimli Egzersiz</summary>
-
-> Diyelim ki güç kaynağınızı 5V yerine 12V yaptınız, ama diyot hala 2.3V ve 10mA istiyor. Direnci bulmak için formülü nasıl kurarsınız?
-> 
-> **Çözüm:** `R = (12 - 2.3) / 0.01 = 9.7 / 0.01 = 970 Ω`.
-> Gördüğünüz gibi, devredeki voltaj arttıkça diyotu patlamaktan kurtarmak için bağlamamız gereken koruma direncinin değeri devasa şekilde artmak zorundadır!
-
-</details>
-
 ---
 
-## Kaosu Düzene Çevirmek: Doğrultucu Sistemler
+## Alternatif Akımı Doğrultmak
 
 Evlerimize ulaşan şebeke elektriği Alternatif Akımdır (AC). Saniyede 50 defa yön değiştirir (dalgalanır). Ancak içindeki işlemciler, telefonlar ve bu web sitesini çalıştıran sunucular dümdüz, hareketsiz ve pürüzsüz bir DC (Doğru Akım) enerjisine ihtiyaç duyar.
-Bu işlemi diyotların o muazzam "tek yönlü valf" özelliği sayesinde çözeriz. Buna **Anahtarlamalı Regülatör Devreleri** denir.
+Bu işlemi diyotların o muazzam "tek yönlü vana" özelliği sayesinde çözeriz. Buna **Doğrultucu Devreler** denir.
 
-### 1. Yarım Dalga Doğrultucu Devresi
-Sadece tek bir eşit değerde diyot kullanılarak yapılır. AC sinyalinin artı (pozitif) kısmı geldiğinde diyot bunu seve seve karşıya geçirir. Ancak dalga eksiye (negatife) düştüğünde, diyot ters polarize olduğu için tıkanır ve akımı keser. 
-Çıkış dalgasında koca koca boşluklar oluşur. Tıpkı tabir ettiğimiz gibi; dalga eksiye inince devre kesilir, eksi taraf **"Öldü yine!"**. 
-{/* 
+###  Yarım Dalga Doğrultucu Devresi (Half-Wave Rectifier)
+
+Alternatif akımı (AC) tek yönlü bir akıma dönüştürmenin en temel yolu **Yarım Dalga Doğrultucu** devresidir.
+
 <Image 
-  src={i3} 
-  alt="Yarım Dalga Doğrultucu ve Ölü Noktalar" 
+  src={i13} 
+  alt="Yarım Dalga Doğrultucu Devresi" 
   quality="mid"
-  style={{ maxWidth: '500px', width: '100%', height: 'auto' }}
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
 />
-*/}
 
-### 2. Tam Dalga Doğrultucular
-Çöpe atılan o "ölü" dalgaları kurtarmamız gerekir.
-- **2 Diyotlu Tam Dalga Tipi:** Trafonun orta ucunu (Center-Tap) bir referans noktası olarak alarak, iki farklı diyotun sırayla iletime geçmesini sağlar.
+**1. Pozitif Yarı Dalga (Kapı Açılıyor)**
+Devreye dalgalı bir AC gerilimi uyguladığımızda, sinyalin **pozitif (+)** kısmı geldiğinde diyot doğru yönde kutuplanır (forward-bias). Bu durumda diyot tıpkı **kapalı bir anahtar** (geçişe izin veren bir iletken) gibi davranır. Elektrik engelsizce akar ve pozitif dalga doğrudan yük direncinin (çıkışın) üzerine yansır.
 
-- **Köprü Tipi Tam Dalga Doğrultucu:** Mühendisliğin ve zekanın zirvesidir. Trafosuz, 4 diyotla inşa edilen bir karedir.
-
-Peki bu 4 diyotlu köprü nasıl çalışır? Sistem öyle bir labirent gibi kurulmuştur ki:
-> Alternatif akım dalgası **"+" (pozitif)** olduğunda, akım farklı polarizasyonda olan çaprazlama **2 tane diyota uğrar** ve çıkışa ulaşır.
-> Dalga yön değiştirip **"-" (negatif)** olduğunda, akım bu kez kapanan diyotlardan değil, diğer çapraz konumdaki **yine 2 tanesine uğrar**. 
-
-{/*
 <Image 
-  src={i4} 
-  alt="Köprü Tipi Tam Dalga Doğrultucu Devresi" 
+  src={i14} 
+  alt="Pozitif Yarı Dalga" 
   quality="mid"
-  style={{ maxWidth: '600px', width: '100%', height: 'auto' }}
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
 />
-*/}
+
+**2. Negatif Yarı Dalga (Kapı Kilitleniyor)**
+Dalga yön değiştirip **negatif (-)** kısma geçtiğinde ise diyot ters kutuplanır (reverse-bias). Bu sefer diyot tıpkı **açık bir anahtar** (yolu kapatan bir yalıtkan) gibi davranır ve elektriği tamamen keser. Yük direncinin üzerine hiçbir voltaj düşmez.
+
+<Image 
+  src={i15} 
+  alt="Negatif Yarı Dalga" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+**3. Sonuç: Negatif Dalgaları Budamak**
+Yarım dalga doğrultucuda diyot sadece pozitif dalgalarda çalışır, negatif dalgaları ise acımasızca **kırpar (çöpe atar)**. Çıkışta elimizde kalan bu kesik kesik pozitif tepeciklerden oluşan sinyale **Yarım Dalga Sinyali** denir.
+
+<Image 
+  src={i16} 
+  alt="Yarım Dalga Sinyali" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+**Diyodu Ters Çevirirsek Ne Olur?**
+Eğer devredeki diyodun yönünü tam ters bağlarsanız, bu kez tam tersi gerçekleşir: Diyot sadece giriş negatif olduğunda iletime geçer. Çıkışta sadece negatif voltaj darbeleri elde edersiniz.
+
+En nihayetinde bu yarım dalga voltajı, akımın devre üzerinde **sadece tek bir yönde** akmasını sağlayarak devreyi tek yönlü (unidirectional) hale getirmiş olur!
+
+
+### Tam Dalga Doğrultucu (Full-Wave Rectifier)
+
+Sinüs dalgasının sadece tek bir tarafını değil, **her iki yarısını da** doğrultmak (kullanılabilir hale getirmek) için **Tam Dalga Doğrultucu** kullanılır. Bu sistemde, dalganın her bir yarısı için ayrı birer tane olmak üzere **iki adet diyot** ve sekonder (çıkış) sargısının tam ortasından ek bir hat çıkarılmış **orta uçlu (center-tapped) bir transformatör** kullanılır.
+
+Mantık olarak tam dalga doğrultucu, sırt sırta vermiş **iki tane yarım dalga doğrultucudan** ibarettir.
+
+<Image 
+  src={i17} 
+  alt="Tam Dalga Doğrultucu" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+### Köprü Tipi Tam Dalga Doğrultucu (Full-Wave Bridge Rectifier)
+
+Sinüs dalgasının her iki yarısını da (hem pozitif hem negatif alternansı) doğrultmak için **Köprü Tipi Tam Dalga Doğrultucu** kullanılır. Bu sistemde, "köprü" düzeninde birbirine bağlanmış **4 adet diyot** yer alır. Transformatörün sekonder (çıkış) sargısı diyot köprüsünün bir tarafına, çalıştırılacak yük (yük direnci) ise diğer tarafına bağlanır.
+
+Aşağıdaki görselde bir köprü tipi doğrultucu devresi gösterilmektedir.
+
+<Image 
+  src={i18} 
+  alt="Köprü Tipi Tam Dalga Doğrultucu" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+**Devre Nasıl Çalışır? (Pozitif Yarı Periyot)**
+
+Bu devrenin çalışma mantığı, sinyali yarı periyotlar halinde adım adım incelediğimizde çok daha kolay anlaşılır.
+
+**Pozitif Yarı Dalga (+ Alternans Durumu)**
+Güç kaynağından gelen dalganın pozitif yarısı ulaştığında:
+
+**D1 ve D2 Diyotları:** Doğru yönde kutuplanır (forward biased) ve iletime geçerek akımın geçişine izin verir.
+**D3 ve D4 Diyotları:** Ters yönde kutuplanır (reverse biased) ve kapılarını kapatarak akımı engeller.
+**Sonuç:** Akım, iletimde olan D1 ve D2 diyotları üzerinden süzülerek geçer ve yük direncinin R<sub>L</sub> üzerinde pozitif bir çıkış voltajı üretir (yük direncinin iki ucundaki artı-eksi kutupluluğa dikkat edin).
+
+<Image 
+  src={i19} 
+  alt="Köprü Tipi Doğrultucu - Pozitif Yarı Dalga" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+**Negatif Yarı Dalga (- Alternans Durumu)**
+
+Dalga yön değiştirip **negatif (-)** olduğunda ise tam tersi gerçekleşir.
+**D3 ve D4 Diyotları:** Doğru yönde kutuplanır ve iletime geçer.
+**D1 ve D2 Diyotları:** Ters yönde kutuplanır ve kapanır.
+**Sonuç:** Akım bu kez kapanan diyotlardan değil, D3 ve D4 üzerinden geçer. Akımın çıkış yönü her zaman aynı kalır.
+
+<Image 
+  src={i20} 
+  alt="Köprü Tipi Doğrultucu - Negatif Yarı Dalga" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
 
 Yani dalga nereden gelirse gelsin, hangi hırçınlıkla çarparsa çarpsın, akımın devreden çıkış yönü her zaman tektir. Ekranda baktığınızda o "öldü yine" denen negatif dalgaların hepsi yukarı, pozitife katlanmış şekildedir.
 
 Fakat işimiz henüz bitmedi. Elde ettiğimiz bu arka arkaya gelen kambur tepeler (doğrultulmuş dalga) hala dalgalıdır. Bu yapılar tek başına **stabil değildir**.
-Saf ve sarsılmaz bir akım elde etmek için, yazının başında öğrendiğimiz enerjiyi depolayan **kapasitörleri**, değişime direnen **bobinleri** ve voltaj sabitleyici **regülatörleri** kullanmak zorundayız.
 
-Ancak o şok emici kapasitörlerin filtreleme macerası, bir sonraki dersimizin konusu...
+
+### Doğrultucu Çıkışını Filtrelemek (Kapasitörlü Süzme)
+
+Tam dalga doğrultucudan elde ettiğimiz çıkış, sürekli sıfırdan başlayıp tepe noktasına çıkan, ardından tekrar sıfıra düşen **dalgalı (zonklayan) bir DC voltajdır**.
+
+Ancak hassas elektronik cihazlarımız bu tarz sarsıntılı bir voltajla düzgün çalışamaz. Bize gereken şey, tıpkı bir pilden elde ettiğimiz gibi üzerinde hiçbir dalgalanma (ripple) veya voltaj değişimi olmayan, **dümdüz ve kararlı bir DC voltajdır**.
+
+İşte bu pürüzsüz voltajı elde etmek için doğrultulmuş sinyali **filtrelememiz (süzmemiz)** gerekir. Bunu yapmanın en pratik yolu, yük direncinin R<sub>L</sub> iki ucuna paralel bir **Filtre (Yumuşatma) Kapasitörü** bağlamaktır.
+
+<Image 
+  src={i22} 
+  alt="Kapasitörlü Köprü Tipi Doğrultucu" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+**Doğrultucu Filtreleme (Kapasitörlü Süzme) Özetle:**
+
+* **Sorun:** Tam dalgalı doğrultucudan çıkan elektrik dikey dalgalar halindedir (sıfır ile tepe noktası arasında sürekli gidip gelir). Hassas cihazlar bu dalgalı elektrikle çalışamaz.
+* **Kapasitörün Rolü (Depo/Baraj):** 
+  * Voltaj zirveye çıkarken hızlıca **şarj olur** (içini elektrikle doldurur).
+  * Voltaj düşmeye ve sıfıra yaklaşmaya başladığında diyotlar kapanır; bu kez kapasitör devreye girip **deşarj olarak** çukurları doldurur.
+<Image 
+  src={i21} 
+  alt="Filtrelenmiş Tam Dalga Sinyali" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+* **Sonuç:** Voltajın sıfıra düşmesi engellenir; çıkışta tıpkı bir pil gibi **düz, pürüzsüz ve kararlı bir DC voltaj** elde edilir.
+

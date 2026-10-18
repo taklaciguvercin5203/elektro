@@ -474,7 +474,7 @@ function haBoot() {
   }
 
   /** Panel her açıldığında Houston'ın selamı. */
-  const WELCOME = 'Tekrar hoş geldin, Operatör';
+  const WELCOME = 'Tekrar hoş geldin, Operatör. Anlamadığın konuyu sor.';
 
   /** Panel her açıldığında sohbet sıfırlanır: yalnızca karşılama mesajı kalır. */
   function resetChat() {
