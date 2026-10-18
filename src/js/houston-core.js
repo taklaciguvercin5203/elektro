@@ -396,16 +396,15 @@ function haBoot() {
     clearTimeout(haIdleTimer);
     clearTimeout(haIdleClosedTimer);
     try { localStorage.setItem(HA_HIDE_KEY, 'true'); } catch {}
-    fab.classList.add('ha-crying');
-    haSetPose('cry');
-    // Aglamadan sonra ~2.5 sn sonra kaybolur ve geri cagirma sekmesi belirir.
-    setTimeout(() => {
-      fab.classList.remove('ha-crying');
-      document.dispatchEvent(new CustomEvent('ha:hidden'));
-      haApplyHidden();
-    }, 2500);
+    fab.classList.remove('ha-crying');
+    // Loader'a haber ver: sag alttaki geri cagirma sekmesi belirir.
+    document.dispatchEvent(new CustomEvent('ha:hidden'));
+    haApplyHidden();
   }
-  /**
+
+  /** Telsizle geri cagirma repligi:
+   *  Kullanici: "Houston, bir problemimiz var"
+   *  Houston:  "Ciddimisin? 56 yildir problem cozuyorum"
    *  Houston konusurken agiz hareket eder (haTalk), yazi typing/fade-in ile
    *  agiz hareketine uyumlu cikar.
    *
