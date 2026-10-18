@@ -1,4 +1,23 @@
-  /**
+const __HA_CFG = { baseUrl: '/', isDev: false };
+let __booted = false;
+let __recallFn = null;
+let __applyHiddenFn = null;
+
+export function initHouston(opts) {
+  if (opts) {
+    if (typeof opts.baseUrl === 'string') __HA_CFG.baseUrl = opts.baseUrl;
+    if (typeof opts.isDev === 'boolean') __HA_CFG.isDev = opts.isDev;
+  }
+  if (__booted) { if (__applyHiddenFn) __applyHiddenFn(); return; }
+  __booted = true;
+  haBoot();
+}
+
+export function recallHouston() { if (__recallFn) { __recallFn(); } }
+
+function haBoot() {
+
+/**
    * Houston asistanı mantığı.
    * Proje deseniyle uyumlu: dinleyiciler document üzerinde delegation kurar
    * (Header.astro / Sidebar.astro ile aynı), böylece sayfa geçişlerinde de çalışır.
@@ -342,45 +361,66 @@
     el.classList.add('ha-throw--go');
   }
 
-  /** Kapat tuşu: önce ağlar (gözyaşı + cry pozu ~2.5sn), sonra gider.
-   *  hideHouston=true yazılır, kabuk (loader) Houston'u gizleyip sağ
-   *  alttaki geri çağırma butonunu gösterir. Sonraki sayfalarda çekirdek
-   *  hiç yüklenmez. Uykudayken kapatılırsa ağlamadan, uykulu gider. */
+  /** Kapat tusu: hideHouston=true yazilir, loader sag alttaki geri
+   *  cagirma sekmesini gosterir. Sonraki sayfalarda cekirdek HIC yuklenmez. */
   const HA_HIDE_KEY = 'hideHouston';
+  function haIsHidden() {
+    try {
+      return localStorage.getItem(HA_HIDE_KEY) === 'true';
+    } catch { return false; }
+  }
+  function haApplyHidden() {
+    const fab = document.getElementById('houston-fab');
+    const radio = document.getElementById('ha-gate-radio') || document.getElementById('houston-radio');
+    const panel = document.getElementById('houston-panel');
+    const bubble = document.getElementById('houston-bubble');
+    if (haIsHidden()) {
+      // GİZLİ: FAB gider, sağ altta geri çağırma sekmesi belirir.
+      if (fab) fab.classList.add('ha-gone');
+      if (radio instanceof HTMLButtonElement) radio.hidden = false;
+      if (panel) panel.hidden = true;
+      if (bubble) bubble.classList.remove('ha-bubble--show');
+      // Kapatıldıysa periyodik sahneleri de çalıştırma.
+      clearTimeout(haIdleTimer);
+      clearTimeout(haIdleClosedTimer);
+    } else {
+      // AÇIK: FAB görünür, sekme gizli.
+      if (fab) fab.classList.remove('ha-gone');
+      if (radio instanceof HTMLButtonElement) radio.hidden = true;
+    }
+  }
   function haSulk() {
     const fab = document.getElementById('houston-fab');
-    if (!fab || fab.classList.contains('ha-crying')) return;
+    if (!fab) return;
     setOpen(false);
     clearTimeout(haIdleTimer);
     clearTimeout(haIdleClosedTimer);
     try { localStorage.setItem(HA_HIDE_KEY, 'true'); } catch {}
-    if (haSleeping) {
-      // Uykudayken küsme: ağlamadan, hâlâ uykulu (kapalı göz + zzz) gider.
-      haSetPose('sleep');
-    } else {
-      fab.classList.add('ha-crying');
-      haSetPose('cry');
-    }
-    // Gözyaşları izlenebilsin: ~2.5sn sonra küsüp gider, kabuğa haber ver.
-    setTimeout(() => {
-      fab.classList.remove('ha-crying');
-      document.dispatchEvent(new CustomEvent('ha:hidden'));
-    }, 2500);
+    fab.classList.remove('ha-crying');
+    // Loader'a haber ver: sag alttaki geri cagirma sekmesi belirir.
+    document.dispatchEvent(new CustomEvent('ha:hidden'));
+    haApplyHidden();
   }
 
-  /** Geri çağırma repliği (kabuktaki #ha-recall butonu veya eski telsiz):
-   *  Kullanıcı: "Houston, bir problemimiz var"
-   *  Houston:  "Ciddimisin? 56 yıldır problem çözüyorum"
-   *  Houston konuşurken ağız hareket eder (haTalk), yazı typing/fade-in ile
-   *  ağız hareketine uyumlu çıkar.
+  /** Telsizle geri cagirma repligi:
+   *  Kullanici: "Houston, bir problemimiz var"
+   *  Houston:  "Ciddimisin? 56 yildir problem cozuyorum"
+   *  Houston konusurken agiz hareket eder (haTalk), yazi typing/fade-in ile
+   *  agiz hareketine uyumlu cikar.
+   *
+   *  KURTARMA: tarayicida eski 'houston:hidden' anahtari takiliysa da
+   *  Houston gorunmez. Konsoldan:
+   *    localStorage.removeItem('hideHouston');
+   *    localStorage.removeItem('houston:hidden'); location.reload();
    */
   async function haRecall() {
     const fab = document.getElementById('houston-fab');
-    const radio = document.getElementById('houston-radio');
+    const radio = document.getElementById('ha-gate-radio') || document.getElementById('houston-radio');
     if (!fab) return;
     if (radio instanceof HTMLButtonElement) radio.hidden = true;
-    // Gizlilik tercihini kaldır: artık her sayfada görünür.
+    // Gizlilik tercihini kaldir: artik her sayfada gorunur (eski anahtar dahil).
     try { localStorage.setItem(HA_HIDE_KEY, 'false'); } catch {}
+    try { localStorage.removeItem('houston:hidden'); } catch {}
 
     haPerforming = true;
     // Houston geri döner
@@ -504,9 +544,18 @@
   /** Modül bir kez yüklenir; astro dev'de indeks olmadığından null döner. */
   let pagefindPromise = null;
 
+  function haPagefindBase() {
+    try {
+      var u = new URL(haGetCfg().baseUrl, location.href);
+      var p = u.pathname || '/';
+      if (!p.endsWith('/')) p += '/';
+      return u.origin + p;
+    } catch (e) { return '/'; }
+  }
+
   function loadPagefind() {
     if (!pagefindPromise) {
-      const base = import.meta.env.BASE_URL;
+      const base = haPagefindBase();
       pagefindPromise = import(/* @vite-ignore */ base + 'pagefind/pagefind.js')
         .then((pf) => {
           // Sonuç URL'lerine base path eklensin (Starlight araması da aynısını yapar).
@@ -1193,7 +1242,7 @@
       haSulk(); // küser ve kaybolur
       return;
     }
-    if (target.closest('#houston-radio')) {
+    if (target.closest('#ha-gate-radio')) {
       haRecall(); // telsizle geri çağır
       return;
     }
@@ -1724,16 +1773,21 @@
       haScheduleBark();
     }, jitter);
   }
-  // Test amaçlı erişim: console'dan haTriggerBark()/haIntro() tetiklenebilir.
+  // Test butonu kaldirildi; console'dan haTriggerBark()/haIntro() tetiklenebilir.
   window.haTriggerBark = haTriggerBark;
   window.haIntro = haIntro;
   window.haResetIntro = () => {
     try { localStorage.removeItem(HA_INTRO_KEY); } catch {}
     location.reload();
   };
-  // Kabuktaki geri çağırma butonu çekirdek yüklendikten sonra basılırsa
-  // (veya kabuk ha:recall gönderirse) repliği oynat.
-  document.addEventListener('ha:recall', () => { haRecall(); });
+  // Sayfa acilisinda gizlilik tercihini uygula: kapatildiysa her sayfada
+  // gizli kalir, kullanici telsizle cagirana kadar gorunmez.
+  haApplyHidden();
+  // SPA sayfa gecislerinde de uygula.
+  document.addEventListener('astro:after-swap', haApplyHidden);
+  document.addEventListener('astro:page-load', haApplyHidden);
   haScheduleBark();
-  // Kabuk, çekirdeğin yüklendiğini bu bayraktan anlar.
-  window.__haCoreLoaded = true;
+  // Loader baglantisi: tekrar init cagrisinda listener kopyalanmasin.
+  __recallFn = haRecall;
+  __applyHiddenFn = haApplyHidden;
+}

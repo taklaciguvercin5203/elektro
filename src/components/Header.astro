@@ -19,7 +19,7 @@ import Search from 'virtual:starlight/components/Search';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
 import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
 import config from 'virtual:starlight/user-config';
-import AiAssistant from './AiAssistant.astro';
+import HoustonGate from './HoustonGate.astro';
 
 /** Arama kutusunun yalnızca Pagefind ya da Search override'ı varken basılması gerekir. */
 const shouldRenderSearch =
@@ -70,8 +70,9 @@ const version = 'v0.1';
   </svg>
 </button>
 
-<!-- Sağ alttaki Houston yapay zekâ sohbet butonu (tüm sayfalarda görünür) -->
-<AiAssistant />
+<!-- Houston kapısı: hideHouston=true ise AiAssistant sayfaya hiç girmez
+  (HTML+CSS+JS inmez); sağ altta sadece geri çağırma sekmesi durur. -->
+<HoustonGate />
 
 <style>
   /* --- Menü kapalıyken sol kenardaki "menüyü aç" sekmesi --- */
