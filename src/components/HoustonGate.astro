@@ -1,16 +1,28 @@
 ---
 import AiAssistant from './AiAssistant.astro';
+
 /**
  * HoustonGate — ince kapı bekçisi, HER sayfada basılır (~3KB).
- * hideHouston=true  -> AiAssistant HTML/CSS sayfada ama [data-ha-hidden="true"]
- *                      ile gizli; houston-core.js HİÇ import edilmez.
- *                      Sadece geri çağırma sekmesi görünür.
- * değilse           -> AiAssistant normal görünür, çekirdek import edilir.
+ *
+ * Gizleme kararı SUNUCU tarafından cookie üzerinden alınır, bu yüzden
+ * HTML render edilirken zaten data-ha-hidden="true" yazılmış olur ve
+ * JS çalışmadan önce hiç bir flaş (FOUC) çıkmamış olur.
+ *
+ * hideHouston=true  -> AiAssistant data-ha-hidden="true" ile render edilir,
+ *                      houston-core.js import edilmez, sadece radio butonu görünür.
+ * hideHouston=false -> AiAssistant normal görünür, çekirdek import edilir.
  */
+let hideHouston = false;
+try {
+  hideHouston = Astro.cookies.get('hideHouston')?.value === 'true';
+} catch (e) {
+  // Statik build (prerender) sırasında cookie'ye erişilemez; false kalır.
+}
 ---
+
 <div id="ha-gate" data-shell-url={import.meta.env.BASE_URL}></div>
 
-<AiAssistant />
+<AiAssistant hideHouston={hideHouston} />
 
 <button
   type="button"
@@ -18,8 +30,8 @@ import AiAssistant from './AiAssistant.astro';
   id="ha-gate-radio"
   title="Houston'ı geri getir"
   aria-label="Houston'ı geri getir"
-  hidden
->
+  {hideHouston ? undefined : 'hidden'} style="display: none;">
+
   <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M10 3.5L5.5 8 10 12.5" />
   </svg>
@@ -63,17 +75,27 @@ import AiAssistant from './AiAssistant.astro';
 </style>
 
 <script>
-  // HoustonGate: hideHouston=true ise AiAssistant görünür ama gizli kalır
-  // (houston-core.js HİÇ import edilmez). Sadece kapı sekmesi durur;
-  // basınca kayıt silinir, çekirdek yüklenir, Houston geri döner.
+  // HoustonGate: hideHouston=true ise AiAssistant HTML'de data-ha-hidden="true"
+  // ile zaten gizli gelir; houston-core.js import edilmez.
+  // Radio butonuna basıldığında cookie silinip sayfa yenilenir.
   (function () {
     var KEY = 'hideHouston';
+    var radio = document.getElementById('ha-gate-radio');
+    var html = document.documentElement;
+
+    function setCookie(name, value, days) {
+      var d = new Date();
+      d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = name + '=' + value + '; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
+    }
+
+    function removeCookie(name) {
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    }
+
     function isHidden() {
       try { return localStorage.getItem(KEY) === 'true'; } catch (e) { return false; }
     }
-    var gateEl = document.getElementById('ha-gate');
-    var radio = document.getElementById('ha-gate-radio');
-    var html = document.documentElement;
 
     function showRadio(show) {
       if (radio) radio.hidden = !show;
@@ -81,10 +103,12 @@ import AiAssistant from './AiAssistant.astro';
 
     function onRadio(e) {
       if (e && e.stopPropagation) e.stopPropagation();
-      try { localStorage.setItem(KEY, 'false'); } catch (err) {}
+      // Cookie ve localStorage temizle.
+      removeCookie(KEY);
+      try { localStorage.removeItem(KEY); } catch (err) {}
       if (html) html.removeAttribute('data-ha-hidden');
       showRadio(false);
-      // Çekirdeği yükle ve geri çağır.
+      // Çekirdeği yükle ve başlat.
       import('../js/houston-core.js').then(function (m) {
         m.initHouston({ baseUrl: document.baseURI, isDev: false });
         m.recallHouston();
@@ -95,6 +119,7 @@ import AiAssistant from './AiAssistant.astro';
       if (isHidden()) {
         if (html) html.setAttribute('data-ha-hidden', 'true');
         showRadio(true);
+        radio.style.display='block';
         return;
       }
       if (html) html.removeAttribute('data-ha-hidden');
@@ -108,12 +133,15 @@ import AiAssistant from './AiAssistant.astro';
     if (!window.__haGateWired) {
       window.__haGateWired = true;
       if (radio) radio.addEventListener('click', onRadio);
-      // Çekirdek kapanınca (ha:hidden) kapı sekmesi döner.
+
+      // Çekirdek kapanınca (ha:hidden) cookie + localStorage true olarak ayarlanır.
       document.addEventListener('ha:hidden', function () {
+        setCookie(KEY, 'true', 365);
         try { localStorage.setItem(KEY, 'true'); } catch (err) {}
         if (html) html.setAttribute('data-ha-hidden', 'true');
         showRadio(true);
       });
+
       document.addEventListener('astro:after-swap', gate);
       document.addEventListener('astro:page-load', gate);
     }

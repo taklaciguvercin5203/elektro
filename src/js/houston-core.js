@@ -3,6 +3,9 @@ let __booted = false;
 let __recallFn = null;
 let __applyHiddenFn = null;
 
+const houston= document.getElementById('ha-shell');
+houston.style.display='block';
+
 export function initHouston(opts) {
   if (opts) {
     if (typeof opts.baseUrl === 'string') __HA_CFG.baseUrl = opts.baseUrl;
@@ -89,6 +92,7 @@ function haBoot() {
   let haTracking = false;
   /** Balon okunurken Houston'ı canlandırma durumu (panel mantığından bağımsız). */
   let haBarkAlive = false;
+  let haSulking = false;
   let haRect = null;
   let haBlinkTimer = 0;
   let haTalkTimer = 0;
@@ -388,31 +392,32 @@ function haBoot() {
       if (fab) fab.classList.remove('ha-gone');
       if (radio instanceof HTMLButtonElement) radio.hidden = true;
     }
-  }
+  } 
+
   function haSulk() {
+    // Recall devam ediyorsa sulk etme: recall'ın son pose'u cry'yi ezer.
+    if (haPerforming) return;
+    haSulking=true;
     const fab = document.getElementById('houston-fab');
     if (!fab) return;
     setOpen(false);
     clearTimeout(haIdleTimer);
     clearTimeout(haIdleClosedTimer);
     try { localStorage.setItem(HA_HIDE_KEY, 'true'); } catch {}
-    fab.classList.remove('ha-crying');
-    // Loader'a haber ver: sag alttaki geri cagirma sekmesi belirir.
-    document.dispatchEvent(new CustomEvent('ha:hidden'));
-    haApplyHidden();
+    fab.classList.add('ha-crying');
+    haSetPose('cry');
+    houston.style.pointerEvents='none';
+    // Aglamadan sonra ~2.5 sn sonra kaybolur ve geri cagirma sekmesi belirir.
+    setTimeout(() => {
+      fab.classList.remove('ha-crying');
+      document.dispatchEvent(new CustomEvent('ha:hidden'));
+      haApplyHidden();
+      haSulking = false;
+      houston.style.pointerEvents='auto';
+    }, 2500);
+    
   }
 
-  /** Telsizle geri cagirma repligi:
-   *  Kullanici: "Houston, bir problemimiz var"
-   *  Houston:  "Ciddimisin? 56 yildir problem cozuyorum"
-   *  Houston konusurken agiz hareket eder (haTalk), yazi typing/fade-in ile
-   *  agiz hareketine uyumlu cikar.
-   *
-   *  KURTARMA: tarayicida eski 'houston:hidden' anahtari takiliysa da
-   *  Houston gorunmez. Konsoldan:
-   *    localStorage.removeItem('hideHouston');
-   *    localStorage.removeItem('houston:hidden'); location.reload();
-   */
   async function haRecall() {
     const fab = document.getElementById('houston-fab');
     const radio = document.getElementById('ha-gate-radio') || document.getElementById('houston-radio');
@@ -421,6 +426,7 @@ function haBoot() {
     // Gizlilik tercihini kaldir: artik her sayfada gorunur (eski anahtar dahil).
     try { localStorage.setItem(HA_HIDE_KEY, 'false'); } catch {}
     try { localStorage.removeItem('houston:hidden'); } catch {}
+    if (haSulking) { haPerforming = false; return; }
 
     haPerforming = true;
     // Houston geri döner
@@ -434,14 +440,17 @@ function haBoot() {
 
     // Kısa duraklama → "yazıyor" göstergesi
     await sleep(700);
+    if (haSulking) { haPerforming = false; return; }
     const typing = renderMsg('bot', '…', { typing: true });
 
     // Houston yanıtı: typing/fade-in + ağız hareketi uyumlu
     await sleep(900);
+    if (haSulking) { haPerforming = false; return; }
     if (typing) typing.remove();
     haSetPose('wink');
     haTalk();
     await haTypeText('bot', 'Ciddimisin? 56 yıldır problem çözüyorum');
+    if (haSulking) { haPerforming = false; return; }
     haStopTalk();
     haSetPose('happy');
 
@@ -1240,6 +1249,7 @@ function haBoot() {
     }
     if (target.closest('#houston-close')) {
       haSulk(); // küser ve kaybolur
+      radio.style.display='block';
       return;
     }
     if (target.closest('#ha-gate-radio')) {
@@ -1781,7 +1791,7 @@ function haBoot() {
     location.reload();
   };
   // Sayfa acilisinda gizlilik tercihini uygula: kapatildiysa her sayfada
-  // gizli kalir, kullanici telsizle cagirana kadar gorunmez.
+  // gizli kalir, kullanici çagırana kadar gorunmez.
   haApplyHidden();
   // SPA sayfa gecislerinde de uygula.
   document.addEventListener('astro:after-swap', haApplyHidden);

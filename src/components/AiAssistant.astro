@@ -4,10 +4,16 @@
  * fetch ile çekilip gövdeye eklenir. Tek başına sayfaya basılmaz;
  * Header yalnızca HoustonGate basar.
  */
-const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
+
+interface Props {
+  /** Sunucu tarafından cookie üzerinden gelen gizleme bayrağı. true ise HTML'de data-ha-hidden="true" yazılır ve FOUC önlenir. */
+  hideHouston?: boolean;
+}
+
+const { hideHouston = false } = Astro.props;
 ---
 
-<div id="ha-shell">
+<div id="ha-shell" style="display:none" data-ha-hidden={hideHouston ? 'true' : undefined}>
 
 <button
   type="button"
@@ -16,8 +22,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
   title="Houston'a anlamadığın konuyu sor belki cevap verir"
   aria-label="Houston yapay zekâ asistanını aç"
   aria-expanded="false"
-  aria-controls="houston-panel"
->
+  aria-controls="houston-panel">
+  
   <span class="ha-houston" aria-hidden="true">
     <span class="ha-houston__glow"></span>
     <span class="ha-houston__frame">
@@ -31,7 +37,8 @@ const iconUrl = `${import.meta.env.BASE_URL}houston.ico`;
     </span>
       <span class="ha-houston__zzz" aria-hidden="true"><i>z</i><i>z</i><i>z</i></span>
       <span class="ha-houston__hearts" aria-hidden="true"><i>♥</i><i>♥</i><i>♥</i></span>
-    </span>
+  </span>
+  
 </button>
 
 <!-- Seyrek "Operatör" konuşma balonu (panel kapalı + idle iken rastgele belirir) -->
