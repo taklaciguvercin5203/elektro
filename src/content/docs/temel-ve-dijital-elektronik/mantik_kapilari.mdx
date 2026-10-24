@@ -1,0 +1,86 @@
+---
+title: 'a'
+description: s
+sidebar:
+  order: 5
+---
+
+import { Image } from 'astro:assets';
+import i1 from '/src/assets/4/diode_logic_gate_OR.png';
+import i2 from '/src/assets/4/diode_logic_gate_AND.png';
+import i3 from '/src/assets/4/npn_pnp_transistor.png';
+import i4 from '/src/assets/4/transistor_calisma_bolgeleri.jpg';
+
+
+# Diyotlar ve Karar Veren Devreler
+Diyot, elektriğin sadece tek bir yönde akmasına izin veren "tek yönlü bir kapı" veya "vana" gibidir. Bu kapıları yan yana bağlayarak bilgisayarların karar vermesini sağlayan mantık kapıları yapılır.
+
+## Mantık Kapıları
+#### VEYA (OR) Kapısı
+Çok esnek bir sistemdir. A veya B yollarından herhangi birine elektrik (5V) verirseniz, lamba yanar yani çıkıştan elektrik (1 durumu) alırsınız.
+
+<Image 
+  src={i1} 
+  alt="Diyot VEYA Mantık Kapısı" 
+  quality="mid"
+  style={{ maxWidth: '300px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+Bazen gördüğümüz 4.7V değeri ise şudur; elektriğin o tek yönlü diyottan geçerken harcadığı küçük bir geçiş ücreti 0.3V vardır, bu yüzden çıkışa 5V yerine biraz azalmış olarak ulaşır.   
+
+#### VE (AND) Kapısı
+Katı kuralları olan bir sistemdir. Çıkıştan elektrik alabilmek için hem A hem de B yoluna aynı anda elektrik 5V vermek zorundasınız.
+
+<Image 
+  src={i2} 
+  alt="Diyot VE Mantık Kapısı" 
+  quality="mid"
+  style={{ maxWidth: '300px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+Sadece birine elektrik verirseniz veya ikisine de vermezseniz sistem çıkışa izin vermez (0 durumu).
+
+
+>**DEĞİL (NOT) Kapısı:** Sadece diyot kullanarak tam anlamıyla bir DEĞİL kapısı yapılamaz. Çünkü diyotlar sadece elektriğe yol veren veya yolu kapatan "tek yönlü kapılar" gibidir. DEĞİL kapısı ise gelen durumu tamamen tersine çevirmek (1 gelirse 0, 0 gelirse 1 yapmak) zorundadır. Diyotlar pasif elemanlar oldukları için kendi başlarına enerjiyi bu şekilde tersine çeviremezler.
+
+
+
+## Transistörler: Akıllı Elektrik Muslukları
+
+Eğer diyot tek yönlü bir "el ile kontrol edilen musluk" ise, Transistör elle değil yine "elektrikle kontrol edilen akıllı bir musluk" gibidir. 
+
+##### BJT (Bipolar Junction Transistor-Çift Kutuplu Bağlantı Transistörü)
+
+**NPN ve PNP olarak adlandırılan yapıda üç adet bacağı bulunur:** Base-Beyz (B), Collector-Kollektör (C) ve Emitter-Emiter (E).
+<Image 
+  src={i3} 
+  alt="NPN ve PNP Transistör" 
+  quality="mid"
+  style={{ maxWidth: '300px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+**Küçük Güçle Büyük İşler (Aktif Bölge):** **NPN** söz konusu olduğu zaman **Base (B)** bacağını musluğun küçük çevirme kolu, **Kollektör'ü (C)** ise barajdan gelen devasa su borusu olarak düşünün. **Base** bacağından içeri çok küçük bir elektrik akımı **(I<sub>B</sub>)** gönderdiğinizde, transistör bunu **Beta (&Beta;)** adı verilen bir güç çarpanıyla büyütür ve **Kollektör'den** devasa bir akımın **(I<sub>C</sub>)** akmasını sağlar. Yani **NPN'de** akım kollektörden girer ve emiterden çıkar. **PNP'de** ise durum tam tersidir.  
+
+**I<sub>C</sub> = &Beta; &times; I<sub>E</sub>**
+
+**I<sub>E</sub> = I<sub>E</sub> + I<sub>C</sub>**
+
+
+**Anahtar Olarak Kullanım:** Transistörleri televizyonu açıp kapatan düğmenin elektronik versiyonu olarak kullanabiliriz. Eğer **Base** bacağına hiç elektrik vermezseniz musluk tamamen kapanır **(Kesim Bölgesi)**,
+eğer yeterli elektriği verirseniz musluk sonuna kadar açılır **(Doyum Bölgesi)**.
+
+**Doyum Bölgesi:** Emitör ve Kollektör voltajları birbirine çok yaklaştığında transistör doyum bölgesine geçer. Doyum bölgesinde I<sub>C</sub> akımı artık en büyük değere ulaşmıştır. I<sub>B</sub> tarafından kontrol edilemez hale gelir. VCE voltajı çok küçülür. Transistör hızla ısınarak bozulabilir. Bu nedenle transistörler özellikle doyum bölgesinde uzun süre çalıştırılmamalıdır.
+Transistör, maksimum base akımı I<sub>B</sub> geçecek şekilde beslenir. Bu da maksimum kollektör akımı IC ve minimum kollektör-base gerilimi VCE oluşmasına neden olur.
+
+
+<Image 
+  src={i4} 
+  alt="Transistör Çalışma Bölgeleri" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'7px' }}
+/>
+
+**Kesim Bölgesi:** Base ve Emitör arası ters polarize edildiği zaman yada Base ve Emitör arası voltaj transistörün **V<sub>BE</sub>** açma voltajına eşit yada küçük olduğu zaman transistör artık kesim bölgesindedir. Bu durumda **V<sub>CC</sub>** voltajı ne olursa olsun **I<sub>C</sub>** akımı akmaz. **V<sub>CE</sub>** voltajı **V<sub>CC</sub>** voltajına eşit olur. Kesim bölgesindeki transistörün elektronik devrelerde uygulaması vardır.
+
+**Regülatör (Sabitleyici) Devresi:** Bazen prizden gelen elektrik dalgalı veya düzensiz olabilir. Çizilen regülatör devresinde transistör, bu dalgalanmaları emerek hassas elektronik cihazlara (örneğin telefonunuza) her zaman dümdüz ve sabit bir elektrik akımı sağlamak için bir dalgakıran gibi görev yapar.

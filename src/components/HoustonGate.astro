@@ -1,5 +1,5 @@
 ---
-import AiAssistant from './AiAssistant.astro';
+import Houston from './Houston.astro';
 
 /**
  * HoustonGate — ince kapı bekçisi, HER sayfada basılır (~3KB).
@@ -8,9 +8,9 @@ import AiAssistant from './AiAssistant.astro';
  * HTML render edilirken zaten data-ha-hidden="true" yazılmış olur ve
  * JS çalışmadan önce hiç bir flaş (FOUC) çıkmamış olur.
  *
- * hideHouston=true  -> AiAssistant data-ha-hidden="true" ile render edilir,
+ * hideHouston=true  -> Houston data-ha-hidden="true" ile render edilir,
  *                      houston-core.js import edilmez, sadece radio butonu görünür.
- * hideHouston=false -> AiAssistant normal görünür, çekirdek import edilir.
+ * hideHouston=false -> Houston normal görünür, çekirdek import edilir.
  */
 let hideHouston = false;
 try {
@@ -22,7 +22,7 @@ try {
 
 <div id="ha-gate" data-shell-url={import.meta.env.BASE_URL}></div>
 
-<AiAssistant hideHouston={hideHouston} />
+<Houston hideHouston={hideHouston} />
 
 <button
   type="button"
@@ -38,7 +38,7 @@ try {
 </button>
 
 <style>
-  /* Kapı sekmesi: AiAssistant kapalıyken sağ kenarda duran tek şey. */
+  /* Kapı sekmesi: Houston kapalıyken sağ kenarda duran tek şey. */
   .ha-gate-radio {
     position: fixed;
     inset-block-end: max(1rem, env(safe-area-inset-bottom, 0px));
@@ -75,7 +75,7 @@ try {
 </style>
 
 <script>
-  // HoustonGate: hideHouston=true ise AiAssistant HTML'de data-ha-hidden="true"
+  // HoustonGate: hideHouston=true ise Houston HTML'de data-ha-hidden="true"
   // ile zaten gizli gelir; houston-core.js import edilmez.
   // Radio butonuna basıldığında cookie silinip sayfa yenilenir.
   (function () {
@@ -109,7 +109,7 @@ try {
       if (html) html.removeAttribute('data-ha-hidden');
       showRadio(false);
       // Çekirdeği yükle ve başlat.
-      import('../js/houston-core.js').then(function (m) {
+      import('./houston-core.js').then(function (m) {
         m.initHouston({ baseUrl: document.baseURI, isDev: false });
         m.recallHouston();
       }).catch(function (err) { console.error('Houston core yüklenemedi:', err); });
@@ -125,7 +125,7 @@ try {
       if (html) html.removeAttribute('data-ha-hidden');
       showRadio(false);
       // Normal akış: çekirdeği yükle ve başlat.
-      import('../js/houston-core.js').then(function (m) {
+      import('./houston-core.js').then(function (m) {
         m.initHouston({ baseUrl: document.baseURI, isDev: false });
       }).catch(function (err) { console.error('Houston core yüklenemedi:', err); });
     }
