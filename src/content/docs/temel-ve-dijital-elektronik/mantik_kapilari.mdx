@@ -11,7 +11,6 @@ import i2 from '/src/assets/4/diode_logic_gate_AND.png';
 import i3 from '/src/assets/4/npn_pnp_transistor.png';
 import i4 from '/src/assets/4/transistor_calisma_bolgeleri.jpg';
 
-
 # Diyotlar ve Karar Veren Devreler
 
 Bilgisayarların, akıllı telefonların ve o çok sevdiğimiz oyun konsollarının aslında temelde yaptığı tek bir şey vardır: **Karar vermek**. Bu sistemler, elektriğin var olması (1) veya olmaması (0) gibi çok basit iki durum üzerinden evrenler yaratır.
@@ -105,6 +104,13 @@ Eğer Base bacağına yeterince elektrik verirseniz, musluğu sonuna kadar açm�
 Kesim (tam kapalı) ile Doyum (tam açık) arasındaki o hassas ayar bölgesidir. Suyu (akımı) istediğiniz şiddette, çok hassas bir şekilde ayarlayabilirsiniz. Ses sinyallerini veya sensör verilerini büyütmek istediğimizde transistörü bu bölgede çalıştırırız.
 
 ### Regülatör (Sabitleyici) Devresi
-Önceki derte gördüğümüz gibi prizden veya bataryadan gelen elektrik her zaman pürüzsüz değildir, tıpkı dalgalı bir deniz gibidir. İşte regülatör devrelerinde transistör, bu dalgalanmaları engelleyip DC akım sağlayan **dalgakıran** gibi görev yapar. Gelen voltaj 9V ile 12V arası sallansa bile, transistör fazla enerjiyi ısı olarak atar (kondansatörün süzme işine destek olur) ve telefonunuzun şarj devresine her zaman dümdüz, kararlı bir 5V  DC akım yollar.
+Önceki derste gördüğümüz gibi prizden veya bataryadan gelen elektrik her zaman pürüzsüz değildir, tıpkı dalgalı bir deniz gibidir. İşte regülatör devrelerinde transistör, bu dalgalanmaları engelleyip DC akım sağlayan **dalgakıran** gibi görev yapar. Gelen voltaj 9V ile 12V arası sallansa bile, transistör fazla enerjiyi ısı olarak atar (kondansatörün süzme işine destek olur) ve telefonunuzun şarj devresine her zaman dümdüz, kararlı bir 5V  DC akım yollar.
 
-#### Kendimizi test edelim.
+Modern çağda artık Zener Diyot adı verilen bileşen kullanılır. Standart bir diyottan farklı olarak, ters gerilim uygulandığında belirli bir kritik noktaya kadar akımı engeller; bu kritik noktaya Zener Gerilimi  V<sub>Z</sub> denir. Bu gerilime ulaşıldığında ise normal diyotun aksine bozulmadan ters yönde akım geçirmeye başlar ve uçlarındaki gerilimi tam bu V<sub>Z</sub> değerinde sabit tutar.
+
+Girişten gelen elektriği bir musluktan akan su, devredeki voltajı ise havuzdaki su seviyesi (basınç) olarak düşünün
+
+Havuzun tam 5 metre yüksekliğine bir tahliye deliği açtığımızı hayal edin. Su seviyesi 5 metrenin altındaysa bu delikten hiç su akmaz.
+
+**Taşma Durumu (Regülasyon):** Musluktan bir anda çok fazla su gelip seviye 5 metreyi geçmeye çalıştığı an, fazla su hemen o tahliye deliğinden dışarı akar. Böylece havuzun içindeki su seviyesi her zaman tam 5 metrede sabit kalır.
+
