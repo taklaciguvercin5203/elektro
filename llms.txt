@@ -1,0 +1,45 @@
+# Elektro — Elektronik Öğrenme Platformu
+
+Bu depo elektronik ve bilgisayar mühendisliği konularını jargondan arındırılmış, en yalın ve somut halleriyle derlediği kişisel bir öğrenme alanıdır. Karmaşık fiziksel/mühendislik kavramlarını benzetmeler, gerçek hayat örnekleri ve sadeleştirmelerle anlatmayı amaçlar. Modern web framework'ü **Astro**'nun **Starlight** döküman şablonu üzerine kuruludur.
+
+Site: https://taklaciguvercin5203.github.io/elektro  
+Depo: https://github.com/taklaciguvercin5203/elektro  
+Dil: Türkçe (tr)
+
+## İçerik Haritası (Dokümantasyon)
+
+Tüm MDX tabanlı dökümanlar `src/content/docs/temel-ve-dijital-elektronik/` altında yer alır ve Starlight sidebar'ı üzerinden sıralı olarak erişilebilir.
+
+### [İletkenlik ve Yarı İletkenler](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/)
+Elektron, iletken, yalıtkan ve yarı iletken malzemelerin temel çalışma mantığı. Transistörlerin atası olan vakumlu triyottan başlayarak BJT ve FET (JFET, MOSFET, IGBT) transistör türlerine kadar geniş bir kapsam sunar. Örnek devreler: MOSFET ile LED yakma, mantıksal anahtarlama devreleri.
+
+### [Sayı Sistemleri ve Devreler](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/sayi_sistemleri_ve_devreler)
+İkili sayı sistemlerinden başlayarak gerilim, akım, Kirchhoff kanunları ve pasif devre elemanları (R, L, C) üzerine temel elektrik ve elektronik devre analizini anlar. İçerisinde interaktif bir sayı dönüştürücü bileşeni ve Ohm Kanonu örnekleri (insan vücut direnci üzerinden güvenlik hesabı) bulunmaktadır.
+
+### [Yarı İletkenler Fiziği, Diyotlar ve Güç Doğrultma Sistemleri](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/yari_iletkenler_fizigi)
+Kirchhoff kanunları, kondansatörler (kova benzetmesi), silikon atom yapısı, PN birleşimi, n-tip/p-tip yarı iletkenler, diyot IV özellikleri, ideal diyot, yarım dalga ve tam dalga köprü doğrultucular, kapasitörlü süzme (filtreleme) sistemi.
+
+### [Mantık Kapıları ve Karar Veren Devreler](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/mantik_kapilari)
+Diyotlarla OR, AND kapılarının kurulumu, diyot sınırları (0.7V giriş ücreti, NOT kapısı imkansızlığı), transistörler ile bu sınırların aşılması. BJT (NPN/PNP) çalışma prensipleri, kazanç (Beta), çalışma bölgeleri (kesim, doyum, aktif), regülatör devreleri.
+
+
+## Teknik Bileşenler
+
+- **Framework:** Astro (^7.2.10)
+- **Döküman şablonu:** @astrojs/starlight (^0.42.4)
+- **İçerik formatı:** MDX (Astro Content Collections)
+- **Stil:** Özel CSS (`src/styles/custom.css`), anlamsal renk paleti
+- **JS yardımcıları:** `src/js/number-systems.js`, `src/components/houston-core.js`
+
+## Önemli Notlar
+
+- Proje GitHub Pages üzerinde `/elektro/` base path'i ile yayınlanmaktadır.
+- Tüm içerik Türkçe'dir ve Feynman Tekniği'ne dayalı sadeleştirilmiş açıklamalar kullanır.
+- Her MDX dosyası Starlight sidebar `order` meta verisi ile sıralanmıştır.
+- Görsel varlıklar `src/assets/<hafta-no>/` klasörlerinde düzenlenmiştir.
+
+## İletişim ve Katkı
+
+- GitHub Issues üzerinden hata bildirimi ve öneri paylaşabilirsiniz.
+- Depo: https://github.com/taklaciguvercin5203/elektro
+- Lisans: MIT

@@ -1,0 +1,116 @@
+---
+title: 'Mantık Kapıları ve Karar Veren Devreler'
+description: Diyotların kullanım alanlarındaki dezavantajları kim gideriyor? Transistörle çok küçük bir gerilim ile çok büyük bir akımı nasıl kontrol ederiz? 
+sidebar:
+  order: 5
+---
+
+import { Image } from 'astro:assets';
+import i1 from '/src/assets/4/diode_logic_gate_OR.png';
+import i2 from '/src/assets/4/diode_logic_gate_AND.png';
+import i3 from '/src/assets/4/npn_pnp_transistor.png';
+import i4 from '/src/assets/4/transistor_calisma_bolgeleri.jpg';
+
+# Diyotlar ve Karar Veren Devreler
+
+Bilgisayarların, akıllı telefonların ve o çok sevdiğimiz oyun konsollarının aslında temelde yaptığı tek bir şey vardır: **Karar vermek**. Bu sistemler, elektriğin var olması (1) veya olmaması (0) gibi çok basit iki durum üzerinden evrenler yaratır.
+
+Hatırlarsanız, diyotu elektrik akımının sadece tek bir yönde akmasına izin veren bir "tek yönlü vana" veya "kapı görevlisi" olarak tanımlamıştık. İşte bu kapıları zekice yan yana bağlayarak bilgisayarların en temel karar mekanizmalarını, yani **Mantık Kapılarını (Logic Gates)** inşa edebiliriz.
+
+## Diyotlarla Mantık Kapıları Nasıl Kurulur?
+
+#### VEYA (OR) Kapısı: Esnek Sistem
+Bu kapı çok esnektir. A veya B yollarından herhangi birine (ya da her ikisine birden) elektrik (5V) verirseniz, çıkıştan elektrik alırsınız (1 durumu) ve lamba yanar. 
+
+* **Mantığı Şudur:** Evdeki alarm sistemini düşünün. Salondaki hareket sensörü (A) **VEYA** kapıdaki manyetik sensör (B) tetiklenirse, sistem "Tamamdır, alarmı çal!" kararı verir. İkisinden birinin sinyal göndermesi yeterlidir.
+
+<Image 
+  src={i1} 
+  alt="Diyot VEYA Mantık Kapısı" 
+  quality="mid"
+  style={{ maxWidth: '300px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+**Giriş Ücreti (Gerilim Düşümü):** Çıkışta bazen 5V yerine 4.3V - 4.7V gibi değerler görürüz. Çünkü o diyotun içindeki "Ölü Bölgeyi" aşmak için elektronların ödediği eşik potansiyeli yüzündendir. A girişinden 5V yollasanız bile, diyot kendi payını (0.7V) keser ve çıkışa kalanı yollar.
+
+#### VE (ANDqa) Kapısı: Kuralları Katı Sistem
+Bu kapı hiç esnemez, kuralları sabittir. Çıkıştan elektrik alabilmek için hem A hem de B yoluna **aynı anda** elektrik (5V) vermek zorundasınız.
+
+* **Mantığı Şudur:** Fabrikalardaki o devasa pres makineleri. Makinenin çalışması için işçinin sağ (A) **VE** sol (B) elindeki butonlara aynı anda basması gerekir ki elleri makinenin altında kalmasın. Sadece birine basarsanız sistem "Hayır, güvenlik şartları sağlanmadı" der (0 durumu).
+
+<Image 
+  src={i2} 
+  alt="Diyot VE Mantık Kapısı" 
+  quality="mid"
+  style={{ maxWidth: '300px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+
+> **Peki Ya Diyotların Sınırı?** 
+Sadece diyotları kullanarak devredeki enerjiyi tamamen tersine çeviren bir **DEĞİL (NOT)** kapısı (yani 1 gelirse 0, 0 gelirse 1 yapan bir sistem) yapamayız. Çünkü diyotlar pasif elemanlardır, enerjiyi sadece keser veya geçirirler, yeni bir enerji üretip durumu tersine çeviremezler.
+Üstelik, mantık kapılarını arka arkaya bağladıkça her diyot o 0.7 Voltluk "giriş ücretini" keseceği için sinyal gitgide erir (5V -> 4.3V -> 3.6V -> ...). Bir noktada devrede elektrik kalmaz! **İşte bunu aşmak için sahneye **Transistörler** çıkar.
+
+---
+
+## Transistörler: Akıllı Elektrik Muslukları
+
+Eğer diyot tek yönlü bir "el ile kontrol edilen vana" ise, Transistör elle değil **elektrikle kontrol edilen devasa ve akıllı bir musluk** gibidir. Zayıflayan sinyalleri yeniden ayağa kaldırabilir (yükseltebilir) ve bir sinyali tamamen tersine çevirebilir. Akıllı her cihazın kalbi tam olarak transistörle atar.
+
+##### BJT (Bipolar Junction Transistor - Çift Kutuplu Bağlantı Transistörü)
+
+Transistörün **NPN ve PNP** olarak adlandırılan iki temel yapısı ve üç adet bacağı bulunur: Base-Beyz (B), Collector-Kollektör (C) ve Emitter-Emiter (E).
+
+<Image 
+  src={i3} 
+  alt="NPN ve PNP Transistör" 
+  quality="mid"
+  style={{ maxWidth: '300px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+/>
+
+### Küçük Güçle Büyük İşler  (Aktif Bölge ve Kazanç)
+**NPN** türü bir transistörü anlamak için bir baraj hayal edelim. 
+* **Base (B)** bacağı musluğun o küçük çevirme koludur.
+* **Kollektör (C)** ise barajdan gelen devasa ana su borusudur.
+
+**Base** bacağından içeri çok küçük, minicik bir elektrik akımı **(I<sub>B</sub>)** gönderdiğinizde, transistör bunu **Beta (&Beta;)** adını verdiğimiz bir güç çarpanıyla büyütür. Bu sayede, musluk açılır ve **Kollektör'den** devasa bir akımın **(I<sub>C</sub>)** akmasına izin verir. Küçük bir mikrofon fısıltısının dev stadyum hoparlörleri ile kulağımızı patlatması tam olarak bu **"yükseltme"** mantığıyla çalışır.
+
+Formülleri ise çok basittir:
+**I<sub>C</sub> = &Beta; &times; I<sub>B</sub>** 
+
+*Yani devasa Kollektör akımı **( I<sub>C</sub> )** = Kazanç çarpanı **( &Beta; )** &times; Minicik Base akımı **( I<sub>B</sub> )***
+
+Emiterin **(E)** akımını bulmak istersek **Base** akımı ile **Kollektör** akımı toplarız:
+**I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub>**
+
+
+### Transistörün Çalışma Bölgeleri (Nasıl Davranır?)
+Transistörleri kullanacağımız amaca göre farklı bölgelerde (farklı karakterlerde) çalıştırırız:
+
+<Image 
+  src={i4} 
+  alt="Transistör Çalışma Bölgeleri" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'7px' }}
+/>
+
+**1. Kesim Bölgesi (Anahtar Açık - Lamba Sönük - 0 Durumu):** 
+Base bacağına (musluğun koluna) hiç dokunmazsanız veya yeterli voltajı vermezseniz (0.7V altı), musluk tamamen kapalı kalır. Barajda (Kollektörde) ne kadar su (voltaj) olursa olsun karşıya tek damla akım (I<sub>C</sub>) geçmez. Sistem "Kesim"dedir.
+
+**2. Doyum Bölgesi (Anahtar Kapalı - Lamba Yanık - 1 Durumu):** 
+Eğer Base bacağına yeterince elektrik verirseniz, musluğu sonuna kadar açmış olursunuz! Bu durumda Kollektörden (I<sub>C</sub>) geçebilecek en yüksek, maksimum akım geçer. Base akımını daha fazla artırsanız da sistem artık doymuştur, daha fazla akım geçemez.
+* **Isı Sürüklenmesi Tehlikesine Dikkat:** Transistör sonuna kadar açıkken (doyumdayken), çok hızlı ısınıp "Isı Sürüklenmesi" dediğimiz duruma düşebilir ve bozulabilir. Bu yüzden devreyi tasarlarken önüne doğru dirençleri koyup gücü sınırlamalıyız. (Tıpkı diyotu patlamaktan kurtardığımız Kirchhoff hesabı gibi)
+
+**3. Aktif Bölge (Yükselteç / Amplifikatör(Bizim bildiğimiz Amfi)):**
+Kesim (tam kapalı) ile Doyum (tam açık) arasındaki o hassas ayar bölgesidir. Suyu (akımı) istediğiniz şiddette, çok hassas bir şekilde ayarlayabilirsiniz. Ses sinyallerini veya sensör verilerini büyütmek istediğimizde transistörü bu bölgede çalıştırırız.
+
+### Regülatör (Sabitleyici) Devresi
+Önceki derste gördüğümüz gibi prizden veya bataryadan gelen elektrik her zaman pürüzsüz değildir, tıpkı dalgalı bir deniz gibidir. İşte regülatör devrelerinde transistör, bu dalgalanmaları engelleyip DC akım sağlayan **dalgakıran** gibi görev yapar. Gelen voltaj 9V ile 12V arası sallansa bile, transistör fazla enerjiyi ısı olarak atar (kondansatörün süzme işine destek olur) ve telefonunuzun şarj devresine her zaman dümdüz, kararlı bir 5V  DC akım yollar.
+
+Modern çağda artık Zener Diyot adı verilen bileşen kullanılır. Standart bir diyottan farklı olarak, ters gerilim uygulandığında belirli bir kritik noktaya kadar akımı engeller; bu kritik noktaya Zener Gerilimi  V<sub>Z</sub> denir. Bu gerilime ulaşıldığında ise normal diyotun aksine bozulmadan ters yönde akım geçirmeye başlar ve uçlarındaki gerilimi tam bu V<sub>Z</sub> değerinde sabit tutar.
+
+Girişten gelen elektriği bir musluktan akan su, devredeki voltajı ise havuzdaki su seviyesi (basınç) olarak düşünün
+
+Havuzun tam 5 metre yüksekliğine bir tahliye deliği açtığımızı hayal edin. Su seviyesi 5 metrenin altındaysa bu delikten hiç su akmaz.
+
+**Taşma Durumu (Regülasyon):** Musluktan bir anda çok fazla su gelip seviye 5 metreyi geçmeye çalıştığı an, fazla su hemen o tahliye deliğinden dışarı akar. Böylece havuzun içindeki su seviyesi her zaman tam 5 metrede sabit kalır.
+
