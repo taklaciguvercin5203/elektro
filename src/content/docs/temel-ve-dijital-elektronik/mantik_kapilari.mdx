@@ -33,7 +33,7 @@ Bu kapı çok esnektir. A veya B yollarından herhangi birine (ya da her ikisine
 
 **Giriş Ücreti (Gerilim Düşümü):** Çıkışta bazen 5V yerine 4.3V - 4.7V gibi değerler görürüz. Çünkü o diyotun içindeki "Ölü Bölgeyi" aşmak için elektronların ödediği eşik potansiyeli yüzündendir. A girişinden 5V yollasanız bile, diyot kendi payını (0.7V) keser ve çıkışa kalanı yollar.
 
-#### VE (ANDqa) Kapısı: Kuralları Katı Sistem
+#### VE (AND) Kapısı: Kuralları Katı Sistem
 Bu kapı hiç esnemez, kuralları sabittir. Çıkıştan elektrik alabilmek için hem A hem de B yoluna **aynı anda** elektrik (5V) vermek zorundasınız.
 
 * **Mantığı Şudur:** Fabrikalardaki o devasa pres makineleri. Makinenin çalışması için işçinin sağ (A) **VE** sol (B) elindeki butonlara aynı anda basması gerekir ki elleri makinenin altında kalmasın. Sadece birine basarsanız sistem "Hayır, güvenlik şartları sağlanmadı" der (0 durumu).
@@ -114,3 +114,87 @@ Havuzun tam 5 metre yüksekliğine bir tahliye deliği açtığımızı hayal ed
 
 **Taşma Durumu (Regülasyon):** Musluktan bir anda çok fazla su gelip seviye 5 metreyi geçmeye çalıştığı an, fazla su hemen o tahliye deliğinden dışarı akar. Böylece havuzun içindeki su seviyesi her zaman tam 5 metrede sabit kalır.
 
+## Transistörler ile kurulan mantık kapıları
+
+### VE (AND) Kapısı
+
+**VE kapısı**, çıkışın `1` olması için tüm girişlerin `1` olmasını şart koşar. Çıkış denklemi **Y = A &times; B** olarak ifade edilir.
+
+| Giriş A | Giriş B | Çıkış (Y) |
+| :---: | :---: | :---: |
+| 0 | 0 | 0 |
+| 0 | 1 | 0 |
+| 1 | 0 | 0 |
+| 1 | 1 | 1 |
+
+*Tablodan görüldüğü üzere, yalnızca `A=1` ve `B=1` durumunda çıkış `1` olmaktadır.*
+
+### VEYA (OR) Kapısı
+
+**VEYA kapısı**, girişlerden en az birinin `1` olması durumunda çıkışı `1` yapar. Çıkış denklemi **Y = A &plus; B** şeklindedir.
+
+| Giriş A | Giriş B | Çıkış (Y) |
+| :---: | :---: | :---: |
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 1 |
+
+### DEĞİL (NOT) Kapısı
+
+Tek bir girişi ve tek bir çıkışı bulunur; uygulanan sinyali tersine çevirir. Çıkış denklemi **Y = A&apos;** olarak gösterilir.
+
+| Giriş A | Çıkış (Y) |
+| :---: | :---: |
+| 0 | 1 |
+| 1 | 0 |
+
+### VE DEĞİL (NAND) Kapısı
+
+VE kapısının çıkışına DEĞİL kapısının eklenmesiyle elde edilir; çıkışı VE kapısının tam tersidir. Çıkış denklemi **Y = (A &times; B)&apos;** biçimindedir.
+
+| Giriş A | Giriş B | Çıkış (Y) |
+| :---: | :---: | :---: |
+| 0 | 0 | 1 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 0 |
+
+### VEYA DEĞİL (NOR) Kapısı
+
+VEYA kapısının çıkışına DEĞİL eklenerek oluşturulur ve çıkış durumları VEYA kapısının tamamen tersidir. Boolean ifadesi **Y = (A + B)&apos;** olarak yazılır.  **Y = A&apos; &times; B&apos;** biçiminde de ifade edilebilir.
+
+| Giriş A | Giriş B | Çıkış (F) |
+| :---: | :---: | :---: |
+| 0 | 0 | 1 |
+| 0 | 1 | 0 |
+| 1 | 0 | 0 |
+| 1 | 1 | 0 |
+
+## Yardımcı Yapılar ve Kavramlar
+
+### Tampon (Buffer) Kapısı
+
+Giriş ile çıkış sinyali birebir aynıdır. Temel görevi, devre katları arasındaki empedans uyumsuzluğundan kaynaklanabilecek enerji kayıplarını önlemek ve empedans uygunlaştırması sağlamaktır.
+
+### Minterm, Maxterm ve Don't Care Kavramları
+
+* **Minterm (`m`):** Değişkenlerin çarpımı şeklinde yazılır ve doğruluk tablosunda çıkışı `1` yapan satırları temsil eder.
+* **Maxterm (`M`):** Değişkenlerin toplamı şeklinde yazılır ve doğruluk tablosunda çıkışı `0` yapan durumları temsil eder. Her bir maxterm, ilgili minterm ifadesinin değilidir (M_i = m_i&apos;).
+
+
+### Minterm ve Maxterm Doğruluk Tablosu (3 Değişkenli)
+
+* **Minterm (`m`) kuralı:** Giriş `0` ise değili, `1` ise kendisi alınır ve değişkenler çarpılır **(AND)**. 
+* **Maxterm (`M`) kuralı:** Giriş `1` ise değili, `0` ise kendisi alınır ve değişkenler toplanır **(OR)**.
+
+| Onluk Değer | Giriş A | Giriş B | Giriş C | Minterm (1) | Maxterm (0) |
+| :---: | :---: | :---: | :---: | :--- | :--- |
+| 0 | 0 | 0 | 0 | **m0 = A&apos; &times; B&apos; &times; C&apos; = 1** | **M0 = A &plus; B &plus; C = 0**|
+| 1 | 0 | 0 | 1 | **m1 = A&apos; &times; B&apos; &times; C = 1**| **M1 = A &plus; B &plus; C&apos; = 0**|
+| 2 | 0 | 1 | 0 | **m2 = A&apos; &times; B &times; C&apos; = 1**| **M2 = A &plus; B&apos; &plus; C = 0**|
+| 3 | 0 | 1 | 1 | **m3 = A&apos; &times; B &times; C = 1**| **M3 = A &plus; B&apos; &plus; C&apos; = 0**|
+| 4 | 1 | 0 | 0 | **m4 = A &times; B&apos; &times; C&apos; = 1** | **M4 = A&apos; &plus; B &plus; C = 0**|
+| 5 | 1 | 0 | 1 | **m5 = A &times; B&apos; &times; C = 1**| **M5 = A&apos; &plus; B &plus; C&apos; = 0**|
+| 6 | 1 | 1 | 0 | **m6 = A &times; B &times; C&apos; = 1**| **M6 = A&apos; &plus; B&apos; &plus; C = 0**|
+| 7 | 1 | 1 | 1 | **m7 = A &times; B &times; C = 1**| **M7 = A&apos; &plus; B&apos; &plus; C&apos; = 0**|
