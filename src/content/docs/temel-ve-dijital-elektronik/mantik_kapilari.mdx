@@ -10,6 +10,7 @@ import i1 from '/src/assets/4/diode_logic_gate_OR.png';
 import i2 from '/src/assets/4/diode_logic_gate_AND.png';
 import i3 from '/src/assets/4/npn_pnp_transistor.png';
 import i4 from '/src/assets/4/transistor_calisma_bolgeleri.jpg';
+import i5 from '/src/assets/4/mantiksal_devre.png';
 
 # Diyotlar ve Karar Veren Devreler
 
@@ -188,13 +189,39 @@ Giriş ile çıkış sinyali birebir aynıdır. Temel görevi, devre katları ar
 * **Minterm (`m`) kuralı:** Giriş `0` ise değili, `1` ise kendisi alınır ve değişkenler çarpılır **(AND)**. 
 * **Maxterm (`M`) kuralı:** Giriş `1` ise değili, `0` ise kendisi alınır ve değişkenler toplanır **(OR)**.
 
-| Onluk Değer | Giriş A | Giriş B | Giriş C | Minterm (1) | Maxterm (0) |
-| :---: | :---: | :---: | :---: | :--- | :--- |
-| 0 | 0 | 0 | 0 | **m0 = A&apos; &times; B&apos; &times; C&apos; = 1** | **M0 = A &plus; B &plus; C = 0**|
-| 1 | 0 | 0 | 1 | **m1 = A&apos; &times; B&apos; &times; C = 1**| **M1 = A &plus; B &plus; C&apos; = 0**|
-| 2 | 0 | 1 | 0 | **m2 = A&apos; &times; B &times; C&apos; = 1**| **M2 = A &plus; B&apos; &plus; C = 0**|
-| 3 | 0 | 1 | 1 | **m3 = A&apos; &times; B &times; C = 1**| **M3 = A &plus; B&apos; &plus; C&apos; = 0**|
-| 4 | 1 | 0 | 0 | **m4 = A &times; B&apos; &times; C&apos; = 1** | **M4 = A&apos; &plus; B &plus; C = 0**|
-| 5 | 1 | 0 | 1 | **m5 = A &times; B&apos; &times; C = 1**| **M5 = A&apos; &plus; B &plus; C&apos; = 0**|
-| 6 | 1 | 1 | 0 | **m6 = A &times; B &times; C&apos; = 1**| **M6 = A&apos; &plus; B&apos; &plus; C = 0**|
-| 7 | 1 | 1 | 1 | **m7 = A &times; B &times; C = 1**| **M7 = A&apos; &plus; B&apos; &plus; C&apos; = 0**|
+Aşağıdaki tabloda, çıkışın **1** olduğu durumlar için **Minterm** (Çarpımların Toplamı), çıkışın **0** olduğu durumlar için ise **Maxterm** (Toplamların Çarpımı) ifadeleri doğru mantıkla listelenmiştir.
+
+| Onluk Değer | Giriş A | Giriş B | Giriş C | Çıkış | Minterm (Çıkış = 1) | Maxterm (Çıkış = 0) |
+| :---: | :---: | :---: | :---: | :---: | :--- | :--- |
+| 0 | 0 | 0 | 0 | 1 | **m0 = A&apos; &times; B&apos; &times; C&apos;** | &mdash; |
+| 1 | 0 | 0 | 1 | 0 | &mdash; | **M1 = A &plus; B &plus; C&apos;** |
+| 2 | 0 | 1 | 0 | 1 | **m2 = A&apos; &times; B &times; C&apos;** | &mdash; |
+| 3 | 0 | 1 | 1 | 1 | **m3 = A&apos; &times; B &times; C** | &mdash; |
+| 4 | 1 | 0 | 0 | 0 | &mdash; | **M4 = A&apos; &plus; B &plus; C** |
+| 5 | 1 | 0 | 1 | 0 | &mdash; | **M5 = A&apos; &plus; B &plus; C&apos;** |
+| 6 | 1 | 1 | 0 | 0 | &mdash; | **M6 = A&apos; &plus; B&apos; &plus; C** |
+| 7 | 1 | 1 | 1 | 0 | &mdash; | **M7 = A&apos; &plus; B&apos; &plus; C&apos;** |
+<br />
+
+Yukarıdaki doğruluk tablosuna göre girişlerin mantıksal denklemleri şöyledir:
+
+**1. Minterm (SOP - Toplamların Çarpımı) Gösterimi:**
+
+ <span style="font-size:30px">&Sigma;</span><sub style="font-size:17px">m(0, 2, 3)</sub> = m0 + m2 + m3
+
+F = (A' × B' × C') + (A' × B × C') + (A' × B × C)
+
+**2. Maxterm (POS - Çarpımların Toplamı) Gösterimi:**
+
+ΠM(1, 4, 5, 6, 7) = M1 × M4 × M5 × M6 × M7
+
+F = (A + B + C') × (A' + B + C) × (A' + B + C') × (A' + B' + C) × (A' + B' + C')
+
+
+**Bu devrenin bir Simulasyonda gösterimi aşağıdaki şekildedir:**
+<Image 
+  src={i5} 
+  alt="Tabloda Verilen Mantığın Devre Hali" 
+  quality="mid"
+  style={{ maxWidth: '500px', width: '100%', height: 'auto', load:'lazy', borderRadius:'4px' }}
+/>
