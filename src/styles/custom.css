@@ -79,12 +79,12 @@ h4 {
 }
 
 h5 {
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: #2DD4BF; /* Net Beyaz (Küçüldüğü için okunabilirlik amaçlı) */
 }
 
 h6 {
-  font-size: 0.5rem;
+  font-size: 0.9rem;
   color: #34D399; /* Mat Slate Grisi (Göz yormayan alt detay rengi) */
   text-transform: uppercase; /* Küçük olduğu için vurgu katması amacıyla */
 }
