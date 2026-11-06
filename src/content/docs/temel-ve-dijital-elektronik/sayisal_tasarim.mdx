@@ -1,0 +1,137 @@
+---
+title: "Sayısal Tasarım Rehberi: Boole Cebri, K-Map ve Bileşik Devreler"
+description: "Boole cebri kurallarından Minterm/Maxterm kavramlarına, Karnaugh haritası ile sadeleştirmeden bileşik mantık devrelerinin kapı düzeyinde tasarımına kadar detaylı çalışma rehberi."
+sidebar:
+  order: 6
+---
+
+import Callout from '../../../components/Callout.astro';
+
+# Sayısal Elektroniğe Giriş ve Lojik Tasarım Rehberi
+
+## 1. Mikrodenetleyici ve Decode Devresi
+
+**Dekoderi, adres seçen bir görevli gibi düşünebilirsin.** Girişteki 0 ve 1'lere bakar, birçok çıkıştan yalnızca doğru olanı açar. `n` giriş varsa en fazla 2<sup>n</sup> farklı çıkış seçilebilir.
+
+### Temel Çalışma Prensibi ve 2x4 Dekoder Yapısı
+
+Dekoderin içinde genellikle **VE (AND)** veya **VE DEĞİL (NAND)** kapıları bulunur. Her çıkış, girişlerin yalnızca bir kombinasyonuna karşılık gelir. İki girişin dört olası kombinasyonu olduğu için 2 girişli dekoderin dört çıkışı vardır.
+
+**2x4 Dekoder Doğruluk Tablosu (Aktif-Yüksek Çıkış):**
+
+| A (Giriş) | B (Giriş) | D<sub>0</sub> | D<sub>1</sub> | D<sub>2</sub> | D<sub>3</sub> | 
+| ----- | ----- | ----- | ----- | ----- | ----- | 
+| 0 | 0 | **1** | 0 | 0 | 0 | 
+| 0 | 1 | 0 | **1** | 0 | 0 | 
+| 1 | 0 | 0 | 0 | **1** | 0 | 
+| 1 | 1 | 0 | 0 | 0 | **1** | 
+
+**Çıkışların Boole Fonksiyonları:**
+
+* D<sub>0</sub> = A' &times; B'
+
+* D<sub>1</sub> = A' &times; B
+
+* D<sub>2</sub> = A &times; B'
+
+* D<sub>3</sub> = A &times; B
+
+### Yetkilendirme (Enable) Girişi
+
+`Enable`, dekoderin ana açma-kapama düğmesidir. Girişler doğru kombinasyonda olsa bile `Enable` kapalıysa hiçbir çıkış çalışmaz. Tıpkı Transistör'ün "Base" veya "Gate" ucuna verdiğimiz elektrik ile devreyi kontrol etmemiz gibi.
+
+### Dekoderlerin Kullanım Alanları
+
+* **Adres Çözme (Address Decoding):** Mikrodenetleyicinin adres otobüsündeki veri kombinasyonuna göre, işlemcinin o an haberleşeceği doğru RAM, ROM veya çevre birimini (Chip Select pinini tetikleyerek) aktif hale getirir.
+
+* **Komut Çözme (Instruction Decoding):** İşlemci içindeki Kontrol Birimi, makine kodu komutlarını dekodere sokarak ALU içindeki (Toplama, Çıkarma vb.) doğru lojik birimi çalıştırır.
+
+* **Demultiplexer (Veri Dağıtıcı) Dönüşümü:** Dekoderin girişleri adresi, `Enable` pini de veriyi taşırsa tek kaynaktan gelen veri 2<sup>n</sup> farklı hattan birine yönlendirilir.
+
+<Callout type="example" title="Kendini test et">
+  İki girişli bir dekoderde `A = 1` ve `B = 0` ise hangi çıkışın aktif olması gerekir? Tablodan **D<sub>2</sub>** sonucunu bulabiliyor olmalısın.
+</Callout>
+
+
+---
+
+## 2. Karnaugh (Karno) Haritası ve Gray Kodlaması
+
+**Karnaugh haritası, uzun bir Boole ifadesini kısaltma tablosudur.** Doğruluk tablosundaki 1'leri haritaya koyar, yan yana olanları gruplayarak gereksiz değişkenleri sileriz.
+
+### Gray Kodu ve Komşuluk İlkesi
+
+K-Map tablosunda satır ve sütun başlıkları ikili sayma sırasıyla değil, **Gray kodu** sırasıyla (`00, 01, 11, 10`) dizilir.
+
+* Gray kodunda yan yana iki etikette yalnızca **bir bit** değişir.
+* Böylece haritada komşu duran hücreler gerçekten tek bir değişken bakımından komşu olur. Bu, sadeleştirmeyi güvenli yapar.
+
+| Decimal Sayı | İkili (Binary) Gösterim | Gray Kodu Gösterimi |
+| :---: | :---: | :---: |
+| **0** | `0000` | `0000` |
+| **1** | `0001` | `0001` |
+| **2** | `0010` | `0011` |
+| **3** | `0011` | `0010` |
+
+---
+
+## 3. Boole Cebri Kuralları ve De Morgan Kanunu
+
+**Boole cebri, 0 ve 1'lerle yapılan mantık hesabıdır.** Buradaki `+` genellikle VEYA'yı, `x` ise VE'yi gösterir.
+
+### Temel Boole Kuralları
+
+| Kural Adı | VEYA Formu (&plus;) | VE Formu (&times;) |
+| :--- | :--- | :--- |
+| **Değişme Kuralı** | X &plus; Y = Y &plus; X  | X &times; Y = Y &times; X |
+| **Birleşme Kuralı** | (X &plus; Y) &plus; Z = X &plus; (Y &plus; Z)  | (X &times; Y) &times; Z = X &times; (Y &times; Z)  |
+| **Dağılma Kuralı** | X &plus; (Y &times; Z) = (X &plus; Y)(X &plus; Z)  | X &times; (Y &plus; Z) = X &times; Y &plus; X &times; Z  |
+| **Özdeşlik Kuralı** | X &plus; X = X  | X &times; X = X  |
+| **Tamamlayıcı Kuralı** | X &plus; X' = 1  | X &times; X' = 0  |
+| **Yutma (Soğurma) Kuralı** | X &plus; X &times; Y = X  | X &times; (X &plus; Y) = X  |
+
+
+  **De Morgan Kanunu:** Bir ifadenin başına DEĞİL geldiğinde, işlem türü değişir: VE, VEYA olur; VEYA, VE olur. Değişkenlerin her biri de tümleyenine dönüşür.
+  
+  1. **Çarpımın Tümleyeni:** (X &times; Y)' = X' &plus; Y' *(VE DEĞİL kapısının çıkışı, girişlerin tümleyenlerinin VEYA'sına eşittir).*
+  2. **Toplamın Tümleyeni:** (X &plus; Y)' = X' &times; Y' *(VEYA DEĞİL kapısının çıkışı, girişlerin tümleyenlerinin VE'sine eşittir).*
+
+Beş veya daha fazla değişken olduğunda Karnaugh haritası kalabalıklaşır. **Quine-McCluskey tablo yöntemi**, aynı işi bu kez kurallı ve bilgisayarın takip edebileceği adımlarla yapar.
+
+## 7. Minterm ve Maxterm: Satırları İsimlendirmek
+
+Bir doğruluk tablosunda her satıra bir numara vermek işimizi kolaylaştırır. `n` değişken varsa toplam 2<sup>n</sup> satır vardır.
+
+### Minterm (m<sub>i</sub>) — Çarpımların Toplamı (SOP-Sum of Products)
+* Girişlerin VE ile birleştirildiği tek bir satır tarifidir.
+* Çıkışı **`1`** yapan satırları temsil eder ve **&sum; m** ile gösterilir.
+* Girişte değişken `1` ise kendisi (A), `0` ise değili (A&prime;) alınır.
+
+### Maxterm (M<sub>i</sub>) — Toplamların Çarpımı (POS-Product of Sums)
+* Girişlerin VEYA ile birleştirildiği tek bir satır tarifidir.
+* Çıkışı **`0`** yapan satırları temsil eder ve **&prod; M** ile gösterilir.
+* Girişte değişken `0` ise kendisi (A), `1` ise değili (A&prime;) alınır. 
+
+---
+
+## 6. Karnaugh Haritasını Kullanma
+
+Haritayı bir yapboz gibi düşün: birbirine komşu 1'leri mümkün olan en büyük gruplar halinde birleştiririz. Grupta değişen değişkenleri siler, sabit kalanları ifadede tutarız.
+
+  **Gruplama kuralı:** Bir grup 1, 2, 4, 8 veya 16 hücreden oluşmalıdır. Örneğin bir grupta `A` hem 0 hem 1 ise `A` sonucu değiştirmediği için ifadeden çıkarılır.
+
+  Bir grupta yalnızca `B` sabit kalıyorsa, sadeleştirilmiş terimde hangi değişken kalır? 
+
+  **Cevap: B. Diğer değişkenler grup içinde değiştiği için silinir.**
+
+
+---
+
+## 7. Denklemi Gerçek Devreye Dönüştürme
+
+Sadeleştirilmiş denklemi artık kapılarla çizebiliriz. `&times;` gördüğün yerde VE kapısı, `&plus;` gördüğün yerde VEYA kapısı kullanılır.
+
+### İki Düzeyli Devre Yapıları
+
+* **SOP (Çarpımların Toplamı):** Önce VE kapılarıyla küçük terimleri oluştur, sonra bunları bir VEYA kapısında birleştir.
+* **POS (Toplamların Çarpımı):** Önce VEYA kapılarıyla parantezleri oluştur, sonra bunları bir VE kapısında birleştir.
