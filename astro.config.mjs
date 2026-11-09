@@ -33,11 +33,5 @@ export default defineConfig({
         },
       },
     },
-    sidebar: [
-      {
-        label: 'Temel ve Dijital Elektronik',
-        items: [{ autogenerate: { directory: 'temel-ve-dijital-elektronik' } }],
-      }
-    ],
   })],
 });

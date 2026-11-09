@@ -8,6 +8,10 @@ sidebar:
 import { Image } from 'astro:assets';
 import i1 from '/src/assets/5/mantik_devresi_AxB+nAxC.png';
 import i2 from '/src/assets/5/mantik_devresi_AxB+nAxC_lojik_tablo.png';
+import i3 from '/src/assets/5/mantik_deresi_nAxnB+AxB+AxnCxnD+AxCxD.png';
+import i4 from '/src/assets/5/mantik_deresi_nAxnB+AxB+AxnCxnD+AxCxD_lojik_tablo.png';
+import i5 from '/src/assets/5/mantik_deresi_nAxnB+AxB+AxnCxnD+AxCxD_matematiksel_gosterim.png';
+
 
 # Sayısal Elektroniğe Giriş ve Lojik Tasarım Rehberi
 
@@ -28,13 +32,13 @@ Dekoderin içinde genellikle **VE (AND)** veya **VE DEĞİL (NAND)** kapıları 
 | 1 | 0 | 0 | 0 | **1** | 0 | 
 | 1 | 1 | 0 | 0 | 0 | **1** | 
 
-**Çıkışların Boole Fonksiyonları:**
+**Çıkışların Boole Fonksiyonları (Giriş değişkenlerinin ve sonucunun yalnızca mantıksal değerler 0 veya 1, doğru veya yanlış alabildiği matematiksel bir ifade):**
 
-* D<sub>0</sub> = A&prime; &times; B&prime;
+* D<sub>0</sub> = A' &times; B'
 
-* D<sub>1</sub> = A&prime; &times; B
+* D<sub>1</sub> = A' &times; B
 
-* D<sub>2</sub> = A &times; B&prime;
+* D<sub>2</sub> = A &times; B'
 
 * D<sub>3</sub> = A &times; B
 
@@ -76,7 +80,7 @@ K-Map tablosunda satır ve sütun başlıkları ikili sayma sırasıyla değil, 
 
 ## 3. Boole Cebri Kuralları ve De Morgan Kanunu
 
-**Boole cebri, 0 ve 1'lerle yapılan mantık hesabıdır.** Buradaki `+` genellikle VEYA'yı, `x` ise VE'yi gösterir.
+**Boole cebri, 0 ve 1'lerle yapılan mantık hesabıdır.** Buradaki `+` VEYA'yı, `x` ise VE'yi gösterir.
 
 ### Temel Boole Kuralları
 
@@ -86,14 +90,14 @@ K-Map tablosunda satır ve sütun başlıkları ikili sayma sırasıyla değil, 
 | **Birleşme Kuralı** | (X + Y) + Z = X + (Y + Z)  | (X &times; Y) &times; Z = X &times; (Y &times; Z)  |
 | **Dağılma Kuralı** | X + (Y &times; Z) = (X + Y)(X + Z)  | X &times; (Y + Z) = X &times; Y + X &times; Z  |
 | **Özdeşlik Kuralı** | X + X = X  | X &times; X = X  |
-| **Tamamlayıcı Kuralı** | X + X&prime; = 1  | X &times; X&prime; = 0  |
+| **Tamamlayıcı Kuralı** | X + X' = 1  | X &times; X' = 0  |
 | **Yutma (Soğurma) Kuralı** | X + X &times; Y = X  | X &times; (X + Y) = X  |
 
 
   **De Morgan Kanunu:** Bir ifadenin başına DEĞİL geldiğinde, işlem türü değişir: VE, VEYA olur; VEYA, VE olur. Değişkenlerin her biri de tümleyenine dönüşür.
   
-  1. **Çarpımın Tümleyeni:** (X &times; Y)&prime; = X&prime; + Y&prime; *(VE DEĞİL kapısının çıkışı, girişlerin tümleyenlerinin VEYA'sına eşittir).*
-  2. **Toplamın Tümleyeni:** (X + Y)&prime; = X&prime; &times; Y&prime; *(VEYA DEĞİL kapısının çıkışı, girişlerin tümleyenlerinin VE'sine eşittir).*
+  1. **Çarpımın Değili:** (X &times; Y)' = X' + Y' *(VE DEĞİL kapısının çıkışı, girişlerin değillerinin VEYA'sına eşittir).*
+  2. **Toplamın Değili:** (X + Y)' = X' &times; Y' *(VEYA DEĞİL kapısının çıkışı, girişlerin değillerinin VE'sine eşittir).*
 
 Beş veya daha fazla değişken olduğunda Karnaugh haritası kalabalıklaşır. **Quine-McCluskey tablo yöntemi**, aynı işi bu kez kurallı ve bilgisayarın takip edebileceği adımlarla yapar.
 
@@ -103,98 +107,100 @@ Bir doğruluk tablosunda her satıra bir numara vermek işimizi kolaylaştırır
 
 ### Minterm (m<sub>i</sub>) — Çarpımların Toplamı (SOP-Sum of Products)
 * Girişlerin VE ile birleştirildiği tek bir satır tarifidir.
-* Çıkışı **`1`** yapan satırları temsil eder ve **&Sigma; m** ile gösterilir.
-* Girişte değişken `1` ise kendisi (A), `0` ise değili (A&prime;) alınır.
+* Çıkışı **`1`** yapan satırları temsil eder ve **&Sigma;<sub>m</sub>** ile gösterilir.
+* Girişte değişken `1` ise kendisi (X), `0` ise değili (X') alınır.
 
 ### Maxterm (M<sub>i</sub>) — Toplamların Çarpımı (POS-Product of Sums)
 * Girişlerin VEYA ile birleştirildiği tek bir satır tarifidir.
-* Çıkışı **`0`** yapan satırları temsil eder ve **&Pi; M** ile gösterilir.
-* Girişte değişken `0` ise kendisi (A), `1` ise değili (A&prime;) alınır.
+* Çıkışı **`0`** yapan satırları temsil eder ve **&Pi;<sub>M</sub>** ile gösterilir.
+* Girişte değişken `0` ise kendisi (X), `1` ise değili (X') alınır.
+
+**Not: X burada değişkendir A, B, C, D, E... gibi istenilen yazılabilir.**
 
 ---
 
 ## 5. Karnaugh Haritasını Kullanma
 
-Haritayı bir yapboz gibi düşün: birbirine komşu 1'leri mümkün olan en büyük gruplar halinde birleştiririz. Grupta değişen değişkenleri siler, sabit kalanları ifadede tutarız.
+Haritayı bir yapboz gibi düşün: birbirine komşu 1'leri mümkün olan en büyük gruplar halinde birleştirmeye çalışırız. Grupta değişen değişkenleri siler, sabit kalanları ifadede tutarız.
 
-  **Gruplama kuralı:** Bir grup 1, 2, 4, 8 veya 16 hücreden oluşmalıdır. Örneğin bir grupta `A` hem 0 hem 1 ise `A` sonucu değiştirmediği için ifadeden çıkarılır.
+  **Gruplama kuralı:** Bir grup 1, 2, 4, 8 veya 16 gibi **2<sup>n</sup>** formülüne uyacak hücre adetlerinden oluşmalıdır. 
+
+  Bir grupta `A` hem 0 hem 1 ise `A` sonucu değiştirmediği için ifadeden çıkarılır.
 
   Bir grupta yalnızca `B` sabit kalıyorsa, sadeleştirilmiş terimde hangi değişken kalır? 
-
   **Cevap: B. Diğer değişkenler grup içinde değiştiği için silinir.**
 
 
 ---
 
-## 6. Denklemi Gerçek Devreye Dönüştürme (Mantık Kapıları ile Devre Çizimi)
+## 6. Mantık Kapıları ile Devre Çizimi
 
-Sadeleştirilmiş denklemi artık kapılarla fiziksel bir devreye dönüştürebiliriz. Denklemde &middot; (çarpım) gördüğün yerde **VE (AND)** kapısı, + (toplam) gördüğün yerde ise **VEYA (OR)** kapısı kullanılır.
-
-### İki Düzeyli Devre Yapıları
+Sadeleştirilmiş denklemi artık kapılarla fiziksel bir devreye dönüştürebiliriz. Denklemde **&times; (çarpım)** gördüğün yerde **VE (AND)** kapısı, **+ (toplam)** gördüğün yerde ise **VEYA (OR)** kapısı kullanılır.
 
 * **Minterm (Çarpımların Toplamı):** Önce VE kapılarıyla küçük terimleri oluştur, sonra bunları bir VEYA kapısında birleştir.
 * **Maxterm (Toplamların Çarpımı):** Önce VEYA kapılarıyla parantezleri (toplamları) oluştur, sonra bunları bir VE kapısında birleştir.
 
 ### Örnek: SOP Devresi Tasarımı
 
-Konuyu somutlaştırmak için örnek bir fonksiyonu ele alalım:
-F(A, B, C) = (A &middot; B) + (A&prime; &middot; C)
+Konuyu somutlaştırmak için örnek bir **çarpımlarının toplamı (SOP)** fonksiyonunu ele alalım:
+F(A, B, C) = (AB) + (A'C)
 
-Bu SOP (Çarpımların Toplamı) denklemini çizerken kuralımız gereği şu adımları izleriz:
+Bu denklemi çizerken kuralımız gereği şu adımları izleriz:
 
-1. **Girişleri Hazırlama:** Devrenin başına `A`, `B` ve `C` sinyalleri için üç adet paralel hat çekilir. Denklemde A&prime; olduğu için, A hattına bir adet **DEĞİL (NOT)** kapısı bağlanarak A&prime; sinyali elde edilir.
+1. **Girişleri Hazırlama:** Devrenin başına `A`, `B` ve `C` sinyalleri için üç adet paralel hat çekilir. Denklemde A' olduğu için, A hattına bir adet **DEĞİL (NOT)** kapısı bağlanarak A' sinyali elde edilir.
+
 2. **Çarpım Terimlerini (1. Düzey) Oluşturma:**
-   * İlk terim olan (A &middot; B) için bir **VE (AND)** kapısı yerleştirilir. Kapının girişlerine `A` ve `B` hatları bağlanır.
-   * İkinci terim olan (A&prime; &middot; C) için ayrı bir **VE (AND)** kapısı yerleştirilir. Bu kapının girişlerine ise A&#772; ve `C` hatları bağlanır.
+   * İlk terim olan (AB) için bir **VE (AND)** kapısı yerleştirilir. Kapının girişlerine `A` ve `B` hatları bağlanır. Görselde bu işlem için ve kapısının üstünde **"AxB"** yazılmıştır.
+   * İkinci terim olan (A'C) için ayrı bir **VE (AND)** kapısı yerleştirilir. Bu kapının girişlerine ise A&#772; ve `C` hatları bağlanır. Görselde bu işlem için ve kapısının üstünde **"nAxC"** yazılmıştır. "nA" yazılma nedeni "notA" yani "A'nın değili" niteliğindedir. 
+
 3. **Toplamı (2. Düzey) Elde Etme:**
    * Bir önceki adımda kurduğumuz iki adet VE kapısının çıkış sinyalleri alınır.
    * Bu iki çıkış, tek bir **VEYA (OR)** kapısının girişlerine bağlanır.
    * Bu son VEYA kapısının çıkış ucu, bize fiziksel olarak çalışan `F` fonksiyonunu verir.
 
-Bu devrenin bir simulasyonda gösterimi aşağıdaki şekildeki gibidir **(nA=A&prime;)**:
+Bu devrenin simulasyonda gösterimi aşağıdaki şekildeki gibi olur:
 
 <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
 <Image 
   src={i1} 
   alt="Lojik Devre" 
   quality="mid"
-  style={{ maxWidth: '400px', width: '100%', height: 'auto', load:'lazy',marginLeft:'5%', borderRadius:'10px' }}
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', loading:"lazy",marginLeft:'5%', borderRadius:'10px' }}
 />
 <Image 
   src={i2} 
   alt="Lojik Tablo" 
   quality="mid"
-  style={{ maxWidth: '115px', width: '100%', height: 'auto', load:'lazy',marginLeft:'1%', borderRadius:'10px' }}
+  style={{ maxWidth: '115px', width: '100%', height: 'auto', loading:"lazy",marginLeft:'1%', borderRadius:'10px' }}
 />
 </div>
 
 ---
 
-## 7. Uygulamalı Karnaugh Haritası: Feynman Tekniği ile Adım Adım Sadeleştirme
+## 7. Karnaugh Haritası
 
-Karmaşık formülleri bir kenara bırakalım. Karnaugh Haritası (K-Map), aslında devasa ve karmaşık bir mantık denklemini, **"Görsel bir eşleştirme oyunu"** oynayarak en sade haline getirme yöntemidir.
+Karnaugh Haritası (K-Map), aslında devasa ve karmaşık bir mantık denklemini, **"Görsel bir eşleştirme oyunu"** oynayarak en sade haline getirme yöntemidir.
 
 Elimizde şu görev (fonksiyon) var:
-F(A, B, C, D) = &sum; m(0, 1, 2, 3, 8, 11, 12, 13, 14, 15)
+**F(A, B, C, D) = &Sigma;<sub>m</sub>(0, 1, 2, 3, 8, 11, 12, 13, 14, 15)**
 
-Bu gizemli yazımın Türkçesi şudur: *"Benim 4 tane anahtarım var (A, B, C, D). Bu anahtarların sadece parantez içindeki kombinasyonlarında lambam yanıyor (1 oluyor). Diğer tüm durumlarda lamba sönük (0)."*
+Bu havalı yazımın Türkçesi şudur: **"Benim 4 tane anahtarım var (A, B, C, D). Bu anahtarların sadece parantez içindeki hücre numaralarında lambam yanıyor (1 oluyor). Diğer tüm durumlarda lamba sönük (0)."**
 
 Amacımız, bu kadar çok durumu tek tek yazmak yerine, lambayı yakacak **en kısa ve masrafsız elektronik devreyi** (denklemi) bulmaktır.
 
----
+### Tabloyu Çizmek ve "Sadece Bir Kıyafet Değiştirme" Kuralı
 
-### 1. Tabloyu Çizmek ve "Sadece Bir Kıyafet Değiştirme" Kuralı
+4 anahtarımız olduğu için 2<sup>4</sup> = 16 hücreli bir tablo çiziyoruz. Satırlar `AB` anahtarlarını, sütunlar `CD` anahtarlarını temsil edecek.
 
-4 değişkenimiz olduğu için 2<sup>4</sup> = 16 hücreli bir tablo çiziyoruz. Satırlar `AB` anahtarlarını, sütunlar `CD` anahtarlarını temsil ediyor.
+Buradaki en büyük sır **Gray Kodu**'dur. Odaları normal sayar gibi `00, 01, 10, 11` diye dizmeyiz. Çünkü yan yana olan her odada **sadece bir anahtarın (değişkenin) durumu değişmelidir.** Bu yüzden diziliş `00, 01, 11, 10` şeklindedir. Buna **"tek bir kıyafet değiştirme kuralı"** diyebiliriz.
 
-Buradaki en büyük sır **Gray Kodu**'dur. Odaları normal sayar gibi `00, 01, 10, 11` diye dizmeyiz. Çünkü yan yana olan her odada **sadece bir anahtarın (değişkenin) durumu değişmelidir.** Bu yüzden diziliş `00, 01, 11, 10` şeklindedir. Buna *"sadece bir kıyafet değiştirme kuralı"* diyebiliriz.
-
-| AB / CD | `00` | `01` | `11` | `10` |
-| :---: | :---: | :---: | :---: | :---: |
-| `00` | m<sub>0</sub> = 1 | m<sub>1</sub> = 1 | m<sub>3</sub> = 1 | m<sub>2</sub> = 1 |
-| `01` | 0 | 0 | 0 | 0 |
-| `11` | m<sub>12</sub> = 1 | m<sub>13</sub> = 1 | m<sub>15</sub> = 1 | m<sub>14</sub> = 1 |
-| `10` | m<sub>8</sub> = 1 | 0 | m<sub>11</sub> = 1 | 0 |
+| AB/CD |  | **CD** | **CD** | **CD** | **CD** |
+| :---: | :---: | :---: | :---: | :---: |:---: |
+|  |  | `00` | `01` | `11` | `10` |
+| **AB** | `00` | m<sub>0</sub> = **1** | m<sub>1</sub> = **1** | m<sub>3</sub> = **1** | m<sub>2</sub> = **1** |
+| **AB** | `01` | 0 | 0 | 0 | 0 |
+| **AB** | `11` | m<sub>12</sub> = **1** | m<sub>13</sub> = **1** | m<sub>15</sub> = **1** | m<sub>14</sub> = **1** |
+| **AB** | `10` | m<sub>8</sub> = **1** | 0 | m<sub>11</sub> = **1** | 0 |
 
 **Nasıl Yerleştirdik? (Bir Örnek):**
 Örneğin m<sub>11</sub> neresidir? 11 sayısının bilgisayar dilindeki (ikilik) yazılışı `1011`'dir.
@@ -202,7 +208,7 @@ Bunu ikiye bölersek: `AB = 10` (4. Satır) ve `CD = 11` (3. Sütun). Kesişim n
 
 ---
 
-### 2. Gruplama: Büyük Balık Küçük Balığı Yer
+### Gruplama: Büyük Balık Küçük Balığı Yer
 
 Kurallarımız şunlar:
 1. Sadece 1'leri gruplayabiliriz.
@@ -211,8 +217,8 @@ Kurallarımız şunlar:
 
 Şimdi haritadaki 1'leri kutu içine alalım:
 
-* **1. Büyük Lokma (En Üst Satır):** `AB=00` satırının tamamı 1 ile dolu. Hemen o dördünü tek bir yatay kutu (4'lü grup) içine alıyoruz.
-* **2. Büyük Lokma (Üçüncü Satır):** `AB=11` satırının da tamamı 1 dolu. Onları da yatay bir 4'lü grup yapıyoruz.
+* **1. Büyük Grup (En Üst Satır):** `AB=00` satırının tamamı 1 ile dolu. Hemen o dördünü tek bir yatay kutu (4'lü grup) içine alıyoruz.
+* **2. Büyük Grup (Üçüncü Satır):** `AB=11` satırının da tamamı 1 dolu. Onları da yatay bir 4'lü grup yapıyoruz.
 * **Yalnız Kalanlar (m<sub>8</sub> ve m<sub>11</sub>):** Haritanın en alt satırında (`AB=10`) iki tane 1 yalnız kaldı. Bunlar 4'lü grup olamıyor. Ama bir üst katlarındaki komşularından yardım isteyebilirler!
 * m<sub>8</sub>'i hemen üstündeki m<sub>12</sub> ile birleştirip dikey bir **2'li grup** yapıyoruz.
 * m<sub>11</sub>'i de hemen üstündeki m<sub>15</sub> ile birleştirip dikey bir **2'li grup** yapıyoruz.
@@ -221,18 +227,18 @@ Haritada açıkta hiçbir 1 kalmadı. Görev tamam!
 
 ---
 
-### 3. Denklemi Çıkarmak: "Kim Değişti, Kim Kaldı?"
+### Denklemi Çıkarmak: "Kim Değişti, Kim Kaldı?"
 
 Bir gruba bakarsın ve şu soruyu sorarsın: **"Bu grubun içinde gezinirken hangi anahtarlar konum değiştirdi?"** Konum değiştiren anahtar güvenilmezdir, onu denklemden kovarız (sileriz). Sabit kalanlar ise bizimledir.
 
-* *Sabit kalan anahtar `1` ise kendisini (örn. A), `0` ise değilini (örn. A&prime;) yazarız.*
+* *Sabit kalan anahtar `1` ise kendisini (örn. A), `0` ise değilini (örn. A') yazarız.*
 
-Şimdi gruplarımızı sorguya çekelim:
+Şimdi gruplarımızı hesaplayalım:
 
 #### 1. Yatay 4'lü Grup (En üst satır)
 * Bu grubun içinde soldan sağa gezinirsen `C` ve `D` anahtarları sürekli 0'dan 1'e, 1'den 0'a döner. İkisi de kovulur!
 * Ama `A` ve `B` tüm satır boyunca inatla `00` kalmıştır. 
-* **Sonuç:** İkisi de 0 olduğu için **A&prime;B&prime;**
+* **Sonuç:** İkisi de 0 olduğu için **A'B'**
 
 #### 2. Yatay 4'lü Grup (Üçüncü satır)
 * Yine soldan sağa gezindiğimiz için `C` ve `D` değişip durur, elenirler.
@@ -242,8 +248,8 @@ Bir gruba bakarsın ve şu soruyu sorarsın: **"Bu grubun içinde gezinirken han
 #### 3. Dikey 2'li Grup (m<sub>8</sub> ve m<sub>12</sub>)
 * Yukarıdan aşağı geziyoruz (`AB=11`'den `AB=10`'a). Bakıyoruz ki `A=1`'de kalmış ama `B`, 1'den 0'a değişmiş. `B` kovulur!
 * Sütuna bakıyoruz, grup tamamen `CD=00` sütununda. İkisi de değişmemiş.
-* Elimizde kalanlar: `A` (1 olduğu için kendisi), `C` (0 olduğu için C&prime;), `D` (0 olduğu için D&prime;).
-* **Sonuç:** **A C&prime; D&prime;**
+* Elimizde kalanlar: `A` (1 olduğu için kendisi), `C` (0 olduğu için C'), `D` (0 olduğu için D').
+* **Sonuç:** **A C' D'**
 
 #### 4. Dikey 2'li Grup (m<sub>11</sub> ve m<sub>15</sub>)
 * Yine yukarıdan aşağı geziyoruz. `A=1` sabit, `B` değiştiği için kovuldu.
@@ -255,8 +261,33 @@ Bir gruba bakarsın ve şu soruyu sorarsın: **"Bu grubun içinde gezinirken han
 
 ### 4. Final Denklem
 
-Bulduğumuz bu sapasağlam, değişmeyen blokları yan yana getirip VEYA işlemiyle (Toplama sembolü) birbirine bağlıyoruz. İşte sana devasa formülün en masrafsız hali:
+Bulduğumuz bu sapasağlam, değişmeyen blokları yan yana getirip VEYA işlemiyle (Toplama sembolü) birbirine bağlıyoruz. İşte sana devasa formülün en sadeleşmiş hali:
 
-F = A&prime;B&prime; + AB + A C&prime; D&prime; + ACD
+**F = (A'B') + (AB) + (AC'D') + (ACD)**
 
-İşte Karnaugh haritası bu kadar basittir; sadece kıyafet değiştirmeyenleri bul ve yan yana yaz!
+Devreyi simüle edicek olursak aşağıdaki şekilde olur:
+
+<div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+<Image 
+  src={i3} 
+  alt="Lojik Devre: F = (A'B') + (AB) + (AC'D') + (ACD)" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', loading:"lazy",marginLeft:'5%', borderRadius:'10px' }}
+/>
+<Image 
+  src={i4} 
+  alt="Lojik Tablo: F = (A'B') + (AB) + (AC'D') + (ACD)" 
+  quality="mid"
+  style={{ maxWidth: '86px', width: '100%', height: 'auto', loading:"lazy",marginLeft:'1%', borderRadius:'10px' }}
+/>
+</div>
+
+<Image 
+  src={i5} 
+  alt="Matematiksel gösterimi: F = (A'B') + (AB) + (AC'D') + (ACD)" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', loading:"lazy",marginLeft:'0%', borderRadius:'10px' }}
+/>
+
+
+İşte Karnaugh haritası bu kadar basittir; sadece sabit kalanları bulur ve yan yana yazarız!
