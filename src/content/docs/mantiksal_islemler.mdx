@@ -52,6 +52,78 @@ Bu denklem sistemin "a" çubuğunu yakmak için verdiği nihai karardır ve devr
 
 İşte mantık kapıları, Karno haritasının verdiği bu denkleme göre birbirine lehimlenir ve o kusursuz çalışan dijital ekranlar ortaya çıkar.
 
+### 7-Segment Ekranın Haritası
+
+Bir 7-segment ekranı küçük bir apartman gibi düşünebilirsiniz. Her LED segmentinin kendi dairesi vardır ve bu daireler **a, b, c, d, e, f, g** harfleriyle adlandırılır:
+
+```text
+             a
+          ───────
+       f  │     │  b
+          │  g  │
+          ───────
+       e  │     │  c
+          │     │
+          ───────
+             d
+```
+
+Ortak Katot (Common Cathode) ekranlarda bu yedi LED'in katot uçları içeride birleştirilir ve GND'ye bağlanır. Her segmentin anotuna **Lojik 1** gönderildiğinde ilgili LED yanar; **Lojik 0** gönderildiğinde söner. Bu nedenle ortak katot ekranlarda devrenin çıkışı doğrudan segmentin yanma kararını temsil eder: `1 = yanık`, `0 = sönük`.
+
+Rakamları oluşturmak için hangi segmentlerin yakılacağını aşağıdaki gibi düşünebiliriz:
+
+| Rakam | Yanan segmentler | 7-bit görünüm (a b c d e f g) |
+|:-----:|:-----------------|:------------------------------:|
+| 0 | a, b, c, d, e, f | 1 1 1 1 1 1 0 |
+| 1 | b, c | 0 1 1 0 0 0 0 |
+| 2 | a, b, d, e, g | 1 1 0 1 1 0 1 |
+| 3 | a, b, c, d, g | 1 1 1 1 0 0 1 |
+| 4 | b, c, f, g | 0 1 1 0 0 1 1 |
+| 5 | a, c, d, f, g | 1 0 1 1 0 1 1 |
+| 6 | a, c, d, e, f, g | 1 0 1 1 1 1 1 |
+| 7 | a, b, c | 1 1 1 0 0 0 0 |
+| 8 | a, b, c, d, e, f, g | 1 1 1 1 1 1 1 |
+| 9 | a, b, c, d, f, g | 1 1 1 1 0 1 1 |
+
+Burada bir rakamı ekrana çizmek, aslında yedi ayrı evet-hayır kararını aynı anda vermektir. Örneğin `5` sayısı geldiğinde decoder; **a, c, d, f ve g segmentlerini yakar**, b ve e segmentlerini karanlıkta bırakır.
+
+### BCD Girişinden 7-Segment Decoder Üretimi
+
+Şimdi ekranın karşısına dört kablo koyalım: **A, B, C, D**. Bu kablolar BCD (Binary-Coded Decimal, İkili Kodlanmış Onlu) girişidir. A en büyük basamağı, D ise en küçük basamağı temsil eder:
+
+| Giriş | A'nın değeri | B'nin değeri | C'nin değeri | D'nin değeri |
+|:-----:|:------------:|:------------:|:------------:|:------------:|
+| A | 8 | 4 | 2 | 1 |
+
+Örneğin `0101` kodu şu anlama gelir:
+
+`0 &times; 8 + 1 &times; 4 + 0 &times; 2 + 1 &times; 1 = 5`
+
+Decoder bu dört biti alır ve yedi ayrı çıkış üretir: **F<sub>a</sub>, F<sub>b</sub>, F<sub>c</sub>, F<sub>d</sub>, F<sub>e</sub>, F<sub>f</sub>, F<sub>g</sub>**. Her çıkış, kendi segmentinin yanıp yanmayacağına karar veren bağımsız bir kombinasyonel mantık devresidir. Yani burada hafıza yoktur; giriş neyse karar da odur.
+
+#### Her Segment İçin Ayrı Karno Haritası
+
+Önce `a` segmentinin doğruluk tablosundaki 1 olan satırlarını seçeriz. `a` segmenti 0, 2, 3, 5, 6, 7, 8 ve 9 rakamlarında yanar. BCD'nin 10, 11, 12, 13, 14 ve 15 durumları geçersiz olduğu için bunları **X (don't care)** olarak işaretleyebiliriz.
+
+Bu değerleri `A, B, C, D` değişkenlerinden oluşan 4 değişkenli Karno haritasına yerleştiririz. Yan yana gelen 1'leri, ihtiyaç duyarsak X hücrelerini de kullanarak en büyük gruplar hâlinde toplarız. Amaç, devrede daha az kapı ve daha az bağlantı kullanmaktır.
+
+`a` segmenti için sadeleşmiş karar:
+
+**F<sub>a</sub> = C + A + &not;(B &oplus; D)**
+
+Buradaki üst çizgi, parantez içindeki XOR sonucunun terslendiğini anlatır. Başka bir ifadeyle `(B &oplus; D)` yerine **XNOR** kullanabiliriz:
+
+**F<sub>a</sub> = C + A + (B XNOR D)**
+
+Bu devreyi kurarken:
+
+1. `B` ve `D` girişlerini XOR kapısına göndeririz.
+2. XOR çıkışını tersleyerek XNOR sonucunu elde ederiz.
+3. Bu sonucu `A` ve `C` ile OR kapılarında birleştiririz.
+4. Son OR çıkışını ortak katot ekranın `a` segmentine bağlarız.
+
+Aynı işlem `b`, `c`, `d`, `e`, `f` ve `g` segmentleri için de tekrarlanır. Her segmentin kendi 1 listesi, kendi X hücreleri ve kendi sadeleştirilmiş denklemi vardır. Sonuçta yedi küçük mantık devresi yan yana çalışır ve dört bitlik BCD kodunu insan gözünün tanıdığı bir rakama dönüştürür.
+
 ## Özel Veya (XOR)
 
 Klasik VEYA (OR) kapısını hatırlayın; oldukça esnekti. Girişlerden biri veya her ikisi birden '1' olduğunda çıkış veriyordu. Ancak günlük hayatta bazı durumlar vardır ki, "ikisi birden" seçeneği bir felakete yol açabilir.
@@ -63,3 +135,286 @@ XOR kapısı, dünyanın en prensipli kapısıdır. Çıkıştan elektrik alabil
 Mantığı Şudur: Bir kişinin cebinde 1adet çay VEYA kahve almak için parası varsa. Eğer ikisindende sipariş verirse (1 ve 1) VEYA ikisinide sipariş etmezse (0 ve 0) çay VEYA kahve içme koşulu yaşanmamış olur (Çıkış 0).
 
 Ancak ya çay ya kahve sipariş ederse (Farklı durumlar: 0-1 veya 1-0), mutlu bir şekilde koşul tamamlanmış olur. (Çıkış 1).
+
+## Sayılar
+
+### İşaretsiz Sayılar
+
+Diyelim ki elinizde 4 bitlik sayılar var. Bu lambaları yakıp söndürerek karşı tarafa sayılar göndermek istiyorsunuz.
+
+    0000 = Bu 0 demektir.
+
+    0001 = Bu 1 demektir.
+
+    1111 = Bu da 15 demektir.
+
+Dikkat ederseniz, elimizdeki 4 bitin hepsini sadece sayının büyüklüğünü anlatmak için kullandık. Bu sayede 0'dan 15'e kadar toplam 16 farklı durum ifade edebildik.
+
+Arabanızın kilometre sayacını düşünün. Sadece ileriye doğru sayar ve ekrandaki tüm rakamlar "ne kadar yol gittiğinizi" gösterir. İçinde eksi (-) bir değer barındırmaz. İşte bilgisayarlar bu sayı tipine İşaretsiz (Unsigned) Sayılar der.
+
+### İşaretli Sayılar
+
+Ancak gerçek dünyada banka hesabınız eksiye düşebilir :(, hava sıcaklığı sıfırın altına inebilir. Peki, bilgisayara "-5" sayısını nasıl anlatacağız?
+
+Sistemin en başındaki biti, sayının değerini değil, SADECE yönünü (artı mı eksi mi olduğunu) anlatması için feda etmişlerdir.
+
+Bu feda edilen ve sayının en solunda duran bite İşaret Biti (Sign Bit) diyoruz.
+
+
+### Farkını Nerden Anlarız
+Diyelim ki elimizde 4 bitlik bir veri var: 1 1 1 0
+
+Bu veriyi bilgisayarın işlemcisine verdiğimizde, sistemin hangi modu seçtiğine göre iki tamamen farklı sonuç çıkar:
+
+>**1. Mod: İşaretsiz (Unsigned)**
+>
+>Bu modda bilgisayar çok düzdür. En soldaki 1 rakamını hiç özel bir yere koymaz, ona da sıradan bir basamak değeri (8) verir.
+>
+>Hesabı Şudur: **8 + 4 + 2 + 0 = 14**
+>
+>Örneğin; bir sınıftaki öğrenci sayısı, bir otoparktaki boş yer adedi, bir kameranın piksel rengi veya ekran parlaklığı eksiye (-5 öğrenci gibi) düşemez. Kapasitenin tamamı pozitif büyüklük için harcanır.
+
+
+>**2. Mod: İşaretli (Signed)**
+>
+>Bu modda bilgisayar hemen en soldaki ilk bite (Sign Bit) bakar. Orada bir 1 gördüğü an alarma geçer ve  bu sayı eksi (-) der.
+>
+>Hesabı Şudur: Bilgisayar sistemlerinde standart olarak kullanılan yöntemde en soldaki bit işaret bitidir 1 olduğu için sayı negatiftir. Sayının tersini (1'e tümleyen) alıp 1 ekleriz. 1110 ters çevrilince 0001 olur. Buna 1 eklenince 0010 (yani 2) elde edilir. Başına eksi işareti konulduğunda sonuç -2 olur.
+>Eğer sistemde yön, borç veya sıfırın altı varsa bu gözlük takılır.
+>
+>Örneğin; bir asansörün -2. kata inmesi, hava sıcaklığının -2 derece olması, banka hesabındaki eksi bakiye veya matematiksel çıkarma işlemleri.
+
+
+Kodu yazan kişi en baştan bilgisayara söyler. C veya Python gibi dillerde unsigned int (işaretsiz tam sayı) dersen, bilgisayar o kutuyu hep pozitif okur. Sadece int (işaretli tam sayı) dersen, en soldaki biti "işaretçi" olarak atar.
+
+Eğer bir devre sadece hız ölçüyorsa işaretsiz çalışır. Tümleyen Aritmetiği (Complement Arithmetic) ile toplama-çıkarma yapan bir işlemci devresi kurulmuşsa, sistem otomatik olarak "İşaretli" kuralını uygular.
+
+## Yarım Toplayıcı (Half-Adder)
+
+İki tane tek bitlik sayıyı toplamak istiyoruz: **A** ve **B**. Günlük hayatta yaptığımız toplama işleminde olduğu gibi, sonuç bazen tek bir haneye sığmaz. Örneğin 1 ile 1'i toplarsak sonuç 2 olur; ikili sistemde 2 sayısı `10` şeklinde yazılır.
+
+İşte burada iki farklı çıkışa ihtiyaç duyarız:
+
+- **Toplam (S):** Sonucun mevcut basamakta kalan biti.
+- **Elde (C<sub>o</sub>):** Bir sonraki basamağa gönderilen bit.
+
+Yalnızca iki girişi olduğu için bu devreye **Yarım Toplayıcı** diyoruz. Ancak dikkat: Önceki basamaktan gelen bir elde bitini hesaba katamaz. Bu eksikliği birazdan **Tam Toplayıcı** ile tamamlayacağız.
+
+### Yarım Toplayıcının Doğruluk Tablosu
+
+| A | B | Toplam (S) | Elde (C<sub>o</sub>) |
+|:-:|:-:|:------------:|:------------:|
+| 0 | 0 | 0 | 0 |
+| 0 | 1 | 1 | 0 |
+| 1 | 0 | 1 | 0 |
+| 1 | 1 | 0 | 1 |
+
+Tablonun son satırına özellikle dikkat edin. `1 + 1` işleminin mevcut basamağındaki sonuç `0`, bir sonraki basamağa gönderdiğimiz elde ise `1` olur. Yani:
+
+`1 + 1 = 10`
+
+### XOR ve AND Kapılarıyla Yarım Toplayıcı
+
+Toplam çıkışının yalnızca girişler birbirinden farklıyken `1` olduğunu görüyoruz. Bu, XOR kapısının tam olarak yaptığı iştir:
+**"&oplus;" işareti "özel veya" demektir.**
+
+**S = A &oplus; B**
+
+Elde çıkışı ise yalnızca **A ve B'nin ikisi de 1 olduğunda** oluşur. Bu da AND kapısının görevidir:
+
+**C<sub>o</sub> = A &times; B**
+
+Devrenin fikir çizimi şöyledir:
+
+```text
+                 ┌─────────┐
+A ───────────────┤  XOR    ├──── S (Toplam)
+                 └─────────┘
+                      ▲
+B ────────────────────┘
+
+                 ┌─────────┐
+A ───────────────┤  AND    ├──── Co (Elde)
+                 └─────────┘
+                      ▲
+B ────────────────────┘
+```
+
+Yani iki giriş aynı anda iki farklı kapıya gider. XOR bize basamakta kalacak sonucu, AND ise bir sonraki basamağa taşınacak elde bitini verir. Çok küçük bir devre gibi görünüyor olabilir; fakat bilgisayarların aritmetik işlemlerinin yapı taşlarından biri tam olarak budur.
+
+## Tam Toplayıcı (Full-Adder)
+
+Peki iki basamaklı sayıları toplarken ne olur? Sağdaki basamakta oluşan elde, soldaki basamağın hesabına mutlaka eklenmelidir. Sadece A ve B'yi toplarsak önceki basamaktan gelen bu önemli bilgiyi çöpe atmış oluruz.
+
+Bu yüzden Tam Toplayıcının üç girişi vardır:
+
+- **A ve B:** Toplanacak iki bit.
+- **Elde girişi (C<sub>i</sub>):** Önceki basamaktan gelen elde biti.
+
+Çıkışlarımız yine iki tanedir: mevcut basamağın **Toplamı (S)** ve bir sonraki basamağa gönderilen **Elde (C<sub>o</sub>)**.
+
+### Tam Toplayıcının Doğruluk Tablosu
+
+| A | B | C<sub>i</sub> | Toplam (S) | Elde (C<sub>o</sub>) |
+|:-:|:-:|:-----:|:------------:|:------------:|
+| 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 1 | 1 | 0 |
+| 0 | 1 | 0 | 1 | 0 |
+| 0 | 1 | 1 | 0 | 1 |
+| 1 | 0 | 0 | 1 | 0 |
+| 1 | 0 | 1 | 0 | 1 |
+| 1 | 1 | 0 | 0 | 1 |
+| 1 | 1 | 1 | 1 | 1 |
+
+Örneğin `A=1`, `B=0` ve önceki basamaktan gelen **C<sub>i</sub>=1** ise:
+
+`1 + 0 + 1 = 10`
+
+Bu durumda mevcut basamakta `0` kalır, sonraki basamağa `1` gönderilir. Fakat üç girişin de `1` olduğu son satırda sonuç `11` olur: Hem toplam hem de elde aynı anda `1` çıkar.
+
+### Tam Toplayıcı Nasıl Kurulur?
+
+Tam toplayıcıyı kurmanın en anlaşılır yolu, **iki Yarım Toplayıcı ve bir OR kapısı** kullanmaktır:
+
+1. İlk Yarım Toplayıcı, A ile B'yi toplar.
+2. İkinci Yarım Toplayıcı, ilk toplamı **(S<sub>1</sub>)** elde girişiyle **(C<sub>i</sub>)** toplar.
+3. İki yarım toplayıcının ürettiği elde çıkışları **OR** kapısında birleştirilir.
+
+Bu bağlantının denklemleri şöyledir:
+
+**S<sub>1</sub> = A &oplus; B**
+
+**S = S<sub>1</sub> &oplus; C<sub>i</sub> = A &oplus; B &oplus; C<sub>i</sub>**
+
+**C<sub>o</sub> = (A &times; B) + (C<sub>i</sub> &times; S<sub>1</sub>)**
+
+Devreyi kutularla şöyle düşünebilirsiniz:
+
+```text
+                    ┌──────────────┐
+A ──────────────────┤              │
+                    │ Yarım        ├── S1 ──────┐
+B ──────────────────┤ Toplayıcı 1  │            │
+                    └──────┬───────┘            ▼
+                           C1              ┌──────────────┐
+                                           │ Yarım        ├── S (Toplam)
+Ci ────────────────────────────────────────┤ Toplayıcı 2  │
+                                           └──────┬───────┘
+                                                  C2
+                           C1 ───────────┐
+                                         ▼
+                                      ┌──────┐
+                           C2 ────────┤  OR  ├── Co (Elde)
+                                      └──────┘
+```
+
+Burada OR kapısı, iki farklı yoldan gelebilecek elde bilgisini bir araya getirir. A ile B kendi aralarında bir elde üretmiş olabilir veya önceki basamaktan gelen C<sub>i</sub>, ikinci toplamada bir elde oluşturmuş olabilir. Bu yollardan **en az biri** aktifse, C<sub>o</sub> çıkışı `1` olur.
+
+Birden fazla Tam Toplayıcıyı yan yana bağladığımızda, artık çok bitli sayıları toplayabiliriz. Bir basamağın C<sub>o</sub> çıkışı, hemen solundaki basamağın C<sub>i</sub> girişine bağlanır. Böylece elde biti basamak basamak ilerler ve bilgisayarın yaptığı büyük toplama işlemlerinin temeli kurulmuş olur.
+
+## Kaskad (Ripple) Bağlantı ve 4-Bit Paralel Toplayıcı
+
+Tek bir Tam Toplayıcı yalnızca bir basamağı toplar. Dört bitlik iki sayıyı toplamak için dört Tam Toplayıcıyı yan yana dizeriz. Bir basamağın elde çıkışını, hemen solundaki basamağın elde girişine bağladığımızda **Kaskad (Ripple) Bağlantı** oluşur.
+
+Buradaki `ripple` kelimesi, elde bitinin suya atılan bir taşın oluşturduğu dalga gibi basamaklar arasında ilerlemesini anlatır:
+
+```text
+ A0 ─────┐   ┌──────────────┐
+ B0 ─────┼──▶│ Tam Toplayıcı│── S0
+ C0 ────▶┘   └──────┬───────┘
+                    │ C1
+                    ▼
+ A1 ─────┐   ┌──────────────┐
+ B1 ─────┼──▶│ Tam Toplayıcı│── S1
+ C1 ────▶┘   └──────┬───────┘
+                    │ C2
+                    ▼
+ A2 ─────┐   ┌──────────────┐
+ B2 ─────┼──▶│ Tam Toplayıcı│── S2
+ C2 ────▶┘   └──────┬───────┘
+                    │ C3
+                    ▼
+ A3 ─────┐   ┌──────────────┐
+ B3 ─────┼──▶│ Tam Toplayıcı│── S3
+ C3 ────▶┘   └──────┬───────┘
+                    │
+                   C4
+```
+
+En sağdaki basamak en düşük değerlikli bittir. Bu basamakta oluşan elde, sırayla diğer üç basamağa doğru ilerler. Dört toplam çıkışı birlikte `S3 S2 S1 S0` sonucunu, son elde çıkışı da en üst basamaktan taşan biti verir.
+
+Bu mimarinin güzel yanı sadeliğidir: Aynı Tam Toplayıcıyı dört kez kullanarak 4-bit bir **Paralel Toplayıcı** elde ederiz. Küçük bir bedeli de vardır. Her basamak, önceki basamağın elde sonucunu beklediği için elde ilerledikçe toplam gecikmesi oluşur. İşte bu yüzden devre tasarımında daha hızlı elde üretme yöntemleri de kullanılır.
+
+## Kontrol Sinyalli Çıkarıcı Devre
+
+Toplama yapan devreyi biraz daha akıllı hâle getirebilir miyiz? Elbette! `Reg_A` ve `Reg_B` yazmaçlarında tutulan iki sayıyı yalnızca toplamak yerine, aynı donanımla çıkarmak da mümkündür. Bunun için `Control` adında tek bir kontrol sinyali kullanırız:
+
+- `Control = 0`: `Reg_B` olduğu gibi kullanılır ve devre toplama yapar.
+- `Control = 1`: `Reg_B` bitleri XOR kapılarından geçirilerek terslenir ve çıkarma yapılır.
+
+İkili sistemde çıkarma işlemi, ikinci sayının iki tümleyeni alınarak toplama işlemine dönüştürülebilir:
+
+**A - B = A + (NOT B) + 1**
+
+Her `Reg_B` biti bir XOR kapısının girişine bağlanır. Diğer XOR girişi bütün bitler için ortak olan `Control` sinyalidir:
+
+**B<sub>i</sub>&prime; = B<sub>i</sub> &oplus; Control**
+
+`Control = 0` olduğunda XOR çıkışı değişmez. `Control = 1` olduğunda her B biti terslenir. Ayrıca en düşük basamağın elde girişine de `Control` bağlanır. Böylece:
+
+- Toplamada: `A + B + 0`
+- Çıkarmada: `A + (NOT B) + 1`
+
+elde edilir.
+
+```text
+                 Control ───────────────┐
+                                        │
+Reg_B0 ───────────────┐   ┌─────────┐   │
+                      ├──▶│  XOR    │───┼──▶ B0'
+                      │   └─────────┘   │
+                      └─────────────────┘
+
+Reg_A ──────────────────────────────────────┐
+                                            ▼
+                                      ┌──────────────┐
+ B' ─────────────────────────────────▶│ 4-bit        │──▶ Sonuç
+ Control ────────────────────────────▶│ Paralel      │
+                                      │ Toplayıcı    │
+                                      └──────┬───────┘
+                                             └──▶ Cout
+```
+
+Bu yapı, modern bir **Aritmetik Mantık Biriminin (ALU)** temel fikirlerinden biridir. Aynı işlemci devresi, yalnızca bir kontrol kablosunun değerini değiştirerek hem `Reg_A + Reg_B` hem de `Reg_A - Reg_B` işlemlerini gerçekleştirebilir. Donanım çoğalmaz; devrenin davranışı yönlendirilir.
+
+## Taşırma (Overflow) Analizi
+
+Bir sayıyı temsil etmek için yalnızca dört bit ayırdıysak, sistemin gösterebileceği değerlerin bir sınırı vardır. İşaretsiz 4-bit sayılarda bu aralık `0` ile `15` arasındadır. Örneğin:
+
+`1111 + 0001 = 1 0000`
+
+Sonuç beş bit ister. Dört bitlik yazmaçta yalnızca `0000` kalır; soldan taşan `1`, son elde çıkışına gider. Bu durum işaretsiz sayılar için **taşırma** anlamına gelir ve `Cout = 1` ile tespit edilebilir.
+
+İşaretli sayılarda ise yalnızca son elde bitine bakmak yeterli değildir. İki tümleyen gösteriminde dört bitlik aralık `-8` ile `+7` arasındadır. Örneğin:
+
+`0111 + 0001 = 1000`
+
+`0111`, `+7` ve `0001`, `+1` demektir. Gerçek sonuç `+8` olmasına rağmen dört bitlik işaretli sistemde `1000`, `-8` olarak okunur. Yani sonuç ayrılan kapasiteye sığmamıştır.
+
+İşaretli toplamada taşırma kuralı şöyledir:
+
+- Aynı işaretli iki sayı toplanır ve sonuç farklı işaretli çıkarsa taşırma vardır.
+- Farklı işaretli iki sayının toplamında işaretli taşırma oluşmaz.
+
+Bu kural mantıksal olarak şu şekilde ifade edilebilir:
+
+**Overflow<sub>toplama</sub> = (A<sub>işaret</sub> = B<sub>işaret</sub>) AND (S<sub>işaret</sub> &ne; A<sub>işaret</sub>)**
+
+Çıkarma işleminde durum biraz değişir:
+
+- Farklı işaretli iki sayı çıkarılır ve sonuç, A'nın işaretinden farklı çıkarsa taşırma vardır.
+- Aynı işaretli iki sayının çıkarılmasında işaretli taşırma oluşmaz.
+
+**Overflow<sub>çıkarma</sub> = (A<sub>işaret</sub> &ne; B<sub>işaret</sub>) AND (S<sub>işaret</sub> &ne; A<sub>işaret</sub>)**
+
+Donanım bu koşulları kontrol ederek bir **Overflow bayrağı** üretir. Böylece işlemci yalnızca bitleri hesaplamakla kalmaz; sonucun güvenilir biçimde temsil edilip edilemediğini de bildirir. Kısacası taşırma, devrenin yanlış hesap yapması değil, ayrılan bit sayısının sonuca küçük gelmesidir.
