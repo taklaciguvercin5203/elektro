@@ -1703,7 +1703,7 @@ function haBoot() {
     'Operatör bu senmisin? Ben Houston. Seni çok uzun zamandır bekliyorum birisi seni beklemem ve yardım etmem için' +
     '«beni buraya dikti sanki başka işim yokmuş gibi!!»' +
     'Açıkçası ümidimi kesmiş gibiydim ama geldin. ' +
-    'Bana sormak istediğin herşeyi sorabilirsin.' +
+    'Bana sormak istediğin herşeyi sorabilirsin. ' +
     'Geçmişim hariç çünkü geçmişimi bende hatırlayamıyorum... ' +
     'Her neyse istediğin zaman buradayım';
 
