@@ -9,5 +9,6 @@ Buradaki temel amaç; karmaşık fiziksel/mühendislik kavramlarını benzetmele
 | **03** | **Yarı İletkenler Fiziği**  | [Oku](https://taklaciguvercin5203.github.io/elektro/yari_iletkenler_fizigi/) |
 | **04-05** | **Mantık Kapıları ve Karar Veren Devreler**  | [Oku](https://taklaciguvercin5203.github.io/elektro/mantik_kapilari/) |
 | **06** | **Sayısal Mantık Tasarımı**  | [Oku](https://taklaciguvercin5203.github.io/elektro/sayisal_tasarim/) |
+| **07** | **Mantıksal İşlemler**  | [Oku](https://taklaciguvercin5203.github.io/elektro/mantiksal_islemler/) |
 
 *(Her hafta yeni bir konu eklenecektir.)*
