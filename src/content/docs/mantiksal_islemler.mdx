@@ -359,4 +359,47 @@ elde edilir.
   style={{ maxWidth: '600px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'5px' }}
 />
 
-Bu yapı, modern bir **Aritmetik Mantık Biriminin (ALU)** temel fikirlerinden biridir. Aynı işlemci devresi, yalnızca bir kontrol kablosunun değerini değiştirerek hem `Yazmac_A + Reg_B` hem de `Yazmac_A - Yazmac_B` işlemlerini gerçekleştirebilir. Donanım çoğalmaz; devrenin davranışı yönlendirilir.
+Bu yapı, modern bir **Aritmetik Mantık Biriminin (ALU)** temel fikirlerinden biridir. Aynı işlemci devresi, yalnızca bir kontrol kablosunun değerini değiştirerek hem `Yazmac_A + Yazmac_B` hem de `Yazmac_A - Yazmac_B` işlemlerini gerçekleştirebilir. Donanım çoğalmaz; devrenin davranışı yönlendirilir.
+
+
+## Taşma (Overflow)
+
+Bu zamana kadar hep 4 bitlik sayılar ile işlem yaptık sonuç ya 5 bitlik veya 5'den fazla bir değer çıksa ne olucaktı?
+
+Taşma (Overflow), bilgisayarın hesaplama sonucunu kaydetmek için ayırdığı "kutuya" sığmayacak kadar büyük bir sayı elde ettiğinde, o sonucun bozulması ve yanlış çıkması durumudur.
+
+En basit tabirle: 1 litrelik bir sürahiye 1.5 litre su doldurmaya çalışmaktır. Su taşar ve elinizdeki su miktarı sizin beklediğiniz 1.5 litre olmaz.
+
+Bilgisayarlardaki donanım karşılığı tam olarak şöyledir:
+Diyelim ki sistemimiz sadece 4 bitlik bir hafıza kutusuna sahip. Bu kutuya sığabilecek en büyük işaretsiz sayı 15'tir (1111).
+
+Eğer 15 ile 1'i toplarsanız, matematiksel olarak 16 elde etmeniz gerekir. 16 sayısının ikili (binary) sistemdeki karşılığı 5 bitlik bir sayıdır: 10000.
+
+Fakat bilgisayarın elinde sadece 4 bitlik (4 hanelik) yer vardır! Bu yüzden en soldaki o kritik "1" rakamı kutudan dışarı taşar, havaya karışıp kaybolur. Sistemin içine sadece sağdaki dört sıfır (0000) sığar. İşlemin sonunda bilgisayar ekrana bakar ve gayet ciddi bir şekilde "15 + 1 = 0" der. Kapasite aşıldığı için sonuç tamamen hatalı çıkmıştır.
+
+**İşaretli (Artılı/Eksili) sayılarda bu hata çok daha garip görünür:**
+4 bitlik işaretli bir sistemin kapasitesi en fazla +7'ye kadar çıkabilir. Eğer bilgisayara +5 ile +4'ü topla derseniz, sonuç +9 etmelidir.
+
+Ancak +9 bu dar kutuya sığmadığı için sayının en solundaki "İşaret Biti" (Sign Bit) artarak değişir. Bilgisayar iki pozitif sayıyı toplamasına rağmen ekrana anlamsız bir şekilde negatif bir sayı  yazar.
+  0 1 0 1  (+5)
++ 0 1 0 0  (+4)
+----------
+  1 0 0 1  
+
+İşaretsiz sayılarda işlem yapıcak olsaydık normalde 9 olması gereken sonuç burada şu adımları izler:
+
+Bilgisayar elindeki sonuca bakar: 1 0 0 1.
+
+Bilgisayar kendi kendine şöyle düşünür:"Ben şu an işaretli (signed) moddayım. Bana verilen kurala göre en soldaki bite bakmalıyım. Bakıyorum... Orada 1 yazıyor! Demek ki bu sayı kesinlikle negatif!"
+
+Bilgisayar elindeki 1001 sayısının negatif olduğunu gördüğü an, onun değerini bulmak için standart İkiye Tümleyen (2's Complement) kuralını işletir:
+
+**Sayının tersini alır: 1001 -> 0110 olur.**
+
+**Üzerine 1 ekler: 0110 + 1 = 0111 olur.**
+
+**0111 onluk sistemde 7 demektir.**
+
+**Başlangıçta en solda 1 olduğu için başına eksi koyar: Sonuç -7 çıkar.**
+
+Kısacası Overflow, "sayı hafızaya sığmadı, hesap patladı ve ortaya matematiksel olarak mantıksız bir sonuç çıktı" demektir. Çoğu modern programlama dili veya işlemci, bu durum yaşandığında sistemi uyararak "Overflow Hatası (Taşma Hatası)" verir ve işlemin yanlış olduğunu bildirir.
