@@ -5,72 +5,117 @@ sidebar:
   order: 7
 ---
 
+import {Image} from 'astro:assets';
+import i1 from '/src/assets/6/7SegDisplay.jpg'
+import i2 from '/src/assets/6/LED_Pinout.png'
+import i3 from '/src/assets/6/1den_9a_kadasayilarin_display_gosterimi.png'
+
+
 # Mantıksal ve Aritmetik İşlemler
+## Özel Veya (XOR)
+
+Klasik VEYA (OR) kapısını hatırlayın; girişlerden en az biri `1` olduğunda çıkış veriyordu. XOR ise yalnızca **girişler birbirinden farklıysa** `1` üretir. Yani `0-1` ve `1-0` durumlarında çıkış `1`, `0-0` ve `1-1` durumlarında çıkış `0` olur.
+
+Örneğin bir restoranda “çay **veya** kahve istiyorum” dediğinizde, XOR mantığı ikisinden tam olarak birinin seçilmesini ister. İkisini birden seçmek de hiçbirini seçmemek de koşulu sağlamaz.
+
+| A | B | A &oplus; B |
+|:-:|:-:|:----------:|
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 0 |
+
+XOR, toplama devrelerinde de kritik bir görev üstlenir: İki bitin toplamının mevcut basamakta kalacak kısmını üretir. Bu bağlantıyı yarım toplayıcı bölümünde ayrıntılı olarak kullanacağız.
+
 ## 7 Segment Ekran
-Dijital saatlerimizde, mikrodalga fırınlarımızda veya eski hesap makinelerinde gördüğümüz o köşeli rakamları bir düşünün. Bilgisayarlar veya dijital sistemler bir sayıyı ekrana çizerken fırça kullanmazlar; bunun yerine 7 adet küçük ışık çubuğunu (LED) zekice bir araya getirerek bir yapboz oluştururlar.
+Dijital saatlerimizde, mikrodalga fırınlarımızda veya eski hesap makinelerinde gördüğümüz o köşeli rakamları bir düşünün. Bilgisayarlar veya dijital sistemler bir sayıyı ekrana çizerken fırça kullanmazlar; bunun yerine **7 adet küçük ışık çubuğunu (LED)** zekice bir araya getirerek bir yapboz oluştururlar.
 
-İşte bu donanıma 7-Segment Ekran (Display) diyoruz. Saat yönünde dönen bir isimlendirme kuralıyla bu çubuklara a, b, c, d, e, f ve tam ortadakine de g adı verilir.
+İşte bu donanıma **7-Segment Ekran (Display)** diyoruz. Saat yönünde dönen bir isimlendirme kuralıyla bu çubuklara a, b, c, d, e, f ve tam ortadakine de g adı verilir.
 
-    Mantığı Şudur: Ekranda "8" rakamını görmek isterseniz sistem tüm çubuklara elektrik gönderir. Eğer sadece "1" rakamını görmek isterseniz, sistem sadece sağ taraftaki b ve c çubuklarına elektrik verir, diğerlerini karanlıkta bırakır.
+    Mantığı Şudur: Ekranda **"8"** rakamını görmek isterseniz sistem **tüm çubuklara elektrik gönderir.** Eğer sadece "1" rakamını görmek isterseniz, sistem sadece **sağ taraftaki b ve c çubuklarına elektrik verir**, diğerlerini karanlıkta bırakır.
 
-Bu Çubuklar Nasıl Yakılır? (Ortak Katot Sistemi)
+### Bu Çubuklar Nasıl Yakılır? (Ortak Katot Sistemi)
 
-İçeride 7 farklı LED lamba olduğunu biliyoruz. Her lambanın çalışması için bir artı (+) bir de eksi (-) kablosu olması gerekir. 7 lamba için 14 kablo çekmek inanılmaz bir kablo karmaşası yaratırdı!
+İçeride 7 farklı LED lamba olduğunu biliyoruz. Her lambanın çalışması için bir **artı (+)** bir de **eksi (-)** kablosu olması gerekir. 7 lamba için 14 kablo çekmek inanılmaz bir kablo karmaşası yaratırdı!
 
-Bunu çözmek için mühendisler Ortak Katot (Common Cathode) adını verdikleri zekice bir yöntem buldular:
-İçerideki tüm lambaların eksi (-) kablolarını (katotlarını) birleştirip tek bir kablo olarak toprağa (GND/Sıfır Volt) bağladılar. Geriye sadece 7 adet artı (+) uç kaldı.
+Bunu çözmek için mühendisler **Ortak Katot (Common Cathode)** adını verdikleri zekice bir yöntem buldular:
+İçerideki tüm lambaların **eksi (-) kablolarını (katotlarını)** birleştirip tek bir kablo olarak toprağa (GND/Sıfır Volt) bağladılar. Geriye sadece **7 adet artı (+)** uç kaldı.
 
-    Nasıl Çalışır? Artık bir segmenti (örneğin 'a' çubuğunu) yakmak çok basittir. O çubuğun girişine elektrik (Lojik 1 / 5V) verirsiniz, lamba yanar. Elektriği kesersiniz (Lojik 0 / 0V), lamba söner.
+Artık bir segmenti (örneğin 'a' çubuğunu) yakmak çok basittir. O çubuğun girişine elektrik (Lojik 1 / 5V) verirsiniz, lamba yanar. Elektriği kesersiniz (Lojik 0 / 0V), lamba söner.
 
-Zekayı Devreye Sokmak: Kod Çözücüler (Decoder)
+### Kod Çözücüler (Decoder)
 
-Sistemimizin beyninde 1'ler ve 0'lar dolaşıyor. 4-bitlik bir bilgisayar kodunu (örneğin 0101 yani 5 sayısını) aldığımızda, ekranın anında "ha, benim a, c, d, f ve g segmentlerini yakmam lazım" demesi gerekir. İşte bu çeviri işlemini yapan karar verici devreye Kod Çözücü (Decoder) diyoruz.
+Sistemimizin beyninde 1'ler ve 0'lar dolaşıyor. 4-bitlik bir bilgisayar kodunu **(örneğin 0101 yani 5 sayısını)** aldığımızda, ekranın anında **"ha, benim a, c, d, f ve g segmentlerini yakmam lazım"** demesi gerekir. İşte bu çeviri işlemini yapan karar verici devreye **Kod Çözücü (Decoder)** diyoruz.
 
-Peki bu Kod Çözücü hangi çubuğun ne zaman yanacağına nasıl karar verir? İşte burada sahneye Karno Haritaları (K-Map) çıkar.
-Karno Haritaları: Karar Veren Matematik
+#### Peki bu Kod Çözücü hangi çubuğun ne zaman yanacağına nasıl karar verir?
 
-Karno haritası, bir mantık devresini kurarken kullanacağımız en az parçayı (en ucuz ve en sade devreyi) bulmamızı sağlayan görsel bir haritadır. Ekrandaki 7 çubuğun her biri için ayrı ayrı bir harita çizmek zorundayız.
+İşte burada sahneye Karno Haritaları (K-Map) çıkar.
 
-Örnek olarak sadece en üstteki 'a' çubuğunu ele alalım.
-'a' çubuğu 0, 2, 3, 5, 7, 8 ve 9 rakamlarında yanmalıdır (1).
-1 ve 4 rakamlarında ise sönük kalmalıdır (0).
+Karno haritası, bir mantık devresini kurarken kullanacağımız en az parçayı bulmamızı sağlayan görsel bir haritadır. Ekrandaki yedi çubuğun her biri için ayrı bir harita çizilir.
+
+Örnek olarak sadece en üstteki **'a'** çubuğunu ele alalım.
+
+**'a' çubuğu 0, 2, 3, 5, 6, 7, 8 ve 9 rakamlarında yanmalıdır (1).**
+
+**1 ve 4 rakamlarında ise sönük kalmalıdır (0).**
 
 Bu değerleri Karno haritasındaki karelere yerleştiririz ve yan yana gelen 1'leri gruplayarak bir denklem elde ederiz.
 
-    Fark Etmez (Don't Care) Jokerleri Nedir?
-    4-bitlik bir bilgisayar sistemi (A, B, C, D) toplamda 16 farklı sayı üretebilir (0'dan 15'e kadar). Fakat bizim ekranımız sadece 0 ile 9 arasındaki rakamları gösterebilir!
-    Peki sisteme 10, 11 veya 15 gelirse ne olacak?
-    Cevap basit: Hiçbir zaman gelmeyecek! Günlük kullanımda hesap makinesinin tek hanesinde "12" göremezsiniz. Bu yüzden 10'dan 15'e kadar olan durumlara haritada "d" veya "X" (Fark Etmez) koyarız. Bu X'ler bizim devredeki jokerlerimizdir. Onları 1 gibi sayarak devremizi çok daha fazla sadeleştirebiliriz.
+Değişkenleri satırlarda `AB`, sütunlarda `CD` olacak şekilde Gray kodu sırasıyla (`00, 01, 11, 10`) yerleştirelim. `10`–`15` arası geçersiz BCD kodlarını `X` (don't care) kabul edersek örnek harita şöyledir:
 
-'a' Segmentinin Nihai Kararı (Denklem)
+| AB \ CD | 00 | 01 | 11 | 10 |
+|:--------:|:--:|:--:|:--:|:--:|
+| **00** | 1 | 0 | 1 | 1 |
+| **01** | 0 | 1 | 1 | 1 |
+| **11** | X | X | X | X |
+| **10** | 1 | 1 | X | X |
 
-Karno haritasında 1'leri ve o sihirli 'X' jokerlerini grupladığımızda ortaya çıkan sonuç şudur:
+Haritadaki komşu `1` ve `X` hücrelerini mümkün olan en büyük gruplar hâlinde birleştiririz. Bu gruplandırma sonucunda `a` segmenti için sadeleşmiş ifade:
 
-Fa = C + A + (B ⊕ D)'
+**F<sub>a</sub> = C + A + (B XNOR D)**
 
-Bu denklem sistemin "a" çubuğunu yakmak için verdiği nihai karardır ve devre elemanlarına şu talimatı verir:"C kablosu gelirse VEYA A kablosu gelirse VEYA (B ve D kabloları ÖZEL VEYA DEĞİL (XNOR) kapısından geçerse) en üstteki 'a' ışığını yak!"
+şeklinde yazılabilir. Burada XNOR, iki giriş aynı olduğunda `1` üreten kapıdır. Bu örnek, Karno haritasının doğruluk tablosundaki satırları daha az kapıyla kurulabilecek bir devre denklemine nasıl dönüştürdüğünü gösterir.
 
-İşte mantık kapıları, Karno haritasının verdiği bu denkleme göre birbirine lehimlenir ve o kusursuz çalışan dijital ekranlar ortaya çıkar.
+#### Fark Etmez (Don't Care) Jokerleri Nedir?
+
+4-bitlik bir bilgisayar sistemi (A, B, C, D) toplamda 16 farklı sayı üretebilir (0'dan 15'e kadar). Fakat bizim ekranımız sadece 0 ile 9 arasındaki rakamları gösterebilir!
+
+Peki sisteme 10, 11 veya 15 gelirse ne olacak?
+
+Cevap basit: Hiçbir zaman gelmeyecek! Günlük kullanımda hesap makinesinin tek hanesinde "12" göremezsiniz. Bu yüzden 10'dan 15'e kadar olan durumlara haritada "d" veya "X" (Fark Etmez) koyarız. Bu X'ler bizim devredeki jokerlerimizdir. Onları 1 gibi sayarak devremizi çok daha fazla sadeleştirebiliriz.
+
+Karno haritasından çıkan bu denklem, `C` veya `A` aktif olduğunda ya da `B` ile `D` aynı olduğunda `a` segmentini yakar. Aynı işlem `b`, `c`, `d`, `e`, `f` ve `g` segmentleri için de tekrarlanır; her segmentin kendi 1 listesi, jokerleri ve sadeleştirilmiş denklemi vardır.
 
 ### 7-Segment Ekranın Haritası
 
 Bir 7-segment ekranı küçük bir apartman gibi düşünebilirsiniz. Her LED segmentinin kendi dairesi vardır ve bu daireler **a, b, c, d, e, f, g** harfleriyle adlandırılır:
 
-```text
-             a
-          ───────
-       f  │     │  b
-          │  g  │
-          ───────
-       e  │     │  c
-          │     │
-          ───────
-             d
-```
+<div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
+<Image 
+  src={i1} 
+  alt="Lojik Tablo" 
+  quality="mid"
+  style={{ maxWidth: '140px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'10px' }}
+/>
 
-Ortak Katot (Common Cathode) ekranlarda bu yedi LED'in katot uçları içeride birleştirilir ve GND'ye bağlanır. Her segmentin anotuna **Lojik 1** gönderildiğinde ilgili LED yanar; **Lojik 0** gönderildiğinde söner. Bu nedenle ortak katot ekranlarda devrenin çıkışı doğrudan segmentin yanma kararını temsil eder: `1 = yanık`, `0 = sönük`.
+<Image 
+  src={i2} 
+  alt="Lojik Tablo" 
+  quality="mid"
+  style={{ maxWidth: '115px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'10px' }}
+/>
+</div>
+
+Ortak Katot (com) ekranlarda bu yedi LED'in katot uçları içeride birleştirilir ve GND'ye bağlanır. Her segmentin anotuna **Lojik 1** gönderildiğinde ilgili LED yanar; **Lojik 0** gönderildiğinde söner. Bu nedenle ortak katot ekranlarda devrenin çıkışı doğrudan segmentin yanma kararını temsil eder: `1 = yanık`, `0 = sönük`.
 
 Rakamları oluşturmak için hangi segmentlerin yakılacağını aşağıdaki gibi düşünebiliriz:
+
+<Image 
+  src={i3} 
+  alt="Lojik Tablo" 
+  quality="mid"
+  style={{ maxWidth: '700px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'10px' }}
+/>
 
 | Rakam | Yanan segmentler | 7-bit görünüm (a b c d e f g) |
 |:-----:|:-----------------|:------------------------------:|
@@ -97,44 +142,9 @@ Burada bir rakamı ekrana çizmek, aslında yedi ayrı evet-hayır kararını ay
 
 Örneğin `0101` kodu şu anlama gelir:
 
-`0 &times; 8 + 1 &times; 4 + 0 &times; 2 + 1 &times; 1 = 5`
+`(0 × 8) + (1 × 4) + (0 × 2) + (1 × 1) = 5`
 
 Decoder bu dört biti alır ve yedi ayrı çıkış üretir: **F<sub>a</sub>, F<sub>b</sub>, F<sub>c</sub>, F<sub>d</sub>, F<sub>e</sub>, F<sub>f</sub>, F<sub>g</sub>**. Her çıkış, kendi segmentinin yanıp yanmayacağına karar veren bağımsız bir kombinasyonel mantık devresidir. Yani burada hafıza yoktur; giriş neyse karar da odur.
-
-#### Her Segment İçin Ayrı Karno Haritası
-
-Önce `a` segmentinin doğruluk tablosundaki 1 olan satırlarını seçeriz. `a` segmenti 0, 2, 3, 5, 6, 7, 8 ve 9 rakamlarında yanar. BCD'nin 10, 11, 12, 13, 14 ve 15 durumları geçersiz olduğu için bunları **X (don't care)** olarak işaretleyebiliriz.
-
-Bu değerleri `A, B, C, D` değişkenlerinden oluşan 4 değişkenli Karno haritasına yerleştiririz. Yan yana gelen 1'leri, ihtiyaç duyarsak X hücrelerini de kullanarak en büyük gruplar hâlinde toplarız. Amaç, devrede daha az kapı ve daha az bağlantı kullanmaktır.
-
-`a` segmenti için sadeleşmiş karar:
-
-**F<sub>a</sub> = C + A + &not;(B &oplus; D)**
-
-Buradaki üst çizgi, parantez içindeki XOR sonucunun terslendiğini anlatır. Başka bir ifadeyle `(B &oplus; D)` yerine **XNOR** kullanabiliriz:
-
-**F<sub>a</sub> = C + A + (B XNOR D)**
-
-Bu devreyi kurarken:
-
-1. `B` ve `D` girişlerini XOR kapısına göndeririz.
-2. XOR çıkışını tersleyerek XNOR sonucunu elde ederiz.
-3. Bu sonucu `A` ve `C` ile OR kapılarında birleştiririz.
-4. Son OR çıkışını ortak katot ekranın `a` segmentine bağlarız.
-
-Aynı işlem `b`, `c`, `d`, `e`, `f` ve `g` segmentleri için de tekrarlanır. Her segmentin kendi 1 listesi, kendi X hücreleri ve kendi sadeleştirilmiş denklemi vardır. Sonuçta yedi küçük mantık devresi yan yana çalışır ve dört bitlik BCD kodunu insan gözünün tanıdığı bir rakama dönüştürür.
-
-## Özel Veya (XOR)
-
-Klasik VEYA (OR) kapısını hatırlayın; oldukça esnekti. Girişlerden biri veya her ikisi birden '1' olduğunda çıkış veriyordu. Ancak günlük hayatta bazı durumlar vardır ki, "ikisi birden" seçeneği bir felakete yol açabilir.
-
-Örneğin; bir restorana gittiniz ve garsona "Çay VEYA kahve istiyorum" dediniz. Garson size ya çay getirmelidir ya da kahve. Eğer ikisini aynı bardağa döküp getirirse bu hiç hoş olmaz! İşte bu kesin ayrımı yapan sisteme XOR diyoruz.
-
-XOR kapısı, dünyanın en prensipli kapısıdır. Çıkıştan elektrik alabilmeniz (Lojik 1) için girişlerin kesinlikle birbirinden farklı olması gerekir.
-
-Mantığı Şudur: Bir kişinin cebinde 1adet çay VEYA kahve almak için parası varsa. Eğer ikisindende sipariş verirse (1 ve 1) VEYA ikisinide sipariş etmezse (0 ve 0) çay VEYA kahve içme koşulu yaşanmamış olur (Çıkış 0).
-
-Ancak ya çay ya kahve sipariş ederse (Farklı durumlar: 0-1 veya 1-0), mutlu bir şekilde koşul tamamlanmış olur. (Çıkış 1).
 
 ## Sayılar
 
@@ -185,9 +195,11 @@ Bu veriyi bilgisayarın işlemcisine verdiğimizde, sistemin hangi modu seçtiğ
 >Örneğin; bir asansörün -2. kata inmesi, hava sıcaklığının -2 derece olması, banka hesabındaki eksi bakiye veya matematiksel çıkarma işlemleri.
 
 
-Kodu yazan kişi en baştan bilgisayara söyler. C veya Python gibi dillerde unsigned int (işaretsiz tam sayı) dersen, bilgisayar o kutuyu hep pozitif okur. Sadece int (işaretli tam sayı) dersen, en soldaki biti "işaretçi" olarak atar.
+Kodu yazan kişi en baştan bilgisayara söyler. **C veya Python** gibi dillerde **unsigned int (işaretsiz tam sayı)** dersen, bilgisayar o kutuyu hep pozitif okur. **Sadece int (işaretli tam sayı)** dersen, en soldaki biti **"işaretçi"** olarak atar.
 
-Eğer bir devre sadece hız ölçüyorsa işaretsiz çalışır. Tümleyen Aritmetiği (Complement Arithmetic) ile toplama-çıkarma yapan bir işlemci devresi kurulmuşsa, sistem otomatik olarak "İşaretli" kuralını uygular.
+Eğer bir devre sadece hız ölçüyorsa işaretsiz çalışır.
+
+Tümleyen Aritmetiği (Complement Arithmetic) ile toplama-çıkarma yapan bir işlemci devresi kurulmuşsa, sistem otomatik olarak **"İşaretli"** kuralını uygular.
 
 ## Yarım Toplayıcı (Half-Adder)
 
