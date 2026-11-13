@@ -8,20 +8,23 @@ Dil: Türkçe (tr)
 
 ## İçerik Haritası (Dokümantasyon)
 
-Tüm MDX tabanlı dökümanlar `src/content/docs/temel-ve-dijital-elektronik/` altında yer alır ve Starlight sidebar'ı üzerinden sıralı olarak erişilebilir.
+Tüm MDX tabanlı dökümanlar `src/content/docs/` altında yer alır ve Starlight sidebar'ı üzerinden sıralı olarak erişilebilir.
 
-### [İletkenlik ve Yarı İletkenler](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/)
+### [İletkenlik ve Yarı İletkenler](https://taklaciguvercin5203.github.io/elektro/)
 Elektron, iletken, yalıtkan ve yarı iletken malzemelerin temel çalışma mantığı. Transistörlerin atası olan vakumlu triyottan başlayarak BJT ve FET (JFET, MOSFET, IGBT) transistör türlerine kadar geniş bir kapsam sunar. Örnek devreler: MOSFET ile LED yakma, mantıksal anahtarlama devreleri.
 
-### [Sayı Sistemleri ve Devreler](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/sayi_sistemleri_ve_devreler)
+### [Sayı Sistemleri ve Devreler](https://taklaciguvercin5203.github.io/elektro/sayi_sistemleri_ve_devreler)
 İkili sayı sistemlerinden başlayarak gerilim, akım, Kirchhoff kanunları ve pasif devre elemanları (R, L, C) üzerine temel elektrik ve elektronik devre analizini anlar. İçerisinde interaktif bir sayı dönüştürücü bileşeni ve Ohm Kanonu örnekleri (insan vücut direnci üzerinden güvenlik hesabı) bulunmaktadır.
 
-### [Yarı İletkenler Fiziği, Diyotlar ve Güç Doğrultma Sistemleri](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/yari_iletkenler_fizigi)
+### [Yarı İletkenler Fiziği, Diyotlar ve Güç Doğrultma Sistemleri](https://taklaciguvercin5203.github.io/elektro/yari_iletkenler_fizigi)
 Kirchhoff kanunları, kondansatörler (kova benzetmesi), silikon atom yapısı, PN birleşimi, n-tip/p-tip yarı iletkenler, diyot IV özellikleri, ideal diyot, yarım dalga ve tam dalga köprü doğrultucular, kapasitörlü süzme (filtreleme) sistemi.
 
-### [Mantık Kapıları ve Karar Veren Devreler](https://taklaciguvercin5203.github.io/elektro/temel-ve-dijital-elektronik/mantik_kapilari)
+### [Mantık Kapıları ve Karar Veren Devreler](https://taklaciguvercin5203.github.io/elektro/mantik_kapilari)
 Diyotlarla OR, AND kapılarının kurulumu, diyot sınırları (0.7V giriş ücreti, NOT kapısı imkansızlığı), transistörler ile bu sınırların aşılması. BJT (NPN/PNP) çalışma prensipleri, kazanç (Beta), çalışma bölgeleri (kesim, doyum, aktif), regülatör devreleri.
 
+### [Sayısal Tasarım Rehberi: Boole Cebri, K-Map ve Bileşik Devreler](https://taklaciguvercin5203.github.io/elektro/sayisal_tasarim) Boole cebri kurallarından Minterm/Maxterm kavramlarına, Karnaugh haritası ile sadeleştirmeden bileşik mantık devrelerinin kapı düzeyinde tasarımı.
+
+### [Mantıksal İşlemler: Özel Veya, Toplayıcılar ve 7 Segment Ekran](https://taklaciguvercin5203.github.io/elektro/mantiksal_islemler) Dijital mantıkta XOR kapısı, yarım/tam toplayıcı devreler, taşma (overflow) durumu ve sonuçların 7 segment ekranda gösterilmesi.
 
 ## Teknik Bileşenler
 
