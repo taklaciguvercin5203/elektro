@@ -9,6 +9,12 @@ import {Image} from 'astro:assets';
 import i1 from '/src/assets/6/7SegDisplay.jpg'
 import i2 from '/src/assets/6/LED_Pinout.png'
 import i3 from '/src/assets/6/1den_9a_kadasayilarin_display_gosterimi.png'
+import i4 from '/src/assets/6/yarim_toplayici_devre.png'
+import i5 from '/src/assets/6/iki_yarim_toplayicidan_olusan_tam_toplayici_devre.png'
+import i6 from '/src/assets/6/ripple_carry_adder.jpg'
+import i7 from '/src/assets/6/tam_toplayici_devre.png'
+
+
 
 
 # Mantıksal ve Aritmetik İşlemler
@@ -160,7 +166,7 @@ Diyelim ki elinizde 4 bitlik sayılar var. Bu lambaları yakıp söndürerek kar
 
 Dikkat ederseniz, elimizdeki 4 bitin hepsini sadece sayının büyüklüğünü anlatmak için kullandık. Bu sayede 0'dan 15'e kadar toplam 16 farklı durum ifade edebildik.
 
-Arabanızın kilometre sayacını düşünün. Sadece ileriye doğru sayar ve ekrandaki tüm rakamlar "ne kadar yol gittiğinizi" gösterir. İçinde eksi (-) bir değer barındırmaz. İşte bilgisayarlar bu sayı tipine İşaretsiz (Unsigned) Sayılar der.
+Arabanızın kilometre sayacını düşünün. Sadece ileriye doğru sayar ve ekrandaki tüm rakamlar "ne kadar yol gittiğinizi" gösterir. İçinde eksi (-) bir değer barındırmaz. İşte bilgisayarlar bu sayı tipine **İşaretsiz (Unsigned) Sayılar** denir.
 
 ### İşaretli Sayılar
 
@@ -168,7 +174,7 @@ Ancak gerçek dünyada banka hesabınız eksiye düşebilir :(, hava sıcaklığ
 
 Sistemin en başındaki biti, sayının değerini değil, SADECE yönünü (artı mı eksi mi olduğunu) anlatması için feda etmişlerdir.
 
-Bu feda edilen ve sayının en solunda duran bite İşaret Biti (Sign Bit) diyoruz.
+Bu feda edilen ve sayının en solunda duran bite **İşaret Biti (Sign Bit)** diyoruz.
 
 
 ### Farkını Nerden Anlarız
@@ -223,7 +229,7 @@ Yalnızca iki girişi olduğu için bu devreye **Yarım Toplayıcı** diyoruz. A
 
 Tablonun son satırına özellikle dikkat edin. `1 + 1` işleminin mevcut basamağındaki sonuç `0`, bir sonraki basamağa gönderdiğimiz elde ise `1` olur. Yani:
 
-`1 + 1 = 10`
+`01 + 01 = 10`
 
 ### XOR ve AND Kapılarıyla Yarım Toplayıcı
 
@@ -238,19 +244,12 @@ Elde çıkışı ise yalnızca **A ve B'nin ikisi de 1 olduğunda** oluşur. Bu 
 
 Devrenin fikir çizimi şöyledir:
 
-```text
-                 ┌─────────┐
-A ───────────────┤  XOR    ├──── S (Toplam)
-                 └─────────┘
-                      ▲
-B ────────────────────┘
-
-                 ┌─────────┐
-A ───────────────┤  AND    ├──── Co (Elde)
-                 └─────────┘
-                      ▲
-B ────────────────────┘
-```
+<Image 
+  src={i4} 
+  alt="Lojik Tablo" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'10px' }}
+/>
 
 Yani iki giriş aynı anda iki farklı kapıya gider. XOR bize basamakta kalacak sonucu, AND ise bir sonraki basamağa taşınacak elde bitini verir. Çok küçük bir devre gibi görünüyor olabilir; fakat bilgisayarların aritmetik işlemlerinin yapı taşlarından biri tam olarak budur.
 
@@ -300,25 +299,15 @@ Bu bağlantının denklemleri şöyledir:
 
 **C<sub>o</sub> = (A &times; B) + (C<sub>i</sub> &times; S<sub>1</sub>)**
 
-Devreyi kutularla şöyle düşünebilirsiniz:
+Devreyi şöyle düşünebilirsiniz:
 
-```text
-                    ┌──────────────┐
-A ──────────────────┤              │
-                    │ Yarım        ├── S1 ──────┐
-B ──────────────────┤ Toplayıcı 1  │            │
-                    └──────┬───────┘            ▼
-                           C1              ┌──────────────┐
-                                           │ Yarım        ├── S (Toplam)
-Ci ────────────────────────────────────────┤ Toplayıcı 2  │
-                                           └──────┬───────┘
-                                                  C2
-                           C1 ───────────┐
-                                         ▼
-                                      ┌──────┐
-                           C2 ────────┤  OR  ├── Co (Elde)
-                                      └──────┘
-```
+<Image 
+  src={i5} 
+  alt="Lojik Tablo" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'5px' }}
+/>
+
 
 Burada OR kapısı, iki farklı yoldan gelebilecek elde bilgisini bir araya getirir. A ile B kendi aralarında bir elde üretmiş olabilir veya önceki basamaktan gelen C<sub>i</sub>, ikinci toplamada bir elde oluşturmuş olabilir. Bu yollardan **en az biri** aktifse, C<sub>o</sub> çıkışı `1` olur.
 
@@ -330,103 +319,44 @@ Tek bir Tam Toplayıcı yalnızca bir basamağı toplar. Dört bitlik iki sayıy
 
 Buradaki `ripple` kelimesi, elde bitinin suya atılan bir taşın oluşturduğu dalga gibi basamaklar arasında ilerlemesini anlatır:
 
-```text
- A0 ─────┐   ┌──────────────┐
- B0 ─────┼──▶│ Tam Toplayıcı│── S0
- C0 ────▶┘   └──────┬───────┘
-                    │ C1
-                    ▼
- A1 ─────┐   ┌──────────────┐
- B1 ─────┼──▶│ Tam Toplayıcı│── S1
- C1 ────▶┘   └──────┬───────┘
-                    │ C2
-                    ▼
- A2 ─────┐   ┌──────────────┐
- B2 ─────┼──▶│ Tam Toplayıcı│── S2
- C2 ────▶┘   └──────┬───────┘
-                    │ C3
-                    ▼
- A3 ─────┐   ┌──────────────┐
- B3 ─────┼──▶│ Tam Toplayıcı│── S3
- C3 ────▶┘   └──────┬───────┘
-                    │
-                   C4
-```
+<Image 
+  src={i6} 
+  alt="Lojik Tablo" 
+  quality="mid"
+  style={{ maxWidth: '400px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'5px' }}
+/>
 
 En sağdaki basamak en düşük değerlikli bittir. Bu basamakta oluşan elde, sırayla diğer üç basamağa doğru ilerler. Dört toplam çıkışı birlikte `S3 S2 S1 S0` sonucunu, son elde çıkışı da en üst basamaktan taşan biti verir.
 
-Bu mimarinin güzel yanı sadeliğidir: Aynı Tam Toplayıcıyı dört kez kullanarak 4-bit bir **Paralel Toplayıcı** elde ederiz. Küçük bir bedeli de vardır. Her basamak, önceki basamağın elde sonucunu beklediği için elde ilerledikçe toplam gecikmesi oluşur. İşte bu yüzden devre tasarımında daha hızlı elde üretme yöntemleri de kullanılır.
+Bu mimarinin güzel yanı sadeliğidir: Aynı Tam Toplayıcıyı dört kez kullanarak 4-bit bir **Paralel Toplayıcı** elde ederiz. Küçük bir bedeli de vardır. Her basamak, önceki basamağın elde sonucunu beklediği için elde ilerledikçe toplam gecikmesi oluşur.
 
 ## Kontrol Sinyalli Çıkarıcı Devre
 
-Toplama yapan devreyi biraz daha akıllı hâle getirebilir miyiz? Elbette! `Reg_A` ve `Reg_B` yazmaçlarında tutulan iki sayıyı yalnızca toplamak yerine, aynı donanımla çıkarmak da mümkündür. Bunun için `Control` adında tek bir kontrol sinyali kullanırız:
+Toplama yapan devreyi biraz daha akıllı hâle getirebilir miyiz? Elbette! `Yazmac_A` ve `Yazmac_B` yazmaçlarında tutulan iki sayıyı yalnızca toplamak yerine, aynı donanımla çıkarmak da mümkündür. Bunun için `Kontrol` adında tek bir kontrol sinyali kullanırız:
 
-- `Control = 0`: `Reg_B` olduğu gibi kullanılır ve devre toplama yapar.
-- `Control = 1`: `Reg_B` bitleri XOR kapılarından geçirilerek terslenir ve çıkarma yapılır.
+- `Kontrol = 0`: `Yazmac_B` olduğu gibi kullanılır ve devre toplama yapar.
+- `Kontrol = 1`: `Yazmac_B` bitleri XOR kapılarından geçirilerek terslenir ve çıkarma yapılır.
 
 İkili sistemde çıkarma işlemi, ikinci sayının iki tümleyeni alınarak toplama işlemine dönüştürülebilir:
 
-**A - B = A + (NOT B) + 1**
+**A - B = A + (B') + 1**
 
-Her `Reg_B` biti bir XOR kapısının girişine bağlanır. Diğer XOR girişi bütün bitler için ortak olan `Control` sinyalidir:
+Her `Yazmac_B` biti bir XOR kapısının girişine bağlanır. Diğer XOR girişi bütün bitler için ortak olan `Kontrol` sinyalidir:
 
-**B<sub>i</sub>&prime; = B<sub>i</sub> &oplus; Control**
+**B<sub>i</sub>&prime; = B<sub>i</sub> &oplus; Kontrol**
 
-`Control = 0` olduğunda XOR çıkışı değişmez. `Control = 1` olduğunda her B biti terslenir. Ayrıca en düşük basamağın elde girişine de `Control` bağlanır. Böylece:
+`Kontrol = 0` olduğunda XOR çıkışı değişmez. `Kontrol = 1` olduğunda her B biti terslenir. Ayrıca en düşük basamağın elde girişine de `Kontrol` bağlanır. Böylece:
 
 - Toplamada: `A + B + 0`
-- Çıkarmada: `A + (NOT B) + 1`
+- Çıkarmada: `A + (B') + 1`
 
 elde edilir.
 
-```text
-                 Control ───────────────┐
-                                        │
-Reg_B0 ───────────────┐   ┌─────────┐   │
-                      ├──▶│  XOR    │───┼──▶ B0'
-                      │   └─────────┘   │
-                      └─────────────────┘
+<Image 
+  src={i7} 
+  alt="Lojik Tablo" 
+  quality="mid"
+  style={{ maxWidth: '600px', width: '100%', height: 'auto', loading:"lazy", borderRadius:'5px' }}
+/>
 
-Reg_A ──────────────────────────────────────┐
-                                            ▼
-                                      ┌──────────────┐
- B' ─────────────────────────────────▶│ 4-bit        │──▶ Sonuç
- Control ────────────────────────────▶│ Paralel      │
-                                      │ Toplayıcı    │
-                                      └──────┬───────┘
-                                             └──▶ Cout
-```
-
-Bu yapı, modern bir **Aritmetik Mantık Biriminin (ALU)** temel fikirlerinden biridir. Aynı işlemci devresi, yalnızca bir kontrol kablosunun değerini değiştirerek hem `Reg_A + Reg_B` hem de `Reg_A - Reg_B` işlemlerini gerçekleştirebilir. Donanım çoğalmaz; devrenin davranışı yönlendirilir.
-
-## Taşırma (Overflow) Analizi
-
-Bir sayıyı temsil etmek için yalnızca dört bit ayırdıysak, sistemin gösterebileceği değerlerin bir sınırı vardır. İşaretsiz 4-bit sayılarda bu aralık `0` ile `15` arasındadır. Örneğin:
-
-`1111 + 0001 = 1 0000`
-
-Sonuç beş bit ister. Dört bitlik yazmaçta yalnızca `0000` kalır; soldan taşan `1`, son elde çıkışına gider. Bu durum işaretsiz sayılar için **taşırma** anlamına gelir ve `Cout = 1` ile tespit edilebilir.
-
-İşaretli sayılarda ise yalnızca son elde bitine bakmak yeterli değildir. İki tümleyen gösteriminde dört bitlik aralık `-8` ile `+7` arasındadır. Örneğin:
-
-`0111 + 0001 = 1000`
-
-`0111`, `+7` ve `0001`, `+1` demektir. Gerçek sonuç `+8` olmasına rağmen dört bitlik işaretli sistemde `1000`, `-8` olarak okunur. Yani sonuç ayrılan kapasiteye sığmamıştır.
-
-İşaretli toplamada taşırma kuralı şöyledir:
-
-- Aynı işaretli iki sayı toplanır ve sonuç farklı işaretli çıkarsa taşırma vardır.
-- Farklı işaretli iki sayının toplamında işaretli taşırma oluşmaz.
-
-Bu kural mantıksal olarak şu şekilde ifade edilebilir:
-
-**Overflow<sub>toplama</sub> = (A<sub>işaret</sub> = B<sub>işaret</sub>) AND (S<sub>işaret</sub> &ne; A<sub>işaret</sub>)**
-
-Çıkarma işleminde durum biraz değişir:
-
-- Farklı işaretli iki sayı çıkarılır ve sonuç, A'nın işaretinden farklı çıkarsa taşırma vardır.
-- Aynı işaretli iki sayının çıkarılmasında işaretli taşırma oluşmaz.
-
-**Overflow<sub>çıkarma</sub> = (A<sub>işaret</sub> &ne; B<sub>işaret</sub>) AND (S<sub>işaret</sub> &ne; A<sub>işaret</sub>)**
-
-Donanım bu koşulları kontrol ederek bir **Overflow bayrağı** üretir. Böylece işlemci yalnızca bitleri hesaplamakla kalmaz; sonucun güvenilir biçimde temsil edilip edilemediğini de bildirir. Kısacası taşırma, devrenin yanlış hesap yapması değil, ayrılan bit sayısının sonuca küçük gelmesidir.
+Bu yapı, modern bir **Aritmetik Mantık Biriminin (ALU)** temel fikirlerinden biridir. Aynı işlemci devresi, yalnızca bir kontrol kablosunun değerini değiştirerek hem `Yazmac_A + Reg_B` hem de `Yazmac_A - Yazmac_B` işlemlerini gerçekleştirebilir. Donanım çoğalmaz; devrenin davranışı yönlendirilir.
