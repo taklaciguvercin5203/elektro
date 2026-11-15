@@ -156,7 +156,7 @@ Decoder bu dört biti alır ve yedi ayrı çıkış üretir: **F<sub>a</sub>, F<
 
 ### İşaretsiz Sayılar
 
-Diyelim ki elinizde 4 bitlik sayılar var. Bu lambaları yakıp söndürerek karşı tarafa sayılar göndermek istiyorsunuz.
+Diyelim ki elinizde 4 adet lamba var. Bu lambaları yakıp söndürerek karşı tarafa sayılar göndermek istiyorsunuz.
 
     0000 = Bu 0 demektir.
 
@@ -172,7 +172,7 @@ Arabanızın kilometre sayacını düşünün. Sadece ileriye doğru sayar ve ek
 
 Ancak gerçek dünyada banka hesabınız eksiye düşebilir :(, hava sıcaklığı sıfırın altına inebilir. Peki, bilgisayara "-5" sayısını nasıl anlatacağız?
 
-Sistemin en başındaki biti, sayının değerini değil, SADECE yönünü (artı mı eksi mi olduğunu) anlatması için feda etmişlerdir.
+Sistemin en başındaki biti, sayının değerini değil, SADECE yönünü (artı mı eksi mi olduğunu) anlatması için feda ederler.
 
 Bu feda edilen ve sayının en solunda duran bite **İşaret Biti (Sign Bit)** diyoruz.
 
@@ -195,8 +195,8 @@ Bu veriyi bilgisayarın işlemcisine verdiğimizde, sistemin hangi modu seçtiğ
 >
 >Bu modda bilgisayar hemen en soldaki ilk bite (Sign Bit) bakar. Orada bir 1 gördüğü an alarma geçer ve  bu sayı eksi (-) der.
 >
->Hesabı Şudur: Bilgisayar sistemlerinde standart olarak kullanılan yöntemde en soldaki bit işaret bitidir 1 olduğu için sayı negatiftir. Sayının tersini (1'e tümleyen) alıp 1 ekleriz. 1110 ters çevrilince 0001 olur. Buna 1 eklenince 0010 (yani 2) elde edilir. Başına eksi işareti konulduğunda sonuç -2 olur.
->Eğer sistemde yön, borç veya sıfırın altı varsa bu gözlük takılır.
+>Hesabı Şudur: Sayının tersini (1'e tümleyen) alıp 1 ekleriz. 1110 ters çevrilince 0001 olur. Buna 1 eklenince 0010 (yani 2) elde edilir. Başına eksi işareti konulduğunda sonuç -2 olur.
+>Eğer sistemde yön, borç veya sıfırın altı varsa bu mod gereklidir.
 >
 >Örneğin; bir asansörün -2. kata inmesi, hava sıcaklığının -2 derece olması, banka hesabındaki eksi bakiye veya matematiksel çıkarma işlemleri.
 
